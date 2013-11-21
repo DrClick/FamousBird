@@ -4,6 +4,24 @@
 [submodule "tools"]
 	path = tools
 	url = git@github.com:Famous/build-tools.git
-[submodule "js/loader"]
-	path = js/loader
-	url = git@github.com:Famous/plugin.git
+[submodule "js/famous-views"]
+	path = js/famous-views
+	url = git@github.com:Famous/famous-views.git
+[submodule "js/famous-animation"]
+	path = js/famous-animation
+	url = git@github.com:Famous/animation.git
+[submodule "js/famous-color"]
+	path = js/famous-color
+	url = git@github.com:Famous/color.git
+[submodule "js/famous-physics"]
+	path = js/famous-physics
+	url = git@github.com:Famous/famous-physics.git
+[submodule "js/famous-sync"]
+	path = js/famous-sync
+	url = git@github.com:Famous/famous-sync.git
+[submodule "js/famous-ui"]
+	path = js/famous-ui
+	url = git@github.com:Famous/ui.git
+[submodule "js/famous-utils"]
+	path = js/famous-utils
+	url = git@github.com:Famous/utils.git
