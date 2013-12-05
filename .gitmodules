@@ -25,3 +25,6 @@
 [submodule "js/famous-utils"]
 	path = js/famous-utils
 	url = git@github.com:Famous/utils.git
+[submodule "js/famous-modifiers"]
+	path = js/famous-modifiers
+	url = git@github.com:Famous/famous-modifiers.git
