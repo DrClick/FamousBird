@@ -6,7 +6,7 @@ It functions as a stopwatch, by cataloguing _start_ and _stop_ events, and then 
 
 You would use the profiler as follows:
 
-    Profiler = require('famous-performance/Profiler");
+    var Profiler = require('famous-performance/Profiler");
     FamousEngine.pipe(Profiler);
 
     Profiler.start('foo timer');
@@ -36,10 +36,9 @@ ProfilerView.js
 
 ProfilerView is used to visualize the Profiler-analyzed data. Use it with Profiler as follows:
 
-    ProfilerView = require('famous-performance/ProfilerView');
-    profilerView = new ProfilerView(Profiler);
+    var ProfilerView = require('famous-performance/ProfilerView');
 
-Then append profilerView to the render tree as you would any renderable.
+Then append ProfilerView to the render tree as you would any renderable.
 
 Without any Profiler `start` and `stop` calls, you should still see the view's visualization of FPS and Famo.us javascript runtime duration, as these are profiled by default.
 Notice that all stats besides FPS are measured in milliseconds.
