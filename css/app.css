@@ -1,4 +1,115 @@
-html {
-    background-color: #000;
-    color: #fff;
-} 
+@font-face{
+    font-family: flapyBird;
+    src: url(/content/font/04B_19__.TTF);
+}
+body{
+    background : rgba(50,50,50,1);
+    font-family: 'flapyBird' !important;
+}
+.startup, .gameOver{
+    z-index: 10;
+}
+.startup h1, .scorer h1, .gameOver h1, .gameOver h3{
+    text-align: center;
+    color:white;
+    text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+    line-height: 1.1em;
+    font-size:50px;
+
+}
+
+.startup p{
+    margin-top:250px;   
+    text-align: center;
+    color:white;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    font-size:30px;
+
+}
+
+.gameOver h1, .gameOver h3{
+
+    color:orange;
+}
+.scorer h1{
+    font-size:40px;
+}
+
+.game{
+    background-color:#6dc6d0;
+    background-image: url('/content/images/background.png');
+    background-position: center 532px;
+    background-repeat:no-repeat;
+    z-index: -1;
+    overflow:hidden;
+}
+
+.birdie{
+    background-image: url('/content/images/birdie.png');
+    background-position: left top;
+    background-attachment: fixed;
+    overflow: hidden;
+    background-repeat:no-repeat;
+    z-index:10;
+}
+.birdie-down{
+    background-position: -79px top;
+}
+.birdie-up{
+    background-position: -158px top;
+}
+
+.cloud{
+    background-image: url('/content/images/clouds.png');
+    background-size: 128 256px;
+    overflow: hidden;
+    background-repeat:no-repeat;
+    z-index:-1;
+}
+.cloud-type-0{
+    background-position: 0px 0px;
+}
+.cloud-type-1{
+    background-position: 0px -64px;
+}
+.cloud-type-2{
+    background-position: 0px -128px;
+}
+.cloud-type-3{
+    background-position: 0px -196px;
+}
+
+.pipe{
+    background-image: url('/content/images/pipe.png');
+    color:transparent;
+    background-size: cover;
+    overflow: hidden;
+    background-repeat:no-repeat;
+    z-index:1;
+}
+
+.floor{
+    background-image: url('/content/images/floor.png');
+    background-color:orange;
+    background-size: 128 41;
+    overflow: hidden;
+    background-repeat:repeat-x;
+    z-index:0;
+}
+
+.scorer{
+    z-index:100;
+}
+
+.unselectable{
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    -o-user-select: none;
+    user-select: none;  
+}
+
+.gameOverFlash{
+    background-color: white;
+    z-index:1000;
+}
