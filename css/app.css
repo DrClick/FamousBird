@@ -90,7 +90,7 @@ body{
 
 .floor{
     background-image: url('/content/images/floor.png');
-    background-color:orange;
+    background-color:tan;
     background-size: 128 41;
     overflow: hidden;
     background-repeat:repeat-x;
