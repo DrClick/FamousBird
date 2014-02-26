@@ -16,7 +16,6 @@ define(function(require, exports, module) {
     //include forces and constraints
     var VectorField = require('famous-physics/forces/VectorField');
     var Overlap = require('app/Overlap');
-    var Walls = require('famous-physics/constraints/Walls');
     var Wall = require("famous-physics/constraints/Wall");
     
     //Game Elements
@@ -34,7 +33,12 @@ define(function(require, exports, module) {
     var AppUtils = require('app/Util');
     var Sounds = require('app/Sounds');
 
+    //Transitions
+    var Transitionable = require('famous/Transitionable');
+    var SpringTransition = require('famous-physics/utils/SpringTransition')
 
+
+    Transitionable.registerMethod('spring', SpringTransition);
 
     //main context
     var mainCtx = Engine.createContext();
@@ -58,8 +62,8 @@ define(function(require, exports, module) {
     birdie = new Birdie({physicsEngine:PE});
 
 
-    //create the walls
-    var wallSurface = new ContainerSurface({
+    //create the container and link the physics engine
+    var mainSurface = new ContainerSurface({
         size : wallSize,
         properties: {
             border : '1px solid white',
@@ -68,21 +72,20 @@ define(function(require, exports, module) {
         classes: ['game']
     });
 
-    var wallTransform = new Modifier(Matrix.identity);
+    var mainModifier = new Modifier(Matrix.identity);
+    mainSurface.link(PE);
+    
+    var mainRenderNode = new RenderNode();
+    mainRenderNode.add(mainModifier).link(mainSurface);
 
-
-    //create the scene
-    wallSurface.link(PE);
-    var combiner = new RenderNode();
-    combiner.add(wallTransform).link(wallSurface);
-
-
-    var wallTransform = new Modifier(Matrix.identity);
     
     //create gravity
     var gravity = new VectorField({name : VectorField.FIELDS.CONSTANT, strength : gravityStrength})
     var initFloor = new Floor({initPos:300});
     initFloor.attachToPhysics(PE);
+
+
+    //The following spawn the game elements
 
     var spawnClouds = function(){
         if(!game.ended){
@@ -119,16 +122,6 @@ define(function(require, exports, module) {
         var numParticles = PE._particles.length;
         PE._particles.splice(1,numParticles-100);
     }
-
-    var stopTheWorld = function(){
-        for (var i = 1; i < PE._particles.length; i++) {
-            PE._particles[i].v.x = 0;
-        };
-    }
-
-
-    
-
     
     var spawnGame = function(){
         //Spawn the scene
@@ -138,6 +131,16 @@ define(function(require, exports, module) {
 
     };
 
+
+
+
+
+    //Game Functions ----------------------------------------
+    var stopTheWorld = function(){
+        for (var i = 1; i < PE._particles.length; i++) {
+            PE._particles[i].v.x = 0;
+        };
+    }
     
     var showWelcomeScreen = function(){
         panes.welcome = new BouncyPane(PE, {
@@ -199,13 +202,32 @@ define(function(require, exports, module) {
 
             birdie.stop();
 
-            flashModifier.setOpacity(1, {duration: 50}, function(){
-                flashModifier.setOpacity(0, {duration: 50});
-            });
-
+            Doooooh();
             stopTheWorld();
         }//end if game playing
     };//end method
+
+    function Doooooh(){
+        //flash the screen
+        flashModifier.setOpacity(.75, {duration: 50}, function(){
+                flashModifier.setOpacity(0, {duration: 50});
+        });
+
+        //shake it
+        var spring = {
+            method: 'spring',
+            period: 100,
+            dampingRatio: .1
+        };
+
+        mainModifier.setTransform(
+             Matrix.translate(-10,-10,0)
+        );
+        mainModifier.setTransform(
+             Matrix.translate(0,0,0)
+        , spring);
+
+    };
 
     function score(data){
 
@@ -216,8 +238,7 @@ define(function(require, exports, module) {
             game.scorer.setScore(score);
             AppUtils.playSound(Sounds.score);
         }
-        
-    }
+    };
 
 
     function handleClicks(){
@@ -264,10 +285,10 @@ define(function(require, exports, module) {
     mainCtx.add(new Modifier({
         origin : [.5,.5],
         transform: Matrix.scale(scale,scale,1)
-    })).link(combiner);
+    })).link(mainRenderNode);
 
     //add the flash screen
-    combiner.add(flashModifier).link(flashSurface);
+    mainRenderNode.add(flashModifier).link(flashSurface);
 
 });
 
