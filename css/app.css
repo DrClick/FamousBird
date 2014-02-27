@@ -2,6 +2,12 @@
     font-family: flapyBird;
     src: url(/content/font/04B_19__.TTF);
 }
+@font-face {
+  font-family: 'terminal';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/content/font/terminal.woff) format('woff');
+}
 body{
     background : rgba(50,50,50,1);
     font-family: 'flapyBird' !important;
@@ -27,6 +33,22 @@ body{
 }
 
 
+button{
+    width:130px;
+    height:40px;
+    background-color:#ec4200;
+    color:white;
+    font-family: 'terminal';
+    font-size:24px;
+    border: solid 3px white;
+    letter-spacing:0.1em;
+    font-weight: bold;
+    display: inline;
+    box-shadow: -1px 1px 0 3px black; 
+}
+
+
+
 .scorer h1{
     font-size:40px;
 }
@@ -42,7 +64,10 @@ body{
 
 .gameOverFlash{
     background-color: white;
-    z-index:1000;
+    z-index:-1;
+}
+.gameOverFlashActive{
+    z-index: 1000;
 }
 
 /*------The birdie-------*/
@@ -73,9 +98,11 @@ body{
 }
 .cloud-type-0{
     background-position: 0px 0px;
+    z-index:20;
 }
 .cloud-type-1{
     background-position: 0px -64px;
+    z-index:20;
 }
 .cloud-type-2{
     background-position: 0px -128px;

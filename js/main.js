@@ -28,6 +28,7 @@ define(function(require, exports, module) {
 
     //Widgets
     var BouncyPane = require('app/widgets/BouncyPane');
+    var ButtonPane = require('app/widgets/ButtonPane');
 
     //Utils
     var AppUtils = require('app/Util');
@@ -53,7 +54,7 @@ define(function(require, exports, module) {
     game            = {started:false, over: false, scorer: null, score : 0},
     timers          = {clouds:null, pipes:null, floor: null, clean: null},
     pipeCounter     = 1,
-    panes           = {welcome: null, gameOver: null};
+    panes           = {welcome: null, gameOver: null, welcomeButtons: null};
 
     //initiate the physics physics, which manages the engine, defaults to the entire window real estate
     var PE = new PhysicsEngine({numConstraints : 4});
@@ -144,10 +145,35 @@ define(function(require, exports, module) {
     
     var showWelcomeScreen = function(){
         panes.welcome = new BouncyPane(PE, {
-            content: '<h1>Famous Bird</h1><p>Tap to start a new game</p>',
+            content: '<h1>Famous Bird</h1>',
             classes: ['startup']
         })
         panes.welcome.show();
+
+        panes.welcomeButtons = new ButtonPane(mainRenderNode, {
+            buttons: [
+                {text: "START", callback: startGame, offsetX: -120},
+                {text: "SCORES", callback: showHighScores, offsetX: 120}
+            ]
+        });
+        panes.welcomeButtons.show();
+
+
+    };
+
+    var showGetReadyScreen = function(){
+        panes.welcome = new BouncyPane(PE, {
+            content: '<h1>Famous Bird</h1><p>Tap to start a new game</p>',
+            classes: ['startup']
+        })
+
+
+
+        panes.welcome.show();
+    };
+
+    var showHighScores = function(){
+        throw "Woah Slow Down! Not Implemented Dude!";
     };
 
     var showGameOverScreen = function(){
@@ -162,8 +188,10 @@ define(function(require, exports, module) {
         console.log("starting game");
         game.started = true;
         game.ended = false;
+        
+        //get the UI in the correct state
         panes.welcome.hide();
-        if(panes.gameOver) panes.gameOver.hide();
+        panes.welcomeButtons.hide();
 
         game.scorer = new Score();
         game.scorer.attachToPhysics(PE);
@@ -209,6 +237,7 @@ define(function(require, exports, module) {
 
     function Doooooh(){
         //flash the screen
+        flashSurface.setClasses(['gameOverFlash','gameOverFlashActive'])
         flashModifier.setOpacity(.75, {duration: 50}, function(){
                 flashModifier.setOpacity(0, {duration: 50});
         });
@@ -260,6 +289,7 @@ define(function(require, exports, module) {
 
     Engine.on('click', handleClicks);
     Engine.on('touchstart', handleClicks);
+    Engine.on('keydown', handleClicks);
 
 
 
@@ -277,7 +307,7 @@ define(function(require, exports, module) {
         classes: ['gameOverFlash']
     });
     var flashModifier = new Modifier({
-        opacity: 0.001,//hack for bug where setting to 0 does not work
+        opacity: .001,//hack to get around a bug
         origin: [.5,.5]
     });
 
