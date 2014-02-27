@@ -56,7 +56,7 @@ define(function(require, exports, module) {
     game            = {started:false, over: false, scorer: null, score : 0},
     timers          = {clouds:null, pipes:null, floor: null, clean: null},
     pipeCounter     = 1,
-    panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null};
+    panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
 
     //initiate the physics physics, which manages the engine, defaults to the entire window real estate
     var PE = new PhysicsEngine({numConstraints : 4});
@@ -180,6 +180,15 @@ define(function(require, exports, module) {
         throw "Woah Slow Down! Not Implemented Dude!";
     };
 
+    var restartGame = function(){
+        alert('restart game');
+        throw "Woah Slow Down! Not Implemented Dude!";
+    };
+
+    var shareGame = function(){
+        throw "Woah Slow Down! Not Implemented Dude!";
+    };
+
     var showGameOverScreen = function(){
         panes.gameOver = new BouncyPane(PE, {
             content: '<h1>Game Over</h1>',
@@ -201,6 +210,18 @@ define(function(require, exports, module) {
                 }
                 );  
         }, 300);
+
+
+        panes.gameOverButtons = new ButtonPane(mainRenderNode, {
+            buttons: [
+            {text: "OK", callback: restartGame, offsetX: -120},
+            {text: "SHARE", callback: shareGame, offsetX: 120}
+            ]
+        });
+
+        Timer.setTimeout(function(){
+            panes.gameOverButtons.show();
+        },600);
     };//end function
 
     function startGame(){
@@ -250,6 +271,8 @@ define(function(require, exports, module) {
 
             birdie.stop();
 
+            game.scorer.hide();
+
             Doooooh();
             stopTheWorld();
         }//end if game playing
@@ -257,9 +280,10 @@ define(function(require, exports, module) {
 
     function Doooooh(){
         //flash the screen
-        flashSurface.setClasses(['gameOverFlash','gameOverFlashActive'])
+        flashSurface.setClasses(['gameOverFlash','gameOverFlashActive']);
         flashModifier.setOpacity(.75, {duration: 50}, function(){
             flashModifier.setOpacity(0, {duration: 50});
+            flashSurface.setClasses(['gameOverFlash']);
         });
 
         //shake it
