@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+
     //includes Famous
     var Engine = require('famous/Engine');
     var Surface = require('famous/Surface');
@@ -29,6 +30,7 @@ define(function(require, exports, module) {
     //Widgets
     var BouncyPane = require('app/widgets/BouncyPane');
     var ButtonPane = require('app/widgets/ButtonPane');
+    var SlideUpPane = require('app/widgets/SlideUpPane');
 
     //Utils
     var AppUtils = require('app/Util');
@@ -54,7 +56,7 @@ define(function(require, exports, module) {
     game            = {started:false, over: false, scorer: null, score : 0},
     timers          = {clouds:null, pipes:null, floor: null, clean: null},
     pipeCounter     = 1,
-    panes           = {welcome: null, gameOver: null, welcomeButtons: null};
+    panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null};
 
     //initiate the physics physics, which manages the engine, defaults to the entire window real estate
     var PE = new PhysicsEngine({numConstraints : 4});
@@ -152,8 +154,8 @@ define(function(require, exports, module) {
 
         panes.welcomeButtons = new ButtonPane(mainRenderNode, {
             buttons: [
-                {text: "START", callback: startGame, offsetX: -120},
-                {text: "SCORES", callback: showHighScores, offsetX: 120}
+            {text: "START", callback: showGetReadyScreen, offsetX: -120},
+            {text: "SCORES", callback: showHighScores, offsetX: 120}
             ]
         });
         panes.welcomeButtons.show();
@@ -162,14 +164,16 @@ define(function(require, exports, module) {
     };
 
     var showGetReadyScreen = function(){
-        panes.welcome = new BouncyPane(PE, {
-            content: '<h1>Famous Bird</h1><p>Tap to start a new game</p>',
-            classes: ['startup']
-        })
+        panes.welcome.hide();
+        panes.welcomeButtons.hide();
 
+        panes.ready = new BouncyPane(PE, {
+            content: '<h1>Get Ready</h1><p></p>',
+            classes: ['getReady']
+        });
 
-
-        panes.welcome.show();
+        panes.ready.show();
+        Timer.setTimeout(startGame,2000);
     };
 
     var showHighScores = function(){
@@ -180,9 +184,24 @@ define(function(require, exports, module) {
         panes.gameOver = new BouncyPane(PE, {
             content: '<h1>Game Over</h1>',
             classes: ['gameOver']
-        })
+        });
         panes.gameOver.show();
-    };
+
+        Timer.setTimeout(function(){
+            AppUtils.loadFragment('/fragments/finalScore.html', 
+                {score:1, highScore:999},
+                function(frag){
+                    panes.finalScore = new SlideUpPane(mainRenderNode,
+                    {
+                        size:[500,250],
+                        content: frag,
+                        classes: ['finalScore']
+                    });
+                    panes.finalScore.show();
+                }
+                );  
+        }, 300);
+    };//end function
 
     function startGame(){
         console.log("starting game");
@@ -192,6 +211,7 @@ define(function(require, exports, module) {
         //get the UI in the correct state
         panes.welcome.hide();
         panes.welcomeButtons.hide();
+        panes.ready.hide();
 
         game.scorer = new Score();
         game.scorer.attachToPhysics(PE);
@@ -239,7 +259,7 @@ define(function(require, exports, module) {
         //flash the screen
         flashSurface.setClasses(['gameOverFlash','gameOverFlashActive'])
         flashModifier.setOpacity(.75, {duration: 50}, function(){
-                flashModifier.setOpacity(0, {duration: 50});
+            flashModifier.setOpacity(0, {duration: 50});
         });
 
         //shake it
@@ -250,11 +270,11 @@ define(function(require, exports, module) {
         };
 
         mainModifier.setTransform(
-             Matrix.translate(-10,-10,0)
-        );
+         Matrix.translate(-10,-10,0)
+         );
         mainModifier.setTransform(
-             Matrix.translate(0,0,0)
-        , spring);
+         Matrix.translate(0,0,0)
+         , spring);
 
     };
 
@@ -270,17 +290,11 @@ define(function(require, exports, module) {
     };
 
 
-    function handleClicks(){
-
-        if (game.ended) return;
-
-        if(!game.started){
-            startGame();
-        }
-        else{
+    function handleClicks(evt){
+        if (!game.ended && game.started){
+            //fly little birdie fly 
             birdie.flap();
         }
-
     }
 
     //get this party started
