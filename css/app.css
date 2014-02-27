@@ -169,8 +169,30 @@ button{
     overflow: hidden;
     background-repeat:repeat-x;
     z-index:0;
+    font-family: 'terminal';
+    color: rgba(255,255,255,.4);
+    font-size:20px;
 }
-
+.floor *{
+    margin-left:500px;
+}
+.floor img{
+    float:left;
+    margin-top:50px;
+    opacity:.2;
+}
+.floor b{
+    display:block;
+    margin-top:60px;
+}
+.floor label{
+    display: block;
+    /*margin-top:20px;*/
+}
+.floor p{
+    display:block;
+    /*margin-top:20px;*/
+}
 
 
 /*------Scorer---------*/
