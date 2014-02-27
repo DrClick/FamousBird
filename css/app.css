@@ -12,7 +12,7 @@ body{
     background : rgba(50,50,50,1);
     font-family: 'flapyBird' !important;
 }
-.startup, .gameOver, .scorer{
+.startup, .gameOver, .scorer, .getReady{
     z-index: 1000;
     text-align: center;
     color:white;
@@ -48,6 +48,9 @@ body{
     color:brown;
     font-size: 30px;
     background-color:#e2ca91;
+    background-image: url(/content/images/medal.png);
+    background-position: 30px 70px;
+    background-repeat: no-repeat;
     border: ridge 5px tan;
     box-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000;
 }

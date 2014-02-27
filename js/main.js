@@ -50,14 +50,14 @@ define(function(require, exports, module) {
 
 
     var 
-        birdie          = null,
-        wallRestitution = 0,
-        gravityStrength = 0.002,
-        wallSize        = [640,960],
-        game            = {started:false, over: false, scorer: null, score : 0},
-        timers          = {clouds:null, pipes:null, floor: null, clean: null},
-        pipeCounter     = 1,
-        panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
+    birdie          = null,
+    wallRestitution = 0,
+    gravityStrength = 0.002,
+    wallSize        = [640,960],
+    game            = {started:false, over: false, scorer: null, score : 0},
+    timers          = {clouds:null, pipes:null, floor: null, clean: null, counter: null},
+    pipeCounter     = 1,
+    panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
 
     //initiate the physics engine
     var PE = new PhysicsEngine({numConstraints : 4});
@@ -241,9 +241,21 @@ define(function(require, exports, module) {
                     panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
                     panes.finalScore.show();
                 }
-                );  
-        }, 300);
+            );
 
+            //start the score counting up
+            var scoreUpCounter = 0;
+            timers.counter = Timer.setInterval(function(){
+                scoreUpCounter++;
+                if(scoreUpCounter<= game.score){
+                    scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
+                }
+                else{
+                    Timer.removeInterval(timers.counter);
+                }
+            },40);
+
+        }, 300);
 
         //display the buttons pane
         Timer.setTimeout(function(){
@@ -321,11 +333,11 @@ define(function(require, exports, module) {
         };
 
         mainModifier.setTransform(
-         Matrix.translate(-10,-10,0)
-         );
+           Matrix.translate(-10,-10,0)
+           );
         mainModifier.setTransform(
-         Matrix.translate(0,0,0)
-         , spring);
+           Matrix.translate(0,0,0)
+           , spring);
 
     };
 
