@@ -48,20 +48,22 @@ define(function(require, exports, module) {
 
     //-----------------------------------------------BEGIN APP
 
-    //parameters
-    var birdie          = null
-    wallRestitution = 0,
-    gravityStrength = 0.002,
-    wallSize        = [640,960],
-    game            = {started:false, over: false, scorer: null, score : 0},
-    timers          = {clouds:null, pipes:null, floor: null, clean: null},
-    pipeCounter     = 1,
-    panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
 
-    //initiate the physics physics, which manages the engine, defaults to the entire window real estate
+    var 
+        birdie          = null,
+        wallRestitution = 0,
+        gravityStrength = 0.002,
+        wallSize        = [640,960],
+        game            = {started:false, over: false, scorer: null, score : 0},
+        timers          = {clouds:null, pipes:null, floor: null, clean: null},
+        pipeCounter     = 1,
+        panes           = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
+
+    //initiate the physics engine
     var PE = new PhysicsEngine({numConstraints : 4});
 
-    //create the birdie
+
+    //create the birdie, this makes it the first child node.
     birdie = new Birdie({physicsEngine:PE});
 
 
@@ -78,6 +80,8 @@ define(function(require, exports, module) {
     var mainModifier = new Modifier(Matrix.identity);
     mainSurface.link(PE);
     
+
+    //this node will be used to append widgets and everything else basically
     var mainRenderNode = new RenderNode();
     mainRenderNode.add(mainModifier).link(mainSurface);
 
@@ -196,6 +200,33 @@ define(function(require, exports, module) {
         });
         panes.gameOver.show();
 
+        panes.gameOverButtons = new ButtonPane(mainRenderNode, {
+            buttons: [
+            {text: "OK", callback: restartGame, offsetX: -120},
+            {text: "SHARE", callback: shareGame, offsetX: 120}
+            ]
+        });
+
+        var scoreSurface = new Surface({
+            content: '<h1>0</h1>',
+            classes: ['scorer']
+        });
+        var scoreModifier = new Modifier({
+            transform: Matrix.translate(180,40,0),
+            origin: [.5,.5]
+        });
+
+        var highScoreSurface = new Surface({
+            content: '<h1>999</h1>',
+            classes: ['scorer']
+        });
+        var highScoreModifier = new Modifier({
+            transform: Matrix.translate(180,140,0),
+            origin: [.5,.5]
+        });
+
+
+        //display the score pane
         Timer.setTimeout(function(){
             AppUtils.loadFragment('/fragments/finalScore.html', 
                 {score:1, highScore:999},
@@ -206,19 +237,15 @@ define(function(require, exports, module) {
                         content: frag,
                         classes: ['finalScore']
                     });
+                    panes.finalScore.surface.add(scoreModifier).link(scoreSurface);
+                    panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
                     panes.finalScore.show();
                 }
                 );  
         }, 300);
 
 
-        panes.gameOverButtons = new ButtonPane(mainRenderNode, {
-            buttons: [
-            {text: "OK", callback: restartGame, offsetX: -120},
-            {text: "SHARE", callback: shareGame, offsetX: 120}
-            ]
-        });
-
+        //display the buttons pane
         Timer.setTimeout(function(){
             panes.gameOverButtons.show();
         },600);
@@ -304,8 +331,10 @@ define(function(require, exports, module) {
 
     function score(data){
 
+        //read the score from the pipe
         var score = data.target.node.object.content;
 
+        //NOTE: Each pipe ends up creating a lot of hits, so only score it once
         if(game.score != score){
             game.score = score;
             game.scorer.setScore(score);
@@ -329,9 +358,6 @@ define(function(require, exports, module) {
     Engine.on('touchstart', handleClicks);
     Engine.on('keydown', handleClicks);
 
-
-
-    //connect physics's view to the Famous rendering engine
 
     //determine the scale of the window
     var scaleX = window.innerHeight / 960;
