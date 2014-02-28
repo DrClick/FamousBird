@@ -31,7 +31,7 @@ define(function(require, exports, module) {
         //NOTE: we need two transforms here, one to translate from the particle position
         //and one to scale the score (used in pulsing it)
         this.translateModifier = new Modifier({
-            transform: Matrix.translate(230, 20, 0)
+            transform: Matrix.translate(230, 20, 60)
         }); 
         
 

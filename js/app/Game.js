@@ -86,7 +86,7 @@ define(function(require, exports, module) {
         //note node is part of the base view
        
         
-        this.node.add(this.modifier).link(this.surface);
+        this._add(this.modifier).link(this.surface);
         this.surface.add(this.physicsEngine);
 
         //create gravity
@@ -253,7 +253,7 @@ define(function(require, exports, module) {
         var numParticles = physicsEngine._particles.length;
 
         //TODO: maybe I need to detatch gravity from these too. Check on this
-        physicsEngine._particles.splice(1,numParticles-100);
+        physicsEngine._particles.splice(1,numParticles-50);
     };//end method
 
     var spawn = function(game){

@@ -45,7 +45,7 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-        		transform: Matrix.translate(0,0,0),
+        		transform: Matrix.translate(0,0,50),
         		origin: [0.5, 0.5]
         	}
         );

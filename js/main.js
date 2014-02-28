@@ -40,7 +40,7 @@ define(function(require, exports, module) {
         mainCtx.add(new Modifier({
             origin : [.5,.5],
             transform: Matrix.scale(scale,scale,1)
-        })).add(game);
+        })).link(game);
 
     };
 
