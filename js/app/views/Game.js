@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var Modifier = require("famous/Modifier");
     var Matrix = require("famous/Matrix");
     var Timer = require("famous-utils/Time");
+    var PhysicsEngine = require('famous-physics/PhysicsEngine');
 
     //include forces and constraints
     var VectorField = require("famous-physics/forces/VectorField");
@@ -41,7 +42,7 @@ define(function(require, exports, module) {
     Transitionable.registerMethod("spring", SpringTransition);
     Game.prototype = Object.create(View.prototype); 
     Game.prototype.constructor=Game; 
-    function Game(physicsEngine, opts){
+    function Game(opts){
         View.apply(this, arguments);
 
         if(!opts) opts = {};
@@ -64,7 +65,7 @@ define(function(require, exports, module) {
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
         this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
         this.node           = new RenderNode();
-        this.physicsEngine  = physicsEngine;
+        this.physicsEngine  = new PhysicsEngine({numConstraints : 4});
 
         this.birdie         = new Birdie(this.physicsEngine);
 
@@ -72,7 +73,6 @@ define(function(require, exports, module) {
         this.surface = new ContainerSurface({
             size : this.opts.boardSize,
             properties: {
-                border : "1px solid white",
                 pointerEvents : "none"
             },
             classes: ["game"]
@@ -80,7 +80,7 @@ define(function(require, exports, module) {
 
         this.modifier = new Modifier({
             transform: Matrix.translate(0,0,0),
-            origin: [.5,.5]
+            origin: [.5,0]
         });
         
         //note node is part of the base view
@@ -103,6 +103,8 @@ define(function(require, exports, module) {
         this.eventInput.on("keyup", function(){me.handleClicks();});
         this.eventInput.on("click", function(){me.handleClicks();});
         this.eventInput.on("touchstart", function(){me.handleClicks();});
+
+        this.init();
     };//end class
 
 

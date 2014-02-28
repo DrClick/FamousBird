@@ -10,11 +10,15 @@
 }
 body{
     background : rgba(50,50,50,1);
-    font-family: 'flapyBird' !important;
+    font-family: 'lato';
+    font-weight: 300;
+    color: gainsboro;
+    font-size:40px;
 }
 .startup, .gameOver, .scorer, .getReady{
     text-align: center;
     color:white;
+    font-family: 'flappyBird' !important;
 }
 .startup h1, .scorer h1, .gameOver h1, .gameOver h3, .getReady h1{
     text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;

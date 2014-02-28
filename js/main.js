@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
         //includes Famous
-        var Engine = require('famous/Engine');
+        var Engine = require("famous/Engine");
         var Modifier = require("famous/Modifier");
         var Matrix = require("famous/Matrix");
-        var Resume = require("app/Resume");
+        var Resume = require("app/views/Resume");
 
         //instantiate a new resume        
         var resume = new Resume();
@@ -12,8 +12,16 @@ define(function(require, exports, module) {
         var context = Engine.createContext();
 
         
-        //loads the main view into the context     
-        context.add(resume);
+
+         //scale the window
+        var scaleX = window.innerHeight / 960;
+        var scaleY = window.innerWidth / 640;
+        var scale = Math.min(scaleX, scaleY);
+        context.add(new Modifier({
+            origin : [.5,.5],
+            transform: Matrix.scale(scale,scale,1)
+        })).link(resume);
+
 
 
         //That was easy!!!
