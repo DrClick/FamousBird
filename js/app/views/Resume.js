@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var View            = require("famous/View");
     var GenericSync     = require('famous-sync/GenericSync');
     var Transitionable  = require('famous/Transitionable');
-    var Timer = require("famous-utils/Time");
+    var Timer           = require("famous-utils/Time");
 
     //App
     var MainView        = require("app/views/Main");
@@ -20,8 +20,26 @@ define(function(require, exports, module) {
     function Resume() {
         View.apply(this, arguments);
 
-        this.cardIndex = {main:3, game:2, boring: 1};
+        //the card index controls which card is on top
+        this.cardIndex = {main:2, game:1, boring: 0};
+        this.topCardPos = null;
 
+
+        //create syncs to handle updates
+        this.mainSync = new GenericSync(function() {
+            return this.mainViewPos.get(0);
+        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        
+        this.gameSync = new GenericSync(function() {
+            return this.gameViewPos.get(0);
+        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        
+        this.boringSync = new GenericSync(function() {
+            return this.boringViewPos.get(0);
+        }.bind(this), {direction: GenericSync.DIRECTION_X});
+
+
+        //create the views
         _createPageView.call(this);
         _createGameView.call(this);
         _createBoringView.call(this);
@@ -33,15 +51,13 @@ define(function(require, exports, module) {
 
     Resume.DEFAULT_OPTIONS = {
         posThreshold: 200,
-        velThreshold: 0.75,
-        transition: {
-            duration: 300,
-            curve: 'easeOut'            
-        }
+        velThreshold: 0.75
     };
 
     function _createPageView() {
         this.mainViewPos = new Transitionable(0);
+        this.topCardPos = this.mainViewPos;
+
         this.mainView = new MainView();
         this.mainMod = new Modifier({
             transform: Matrix.translate(0, 0, 3)
@@ -50,6 +66,7 @@ define(function(require, exports, module) {
     }
 
     function _createGameView() {
+        this.gameViewPos = new Transitionable(0);
         this.gameView = new GameView();
         this.gameMod = new Modifier({
             transform: Matrix.translate(0, 0, 2)
@@ -57,6 +74,7 @@ define(function(require, exports, module) {
         this._add(this.gameMod).link(this.gameView);
     }
     function _createBoringView() {
+        this.boringViewPos = new Transitionable(0);
         this.boringView = new BoringView();
         this.boringMod = new Modifier({
             transform: Matrix.translate(0, 0, 1)
@@ -65,76 +83,79 @@ define(function(require, exports, module) {
     }
 
     function _handleTouch() {
+        this.mainView.pipe(this.mainSync);
+        this.gameView.pipe(this.gameSync);
+        this.boringView.pipe(this.boringSync);
 
-        
+        this.mainSync.on('update', _slideCards.bind(this));
+        this.mainSync.on('end', _processSwipe.bind(this));
 
-        this.sync = new GenericSync(function() {
-            return this.mainViewPos.get(0);
-        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        this.gameSync.on('update', _slideCards.bind(this));
+        this.gameSync.on('end', _processSwipe.bind(this));
 
-        this.mainView.pipe(this.sync);
-        
-        this.sync.on('update', _slideCards.bind(this));
-        this.sync.on('end', _processSwipe.bind(this));
+        this.boringSync.on('update', _slideCards.bind(this));
+        this.boringSync.on('end', _processSwipe.bind(this));
     }
 
     function _slideCards(data){
-        console.log(data);
-        this.mainViewPos.set(data.p);
+        console.log(this.cardIndex);
+        if(Math.abs(data.p)>5){//if its not just an accidental touch
+            this.topCardPos.set(data.p);
+        }
+        
 
         //change what card is visible
-        this.cardIndex.boring = (data.p >= 0) ? 2: 1;
-        this.cardIndex.game = (data.p < 0) ? 2: 1;
+        if(this.cardIndex.main == 2){
+            this.cardIndex.boring = (data.p >= 0) ? 1: 0;
+            this.cardIndex.game = (data.p < 0) ? 1: 0;
+        }
+        if(this.cardIndex.game == 2){
+            this.cardIndex.main = (data.p >= 0) ? 1: 0;
+            this.cardIndex.boring = (data.p < 0) ? 1: 0;
+        }
+        if(this.cardIndex.boring == 2){
+            this.cardIndex.game = (data.p >= 0) ? 1: 0;
+            this.cardIndex.main = (data.p < 0) ? 1: 0;
+        }
     }
 
     function _processSwipe(data){
         var velocity = data.v;
-        var position = this.mainViewPos.get();
+        var position = this.topCardPos.get();
 
-        if(Math.abs(position) > this.options.posThreshold) {
-            if(velocity < 0 ){
-                this.slideLeft();
-            } else {
-                this.slideRight();
-            }
-        }
-        else if(Math.abs(velocity) > this.options.velThreshold) {
-         
-            if(velocity < 0) {
-                this.slideLeft();
-            } else {
-                this.slideRight();
-            }
-        }
-        else{
-            //return it
-            this.mainViewPos.set(0);
+        //reset the top card
+        this.topCardPos.set(0);
+
+        if( Math.abs(position) > this.options.posThreshold ||
+            Math.abs(velocity) > this.options.velThreshold) {
+            this.shuffle();
         }
     }//end function
 
 
-    Resume.prototype.slideLeft = function(){
-        console.log('slideLeft');
-        this.mainViewPos.set(0);
-        this.cardIndex.main = 0;
+    Resume.prototype.shuffle = function(){
+        console.log('shuffle');
+        
+        for (var card in this.cardIndex){
+            this.cardIndex[card] = (this.cardIndex[card] + 1) % 3
+        }
+
+        if(this.cardIndex.main == 2){this.topCardPos = this.mainViewPos};
+        if(this.cardIndex.game == 2){this.topCardPos = this.gameViewPos};
+        if(this.cardIndex.boring == 2){this.topCardPos = this.boringViewPos};
     }
 
-    Resume.prototype.slideRight = function(){
-        console.log('slideRight');
-        this.mainViewPos.set(0);
-        this.cardIndex.main = 0;
-    }
 
     Resume.prototype.render = function() {
         this.spec = [];
 
         this.spec.push({
-            transform: Matrix.translate(0, 0, this.cardIndex.game),
+            transform: Matrix.translate(this.gameViewPos.get(), 0, this.cardIndex.game),
             target: this.gameView.render()
         });
 
         this.spec.push({
-            transform: Matrix.translate(0, 0, this.cardIndex.boring),
+            transform: Matrix.translate(this.boringViewPos.get(), 0, this.cardIndex.boring),
             target: this.boringView.render()
         });
 

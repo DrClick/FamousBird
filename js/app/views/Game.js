@@ -40,8 +40,7 @@ define(function(require, exports, module) {
 
 
     Transitionable.registerMethod("spring", SpringTransition);
-    Game.prototype = Object.create(View.prototype); 
-    Game.prototype.constructor=Game; 
+
     function Game(opts){
         View.apply(this, arguments);
 
@@ -102,12 +101,17 @@ define(function(require, exports, module) {
 
 
         var me = this;
-        this.surface.on("keyup", function(){me.handleClicks();});
-        this.surface.on("click", function(){me.handleClicks();});
-        this.surface.on("touchstart", function(){me.handleClicks();});
+        this.surface.pipe(this.eventOutput);
+        // this.surface.on("keyup", function(){me.handleClicks();});
+        // this.surface.on("click", function(){me.handleClicks();});
+        // this.surface.on("touchstart", function(){me.handleClicks();});
 
         this.init();
     };//end class
+    Game.prototype = Object.create(View.prototype); 
+    Game.prototype.constructor=Game; 
+
+    
 
 
     Game.prototype.setOpts = function(opts){
