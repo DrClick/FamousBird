@@ -1,50 +1,22 @@
 define(function(require, exports, module) {
-
-    function main(){
         //includes Famous
         var Engine = require('famous/Engine');
-        var ContainerSurface = require('famous/ContainerSurface');
         var Modifier = require("famous/Modifier");
         var Matrix = require("famous/Matrix");
-     
-        //includes Physics
-        var PhysicsEngine = require('famous-physics/PhysicsEngine');
-        
-        //Game Elements
-        var Game = require('app/views/Game');
+        var Resume = require("app/Resume");
 
-        //remove any exisitng context
-        var contextChildren = document.getElementsByClassName("famous-container");
-        for (var i = 0; i < contextChildren.length; i++) {
-            contextChildren[i].parentNode.removeChild(contextChildren[i]);
-        };
+        //instantiate a new resume        
+        var resume = new Resume();
+
         //create the new one
-        var mainCtx = Engine.createContext();
+        var context = Engine.createContext();
 
-        //initiate the physics engine
-        var physicsEngine = new PhysicsEngine({numConstraints : 4});
-
-        var game = new Game(physicsEngine);
-    
-        game.init();
-
-        //handle events, send engine events to the game and listen to the game to reset
-        Engine.pipe(game.eventInput);
-        game.on('restart', main);
+        
+        //loads the main view into the context     
+        context.add(resume);
 
 
-        //scale the window
-        var scaleX = window.innerHeight / 960;
-        var scaleY = window.innerWidth / 640;
-        var scale = Math.min(scaleX, scaleY);
-        mainCtx.add(new Modifier({
-            origin : [.5,.5],
-            transform: Matrix.scale(scale,scale,1)
-        })).link(game);
-
-    };
-
-    main();
+        //That was easy!!!
 
 });
 

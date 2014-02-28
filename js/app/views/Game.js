@@ -1,44 +1,44 @@
 define(function(require, exports, module) {
-
+    "use strict";
 	//includes Famous
-    var Surface = require('famous/Surface');
-    var ContainerSurface = require('famous/ContainerSurface');
-    var RenderNode = require('famous/RenderNode');
-    var Modifier = require('famous/Modifier');
-    var Matrix = require('famous/Matrix');
-    var Timer = require('famous-utils/Time');
+    var Surface = require("famous/Surface");
+    var ContainerSurface = require("famous/ContainerSurface");
+    var RenderNode = require("famous/RenderNode");
+    var Modifier = require("famous/Modifier");
+    var Matrix = require("famous/Matrix");
+    var Timer = require("famous-utils/Time");
 
     //include forces and constraints
-    var VectorField = require('famous-physics/forces/VectorField');
-    var Overlap = require('app/Overlap');
+    var VectorField = require("famous-physics/forces/VectorField");
+    var Overlap = require("app/Overlap");
     var Wall = require("famous-physics/constraints/Wall");
     
     //Game Elements
-    var Birdie = require('app/Bird');
-    var Cloud = require('app/Cloud');
-    var Pipe = require('app/Pipe');
-    var Floor = require('app/Floor');
-    var Score = require('app/Score');
-    var Sounds = require('app/Sounds');
+    var Birdie = require("app/Bird");
+    var Cloud = require("app/Cloud");
+    var Pipe = require("app/Pipe");
+    var Floor = require("app/Floor");
+    var Score = require("app/Score");
+    var Sounds = require("app/Sounds");
 
     //Widgets
-    var BouncyPane = require('app/widgets/BouncyPane');
-    var ButtonPane = require('app/widgets/ButtonPane');
-    var SlideUpPane = require('app/widgets/SlideUpPane');
+    var BouncyPane = require("app/widgets/BouncyPane");
+    var ButtonPane = require("app/widgets/ButtonPane");
+    var SlideUpPane = require("app/widgets/SlideUpPane");
 
     //Utils
-    var AppUtils = require('app/Util');
-    var Sounds = require('app/Sounds');
+    var AppUtils = require("app/Util");
+    var Sounds = require("app/Sounds");
 
     //Transitions
-    var Transitionable = require('famous/Transitionable');
-    var SpringTransition = require('famous-physics/utils/SpringTransition')
+    var Transitionable = require("famous/Transitionable");
+    var SpringTransition = require("famous-physics/utils/SpringTransition")
 
     //View
     var View = require("famous/View");
 
 
-    Transitionable.registerMethod('spring', SpringTransition);
+    Transitionable.registerMethod("spring", SpringTransition);
     Game.prototype = Object.create(View.prototype); 
     Game.prototype.constructor=Game; 
     function Game(physicsEngine, opts){
@@ -72,10 +72,10 @@ define(function(require, exports, module) {
         this.surface = new ContainerSurface({
             size : this.opts.boardSize,
             properties: {
-                border : '1px solid white',
-                pointerEvents : 'none'
+                border : "1px solid white",
+                pointerEvents : "none"
             },
-            classes: ['game']
+            classes: ["game"]
         });
 
         this.modifier = new Modifier({
@@ -100,9 +100,9 @@ define(function(require, exports, module) {
         initFloor.attachToPhysics(this.physicsEngine);
 
         var me = this;
-        this.eventInput.on('keyup', function(){me.handleClicks();});
-        this.eventInput.on('click', function(){me.handleClicks();});
-        this.eventInput.on('touchstart', function(){me.handleClicks();});
+        this.eventInput.on("keyup", function(){me.handleClicks();});
+        this.eventInput.on("click", function(){me.handleClicks();});
+        this.eventInput.on("touchstart", function(){me.handleClicks();});
     };//end class
 
 
@@ -150,7 +150,7 @@ define(function(require, exports, module) {
 
         //attatch the wall and look for collisions with the birdie
         this.physicsEngine.attach(wall, this.birdie.particle);
-        wall.on('collision', function(){me.end();});
+        wall.on("collision", function(){me.end();});
 
         //let er fly!
         this.birdie.start();
@@ -209,7 +209,7 @@ define(function(require, exports, module) {
     Game.prototype.handleClicks = function(evt){
         
         if (!this.ended && this.started){
-            console.log('click!!!')
+            console.log("click!!!")
             //fly little birdie fly 
             this.birdie.flap();
 
@@ -277,8 +277,8 @@ define(function(require, exports, module) {
 
     var showWelcomeScreen = function(game){
         game.panes.welcome = new BouncyPane(game.physicsEngine, {
-            content: '<h1>Famous Bird</h1>',
-            classes: ['startup']
+            content: "<h1>Famous Bird</h1>",
+            classes: ["startup"]
         })
         game.panes.welcome.show();
 
@@ -296,8 +296,8 @@ define(function(require, exports, module) {
         game.panes.welcomeButtons.hide();
 
         game.panes.ready = new BouncyPane(game.physicsEngine, {
-            content: '<h1>Get Ready</h1><p></p>',
-            classes: ['getReady']
+            content: "<h1>Get Ready</h1><p></p>",
+            classes: ["getReady"]
         });
 
         game.panes.ready.show();
@@ -308,8 +308,8 @@ define(function(require, exports, module) {
         game.scorer.hide();
 
         game.panes.gameOver = new BouncyPane(game.physicsEngine, {
-            content: '<h1>Game Over</h1>',
-            classes: ['gameOver']
+            content: "<h1>Game Over</h1>",
+            classes: ["gameOver"]
         });
         game.panes.gameOver.show();
 
@@ -321,8 +321,8 @@ define(function(require, exports, module) {
         });
 
         var scoreSurface = new Surface({
-            content: '<h1>0</h1>',
-            classes: ['scorer']
+            content: "<h1>0</h1>",
+            classes: ["scorer"]
         });
         var scoreModifier = new Modifier({
             transform: Matrix.translate(180,40,50),
@@ -330,8 +330,8 @@ define(function(require, exports, module) {
         });
 
         var highScoreSurface = new Surface({
-            content: '<h1>999</h1>',
-            classes: ['scorer']
+            content: "<h1>999</h1>",
+            classes: ["scorer"]
         });
         var highScoreModifier = new Modifier({
             transform: Matrix.translate(180,140,50),
@@ -341,14 +341,14 @@ define(function(require, exports, module) {
 
         //display the score pane
         Timer.setTimeout(function(){
-            AppUtils.loadFragment('/fragments/finalScore.html', 
+            AppUtils.loadFragment("/fragments/finalScore.html", 
                 {score:1, highScore:999},
                 function(frag){
                     game.panes.finalScore = new SlideUpPane(game,
                     {
                         size:[500,250],
                         content: frag,
-                        classes: ['finalScore']
+                        classes: ["finalScore"]
                     });
                     game.panes.finalScore.surface.add(scoreModifier).link(scoreSurface);
                     game.panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
@@ -385,7 +385,7 @@ define(function(require, exports, module) {
         //create the game over flash surface
         var flashSurface = new Surface({
             size : game.opts.boardSize,
-            classes: ['gameOverFlash']
+            classes: ["gameOverFlash"]
         });
         var flashModifier = new Modifier({
             opacity: .001,//hack to get around a bug
@@ -398,17 +398,17 @@ define(function(require, exports, module) {
         
 
         //flash the screen
-        flashSurface.setClasses(['gameOverFlash','gameOverFlashActive']);
+        flashSurface.setClasses(["gameOverFlash","gameOverFlashActive"]);
         flashModifier.setOpacity(.75, {duration: 50}, function(){
             flashModifier.setOpacity(0, {duration: 50});
-            flashSurface.setClasses(['gameOverFlash']);
+            flashSurface.setClasses(["gameOverFlash"]);
         });
 
 
 
         //shake the screen
         var spring = {
-            method: 'spring',
+            method: "spring",
             period: 100,
             dampingRatio: .1
         };
@@ -422,11 +422,11 @@ define(function(require, exports, module) {
 
 
     var showHighScores = function(game){
-        alert('Whoah! This agression will not stand man! This hasnt been implemented.');
+        alert("Whoah! This agression will not stand man! This hasnt been implemented.");
     };
 
     var share = function(game){
-        alert('This is a private beta, no sharing for now.');
+        alert("This is a private beta, no sharing for now.");
     };
 
   
