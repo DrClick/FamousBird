@@ -11,7 +11,7 @@ define(function(require, exports, module) {
         var PhysicsEngine = require('famous-physics/PhysicsEngine');
         
         //Game Elements
-        var Game = require('app/Game');
+        var Game = require('app/views/Game');
 
         //remove any exisitng context
         var contextChildren = document.getElementsByClassName("famous-container");
@@ -28,12 +28,12 @@ define(function(require, exports, module) {
     
         game.init();
 
-        Engine.on('click', function(){game.handleClicks();});
-        Engine.on('touchstart', function(){game.handleClicks();});
-        Engine.on('keydown', function(){game.handleClicks();});
-
+        //handle events, send engine events to the game and listen to the game to reset
+        Engine.pipe(game.eventInput);
         game.on('restart', main);
 
+
+        //scale the window
         var scaleX = window.innerHeight / 960;
         var scaleY = window.innerWidth / 640;
         var scale = Math.min(scaleX, scaleY);

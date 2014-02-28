@@ -103,6 +103,8 @@ define(function(require, exports, module) {
     Birdie.prototype.flap = function(isInitialFlap){
         var me = this;
 
+        console.log("flap");
+
         if(!isInitialFlap){
             //nudge the bird up
             this.particle.setVel([0,-.45,0]);//this was a hack, but it works better than below

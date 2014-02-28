@@ -98,6 +98,11 @@ define(function(require, exports, module) {
         //create the initial floor
         var initFloor = new Floor({initPos:400});
         initFloor.attachToPhysics(this.physicsEngine);
+
+        var me = this;
+        this.eventInput.on('keyup', function(){me.handleClicks();});
+        this.eventInput.on('click', function(){me.handleClicks();});
+        this.eventInput.on('touchstart', function(){me.handleClicks();});
     };//end class
 
 
@@ -202,8 +207,9 @@ define(function(require, exports, module) {
 
 
     Game.prototype.handleClicks = function(evt){
+        
         if (!this.ended && this.started){
-            
+            console.log('click!!!')
             //fly little birdie fly 
             this.birdie.flap();
 
@@ -253,7 +259,10 @@ define(function(require, exports, module) {
         var numParticles = physicsEngine._particles.length;
 
         //TODO: maybe I need to detatch gravity from these too. Check on this
-        physicsEngine._particles.splice(1,numParticles-50);
+        for (var i = physicsEngine._particles.length - 50; i >= 1; i--) {
+            physicsEngine.remove(physicsEngine._particles[i]);
+        };
+        
     };//end method
 
     var spawn = function(game){
