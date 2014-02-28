@@ -71,9 +71,6 @@ define(function(require, exports, module) {
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
             size : this.opts.boardSize,
-            properties: {
-                pointerEvents : "none"
-            },
             classes: ["game"]
         });
 
@@ -102,16 +99,16 @@ define(function(require, exports, module) {
 
         var me = this;
         this.surface.pipe(this.eventOutput);
-        // this.surface.on("keyup", function(){me.handleClicks();});
-        // this.surface.on("click", function(){me.handleClicks();});
-        // this.surface.on("touchstart", function(){me.handleClicks();});
+        this.surface.on("keyup", function(){me.handleClicks();});
+        this.surface.on("click", function(){me.handleClicks();});
+        this.surface.on("touchstart", function(){me.handleClicks();});
 
         this.init();
     };//end class
     Game.prototype = Object.create(View.prototype); 
     Game.prototype.constructor=Game; 
 
-    
+
 
 
     Game.prototype.setOpts = function(opts){
@@ -410,6 +407,7 @@ define(function(require, exports, module) {
         flashModifier.setOpacity(.75, {duration: 50}, function(){
             flashModifier.setOpacity(0, {duration: 50});
             flashSurface.setClasses(["gameOverFlash"]);
+            flashModifier.setTransform(Matrix.translate(0,0,-1));
         });
 
 
