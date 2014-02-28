@@ -31,7 +31,14 @@ define(function(require, exports, module) {
     Resume.prototype = Object.create(View.prototype);
     Resume.prototype.constructor = Resume;
 
-    Resume.DEFAULT_OPTIONS = {};
+    Resume.DEFAULT_OPTIONS = {
+        posThreshold: 200,
+        velThreshold: 0.75,
+        transition: {
+            duration: 300,
+            curve: 'easeOut'            
+        }
+    };
 
     function _createPageView() {
         this.mainViewPos = new Transitionable(0);
@@ -68,6 +75,7 @@ define(function(require, exports, module) {
         this.mainView.pipe(this.sync);
         
         this.sync.on('update', _slideCards.bind(this));
+        this.sync.on('end', _processSwipe.bind(this));
     }
 
     function _slideCards(data){
@@ -77,12 +85,44 @@ define(function(require, exports, module) {
         //change what card is visible
         this.cardIndex.boring = (data.p >= 0) ? 2: 1;
         this.cardIndex.game = (data.p < 0) ? 2: 1;
+    }
 
+    function _processSwipe(data){
+        var velocity = data.v;
+        var position = this.mainViewPos.get();
 
-        if(data.v >2){
-            console.log("swipe right");
-            this.cardIndex.main = 0;
+        if(Math.abs(position) > this.options.posThreshold) {
+            if(velocity < 0 ){
+                this.slideLeft();
+            } else {
+                this.slideRight();
+            }
         }
+        else if(Math.abs(velocity) > this.options.velThreshold) {
+         
+            if(velocity < 0) {
+                this.slideLeft();
+            } else {
+                this.slideRight();
+            }
+        }
+        else{
+            //return it
+            this.mainViewPos.set(0);
+        }
+    }//end function
+
+
+    Resume.prototype.slideLeft = function(){
+        console.log('slideLeft');
+        this.mainViewPos.set(0);
+        this.cardIndex.main = 0;
+    }
+
+    Resume.prototype.slideRight = function(){
+        console.log('slideRight');
+        this.mainViewPos.set(0);
+        this.cardIndex.main = 0;
     }
 
     Resume.prototype.render = function() {
