@@ -4,6 +4,8 @@ define(function(require, exports, module) {
         //includes Famous
         var Engine = require('famous/Engine');
         var ContainerSurface = require('famous/ContainerSurface');
+        var Modifier = require("famous/Modifier");
+        var Matrix = require("famous/Matrix");
      
         //includes Physics
         var PhysicsEngine = require('famous-physics/PhysicsEngine');
@@ -22,7 +24,7 @@ define(function(require, exports, module) {
         //initiate the physics engine
         var physicsEngine = new PhysicsEngine({numConstraints : 4});
 
-        var game = new Game(mainCtx, physicsEngine);
+        var game = new Game(physicsEngine);
     
         game.init();
 
@@ -31,6 +33,14 @@ define(function(require, exports, module) {
         Engine.on('keydown', function(){game.handleClicks();});
 
         game.on('restart', main);
+
+        var scaleX = window.innerHeight / 960;
+        var scaleY = window.innerWidth / 640;
+        var scale = Math.min(scaleX, scaleY);
+        mainCtx.add(new Modifier({
+            origin : [.5,.5],
+            transform: Matrix.scale(scale,scale,1)
+        })).add(game);
 
     };
 

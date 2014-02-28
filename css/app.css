@@ -13,7 +13,6 @@ body{
     font-family: 'flapyBird' !important;
 }
 .startup, .gameOver, .scorer, .getReady{
-    z-index: 1000;
     text-align: center;
     color:white;
 }
@@ -96,16 +95,13 @@ button{
     background-image: url('/content/images/background.png');
     background-position: center 532px;
     background-repeat:no-repeat;
-    z-index: -1;
     overflow:hidden;
 }
 
 .gameOverFlash{
     background-color: white;
-    z-index:-1;
 }
 .gameOverFlashActive{
-    z-index: 1000;
 }
 
 /*------The birdie-------*/
@@ -115,7 +111,6 @@ button{
     background-attachment: fixed;
     overflow: hidden;
     background-repeat:no-repeat;
-    z-index:10;
 }
 .birdie-down{
     background-position: -79px top;
@@ -132,15 +127,12 @@ button{
     background-size: 128 256px;
     overflow: hidden;
     background-repeat:no-repeat;
-    z-index:-1;
 }
 .cloud-type-0{
     background-position: 0px 0px;
-    z-index:20;
 }
 .cloud-type-1{
     background-position: 0px -64px;
-    z-index:20;
 }
 .cloud-type-2{
     background-position: 0px -128px;
@@ -157,7 +149,6 @@ button{
     background-size: cover;
     overflow: hidden;
     background-repeat:no-repeat;
-    z-index:1;
 }
 
 
@@ -168,7 +159,6 @@ button{
     background-size: 128 41;
     overflow: hidden;
     background-repeat:repeat-x;
-    z-index:0;
     font-family: 'terminal';
     color: rgba(255,255,255,.4);
     font-size:20px;
@@ -197,7 +187,6 @@ button{
 
 /*------Scorer---------*/
 .scorer{
-    z-index:100;
 }
 
 
