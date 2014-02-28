@@ -1,5 +1,5 @@
 @font-face{
-    font-family: flapyBird;
+    font-family: flappyBird;
     src: url(/content/font/04B_19__.TTF);
 }
 @font-face {
@@ -18,7 +18,6 @@ body{
 .startup, .gameOver, .scorer, .getReady{
     text-align: center;
     color:white;
-    font-family: 'flappyBird' !important;
 }
 .startup h1, .scorer h1, .gameOver h1, .gameOver h3, .getReady h1{
     text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
@@ -100,6 +99,7 @@ button{
     background-position: center 532px;
     background-repeat:no-repeat;
     overflow:hidden;
+    font-family: 'flappyBird' !important;
 }
 
 .gameOverFlash{

@@ -99,10 +99,12 @@ define(function(require, exports, module) {
         var initFloor = new Floor({initPos:400});
         initFloor.attachToPhysics(this.physicsEngine);
 
+
+
         var me = this;
-        this.eventInput.on("keyup", function(){me.handleClicks();});
-        this.eventInput.on("click", function(){me.handleClicks();});
-        this.eventInput.on("touchstart", function(){me.handleClicks();});
+        this.surface.on("keyup", function(){me.handleClicks();});
+        this.surface.on("click", function(){me.handleClicks();});
+        this.surface.on("touchstart", function(){me.handleClicks();});
 
         this.init();
     };//end class
@@ -231,7 +233,7 @@ define(function(require, exports, module) {
     };//end method
 
     var spawnPipes = function(game){
-        if(!this.ended){
+        if(!game.ended){
             var pipe = new Pipe({id:game.pipeCounter});
             var pipeParticles = pipe.attachToPhysics(game.physicsEngine);
 

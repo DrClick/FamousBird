@@ -23,11 +23,12 @@ define(function(require, exports, module) {
             properties: {
                 backgroundColor: 'pink'
             },
-            content: "<h1>Boring</h1>"
+            content: "<h1>Boring</h1>",
+            classes: ["boring"]
         });
 
         this.modifier = new Modifier({
-            transform: Matrix.translate(0,0,1),
+            transform: Matrix.translate(0,0,0),
             origin: [.5,0]
         });
 

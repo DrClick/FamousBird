@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var View            = require("famous/View");
     var GenericSync     = require('famous-sync/GenericSync');
     var Transitionable  = require('famous/Transitionable');
-
+    var Timer = require("famous-utils/Time");
 
     //App
     var MainView        = require("app/views/Main");
@@ -20,7 +20,8 @@ define(function(require, exports, module) {
     function Resume() {
         View.apply(this, arguments);
 
-        var me = this;
+        this.cardIndex = {main:3, game:2, boring: 1};
+
         _createPageView.call(this);
         _createGameView.call(this);
         _createBoringView.call(this);
@@ -33,6 +34,7 @@ define(function(require, exports, module) {
     Resume.DEFAULT_OPTIONS = {};
 
     function _createPageView() {
+        this.mainViewPos = new Transitionable(0);
         this.mainView = new MainView();
         this.mainMod = new Modifier({
             transform: Matrix.translate(0, 0, 3)
@@ -57,22 +59,52 @@ define(function(require, exports, module) {
 
     function _handleTouch() {
 
-        this.mainViewPos = 0;
+        
 
         this.sync = new GenericSync(function() {
-            return this.mainViewPos;
+            return this.mainViewPos.get(0);
         }.bind(this), {direction: GenericSync.DIRECTION_X});
 
         this.mainView.pipe(this.sync);
         
-        this.sync.on('update', function(data) {
-            console.log(data);
-            this.mainViewPos = data.p;
-            this.mainMod.setTransform(Matrix.translate(data.p, 0, 3));
-
-            
-        }.bind(this));
+        this.sync.on('update', _slideCards.bind(this));
     }
+
+    function _slideCards(data){
+        console.log(data);
+        this.mainViewPos.set(data.p);
+
+        //change what card is visible
+        this.cardIndex.boring = (data.p >= 0) ? 2: 1;
+        this.cardIndex.game = (data.p < 0) ? 2: 1;
+
+
+        if(data.v >2){
+            console.log("swipe right");
+            this.cardIndex.main = 0;
+        }
+    }
+
+    Resume.prototype.render = function() {
+        this.spec = [];
+
+        this.spec.push({
+            transform: Matrix.translate(0, 0, this.cardIndex.game),
+            target: this.gameView.render()
+        });
+
+        this.spec.push({
+            transform: Matrix.translate(0, 0, this.cardIndex.boring),
+            target: this.boringView.render()
+        });
+
+        this.spec.push({
+            transform: Matrix.translate(this.mainViewPos.get(), 0, this.cardIndex.main),
+            target: this.mainView.render()
+        });
+
+        return this.spec;
+    };
 
 
     module.exports = Resume;
