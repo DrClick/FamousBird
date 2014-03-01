@@ -125,8 +125,8 @@ define(function(require, exports, module) {
 
     Game.prototype.init = function(){
         var me = this;
-        spawn(me);
         showWelcomeScreen(me);
+        spawn(me);
     };
 
     Game.prototype.start = function(){
@@ -266,8 +266,7 @@ define(function(require, exports, module) {
     var cleanupObjects = function(physicsEngine){
         var numParticles = physicsEngine._particles.length;
 
-        //TODO: maybe I need to detatch gravity from these too. Check on this
-        for (var i = physicsEngine._particles.length - 50; i >= 1; i--) {
+        for (var i = physicsEngine._particles.length - 50; i >= 2; i--) {
             physicsEngine.remove(physicsEngine._particles[i]);
         };
         
