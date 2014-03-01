@@ -71,7 +71,10 @@ define(function(require, exports, module) {
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
             size : this.opts.boardSize,
-            classes: ["game"]
+            classes: ["game"],
+            properties: {
+                border: "2px solid black"
+            }
         });
 
         this.modifier = new Modifier({
