@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
 
         //create the views
-        _createPageView.call(this);
+        _createMainView.call(this);
         _createGameView.call(this);
         _createBoringView.call(this);
         _handleTouch.call(this);
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
         velThreshold: 0.75
     };
 
-    function _createPageView() {
+    function _createMainView() {
         this.mainViewPos = new Transitionable(0);
         this.topCardPos = this.mainViewPos;
 
