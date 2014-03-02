@@ -266,7 +266,7 @@ define(function(require, exports, module) {
     var cleanupObjects = function(physicsEngine){
         var numParticles = physicsEngine._particles.length;
 
-        for (var i = physicsEngine._particles.length - 50; i >= 2; i--) {
+        for (var i = physicsEngine._particles.length - 30; i >= 3; i--) {
             physicsEngine.remove(physicsEngine._particles[i]);
         };
         

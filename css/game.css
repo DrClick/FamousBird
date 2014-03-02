@@ -1,82 +1,3 @@
-@font-face{
-    font-family: 'flappyBird';
-    src: url(/content/font/04B_19__.TTF);
-}
-@font-face {
-  font-family: 'terminal';
-  font-style: normal;
-  font-weight: 400;
-  src: url(/content/font/terminal.woff) format('woff');
-}
-body{
-    background : rgba(0,0,0,1);
-    font-family: 'lato' !important;
-    font-weight: 300;
-    color: gainsboro;
-    font-size:40px;
-}
-
-.main{
-    overflow: hidden;
-}
-
-.slide{
-    text-align: center;
-}
-.slide h1{
-    font-weight: 100;
-    font-size:200px;
-}
-.slide h2{
-    font-weight: 300;
-    font-size:100px;
-}
-.slide h3{
-    font-weight: 300;
-    font-size:90px;
-}
-.slide p{
-    font-weight: 300;
-    font-size:80px;
-}
-.slide .small{
-    font-weight: 300;
-    font-size:60px;
-}
-
-.slide .super-small{
-    font-weight: 300;
-    font-size:55px;
-}
-.slide .bullet{
-    position:absolute;
-    left: -200px;
-    top: -200px;
-    font-size: 800px;
-    font-weight: 400;
-    opacity: .2;
-}
-.slide .pink{
-    color:pink;
-}
-.slide .emphasis{
-    color: red;
-}
-.slide .bring{
-    position:absolute;
-    left: -50px;
-    top: -80px;
-    font-size: 230px;
-    font-weight: 400;
-    opacity: .3;
-}
-.slide ul, .slide li{
-    list-style: none;
-    font-weight: 300;
-    font-size:80px;
-    white-space: nowrap;
-}
-
 
 .game{
     background-color:#6dc6d0;
@@ -86,8 +7,6 @@ body{
     overflow:hidden;
     font-family: 'flappyBird' !important;
 }
-
-
 
 .startup, .gameOver, .scorer, .getReady{
     text-align: center;
@@ -132,7 +51,6 @@ body{
 }
 .finalScore .currentScore, .finalScore .highScore, .finalScore .medal{
     position: absolute;
-    font-family: 'flappyBird';
 }
 
 .finalScore .currentScore{
@@ -257,14 +175,4 @@ button{
 
 /*------Scorer---------*/
 .scorer{
-}
-
-
-/*------Utils---------*/
-.unselectable{
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    -o-user-select: none;
-    user-select: none;  
 }
