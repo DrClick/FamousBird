@@ -88,7 +88,7 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.show = function(){
-        this.modifier.setTransform(Matrix.translate(0,0,this.opts.zPos), {}, function(){
+        this.modifier.setTransform(Matrix.translate(this.opts.position[0],this.opts.position[1],this.opts.zPos), {}, function(){
             this.modifier.setOpacity(1, {duration: 100});
             this.visible = true;
         }.bind(this));//hides the buttons
