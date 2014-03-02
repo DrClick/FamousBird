@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-            transform: Matrix.rotateZ(0),
+            transform: Matrix.multiply(Matrix.rotateZ(0), Matrix.translate(0,0,10)),
             origin: [0.5, 0.5]
         });
 
