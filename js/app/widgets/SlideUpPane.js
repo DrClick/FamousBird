@@ -5,6 +5,7 @@ define(function(require, exports, module) {
 	var Modifier = require('famous/Modifier');
     var Surface = require('famous/Surface');
 	var ContainerSurface = require('famous/ContainerSurface');
+    var View = require("famous/View");
 	
 	//Transitions
     var Transitionable = require('famous/Transitionable');
@@ -14,48 +15,47 @@ define(function(require, exports, module) {
     Transitionable.registerMethod('spring', SpringTransition);
 
 
-	function SlideUpPane(view, opts){
-		this.opts = {
-			classes 	: [],
-			content 	: null,
-			visible 	: false,
-			origin		: [.5,.5],
-			size		: [300,300]
-		};
-		if (opts) this.setOpts(opts);
+	function SlideUpPane(view, options){
+        View.apply(this, [options]);
 
+		_create.call(this, view);
+	};
+    SlideUpPane.prototype = Object.create(View.prototype);
+    SlideUpPane.prototype.constructor = SlideUpPane;
+    SlideUpPane.DEFAULT_OPTIONS = {
+        classes     : [],
+        content     : null,
+        visible     : false,
+        origin      : [.5,.5],
+        size        : [300,300]
+    };
 
-		this.surface = new ContainerSurface({
-			size : this.opts.size,
-		});
-		
-		this.spring = {
+    function _create(view){
+        this.surface = new ContainerSurface({
+            size : this.options.size,
+        });
+        
+        this.spring = {
             method: 'spring',
             period: 300,
             dampingRatio: .5
         };
 
-
         this.modifier = new Modifier({
-        		transform: Matrix.translate(0,500,0),
-        		origin: [0.5, 0.5],
+                transform: Matrix.translate(0,500,0),
+                origin: [0.5, 0.5],
                 opacity: 0
         });
 
         view._add(this.modifier).link(this.surface);
 
 
+        this.surface.pipe(this.eventOutput);
         this.surface.add(new Modifier({origin:[.5,.5]})).link(new Surface({
-            classes : ['unselectable'].concat(this.opts.classes),
-            content: this.opts.content
+            classes : ['unselectable'].concat(this.options.classes),
+            content: this.options.content
         }));
-
-	};
-
-	SlideUpPane.prototype.setOpts = function(opts){
-		for (var key in opts) this.opts[key] = opts[key];
-    };//end method
-
+    }//end create
 
     SlideUpPane.prototype.hide = function(){
     	this.modifier.setOpacity(0, {duration: 400});
@@ -70,15 +70,19 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.render = function(){
+        var spec = [];
+
         // return startupSurface.render();
         if(this.visible){
-        	return {
+        	spec.push({
         		transform : this.modifier.getTransform(),
         		target : this.surface.render(),
         		origin : this.modifier.getOrigin(),
         		opacity : this.modifier.getOpacity()
-        	};
+        	});
         }//end if visible
+
+        return spec;
     };//end method
 
     module.exports = SlideUpPane;

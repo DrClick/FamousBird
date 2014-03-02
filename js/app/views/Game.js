@@ -336,25 +336,27 @@ define(function(require, exports, module) {
 
         var scoreSurface = new Surface({
             content: "<h1>0</h1>",
+            size: [100,50],
             classes: ["scorer"]
         });
         var scoreModifier = new Modifier({
-            transform: Matrix.translate(180,40,50),
+            transform: Matrix.translate(180,-60,50),
             origin: [.5,.5]
         });
 
         var highScoreSurface = new Surface({
             content: "<h1>999</h1>",
+            size: [100,50],
             classes: ["scorer"]
         });
         var highScoreModifier = new Modifier({
-            transform: Matrix.translate(180,140,50),
+            transform: Matrix.translate(180,40,50),
             origin: [.5,.5]
         });
 
 
         //make sure draggable events on these views are piped up
-        //game.panes.ready.gameOver(game.eventOutput);
+        game.panes.gameOver.pipe(game.eventOutput);
         game.panes.gameOverButtons.pipe(game.eventOutput);
 
         //display the score pane
