@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 			origin		: [.5,.5],
             position    : [0,150,0],
 			size		: [600,100],
+            zPos        : 0,
             buttons     : []
 		};
 		if (opts) this.setOpts(opts);
@@ -87,8 +88,10 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.show = function(){
-    	this.modifier.setOpacity(1, {duration: 100});
-    	this.visible = true;
+        this.modifier.setTransform(Matrix.translate(0,0,this.opts.zPos), {}, function(){
+            this.modifier.setOpacity(1, {duration: 100});
+            this.visible = true;
+        }.bind(this));//hides the buttons
     };//end method
 
     ButtonPane.prototype.render = function(){
