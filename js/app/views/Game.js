@@ -301,7 +301,7 @@ define(function(require, exports, module) {
 
         //make sure draggable events on these views are piped up
         game.panes.welcome.pipe(game.eventOutput);
-        //game.panes.welcomeButtons.pipe(game.eventOutput);
+        game.panes.welcomeButtons.pipe(game.eventOutput);
     };
 
     var showGetReadyScreen = function(game){
@@ -355,7 +355,7 @@ define(function(require, exports, module) {
 
         //make sure draggable events on these views are piped up
         //game.panes.ready.gameOver(game.eventOutput);
-        //game.panes.ready.gameOverButtons(game.eventOutput);
+        game.panes.gameOverButtons.pipe(game.eventOutput);
 
         //display the score pane
         Timer.setTimeout(function(){

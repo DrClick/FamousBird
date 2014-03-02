@@ -6,45 +6,51 @@ define(function(require, exports, module) {
 	var Surface = require('famous/Surface');
     var ContainerSurface = require('famous/ContainerSurface');
     var Modifier = require('famous/Modifier');
+	var View = require("famous/View");
 	
-	
 
-	function ButtonPane(view, opts){
-		this.opts = {
-			classes 	: [],
-			visible 	: false,
-			origin		: [.5,.5],
-            position    : [0,150,0],
-			size		: [600,100],
-            zPos        : 0,
-            buttons     : []
-		};
-		if (opts) this.setOpts(opts);
+	function ButtonPane(view, options){
+        View.apply(this, [options]);
+
+		_create.call(this, view);     
+	}
+    ButtonPane.prototype = Object.create(View.prototype);
+    ButtonPane.prototype.constructor = ButtonPane;
+    ButtonPane.DEFAULT_OPTIONS = {
+        classes     : [],
+        visible     : false,
+        origin      : [.5,.5],
+        position    : [0,150,0],
+        size        : [600,100],
+        zPos        : 0,
+        buttons     : []
+    };
 
 
-		this.surface = new ContainerSurface({
-			size : this.opts.size,
-			classes : ['unselectable'].concat(this.opts.classes)
-		});
+    function _create(view){
+        this.surface = new ContainerSurface({
+            size : this.options.size,
+            classes : ['unselectable'].concat(this.options.classes)
+        });
 
         this.modifier = new Modifier({
-        		transform: Matrix.translate(this.opts.position[0], this.opts.position[1], this.opts.position[2]),
-        		origin: [0.5, 0.5],
+                transform: Matrix.translate(this.options.position[0], this.options.position[1], this.options.position[2]),
+                origin: [0.5, 0.5],
                 opacity: 0
-        	}
+            }
         );
 
         view._add(this.modifier).link(this.surface);
+        this.surface.pipe(this.eventOutput);
 
-        //build the buttons
-        for (var i = 0; i < this.opts.buttons.length; i++) {
-            this.buildButtons(this.opts.buttons[i]);
-        };
         
-	}
+        //build the buttons
+        for (var i = 0; i < this.options.buttons.length; i++) {
+            _buildButtons.call(this, this.options.buttons[i]);
+        };
+    }
 
-
-    ButtonPane.prototype.buildButtons = function(button){
+    function _buildButtons(button){
         
         var buttonSurface = new Surface({
             size: [130,40],
@@ -68,19 +74,10 @@ define(function(require, exports, module) {
         //add the button
         this.surface.add(buttonModifier).link(buttonSurface);
         
-    };//end method
-
-
-
-
-
-	ButtonPane.prototype.setOpts = function(opts){
-		for (var key in opts) this.opts[key] = opts[key];
-    };//end method
+    }//end build buttons
 
 
     ButtonPane.prototype.hide = function(){
-    	var me = this;
         this.visible = false;
     	this.modifier.setOpacity(0, {duration: 100}, function(){
             this.modifier.setTransform(Matrix.translate(0,0,-1));//hides the buttons
@@ -88,23 +85,30 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.show = function(){
-        this.modifier.setTransform(Matrix.translate(this.opts.position[0],this.opts.position[1],this.opts.zPos), {}, function(){
-            this.modifier.setOpacity(1, {duration: 100});
-            this.visible = true;
-        }.bind(this));//hides the buttons
+        this.modifier.setTransform(
+            Matrix.translate(this.options.position[0],this.options.position[1],this.options.zPos), 
+            {}, 
+            function(){
+                this.modifier.setOpacity(1, {duration: 100});
+                this.visible = true;
+            }.bind(this)
+        );//hides the buttons
     };//end method
 
     ButtonPane.prototype.render = function(){
+        var spec = [];
         // return startupSurface.render();
         if(this.visible){
-        	return {
+        	spec.push({
         		transform : this.modifier.getTransform(),
         		target : this.surface.render(),
         		origin : this.modifier.getOrigin(),
         		opacity : this.modifier.getOpacity()
-        	};
+        	});
         }//end if visible
-    };//end method
+
+        return spec;
+    };//end render
 
     module.exports = ButtonPane;
 });
