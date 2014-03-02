@@ -33,7 +33,7 @@ define(function(require, exports, module) {
                     shape : physicsEngine.BODIES.RECTANGLE,
                     m : 0,
                     size : [128*12, 265],
-                    p : [this.opts.initPos, 372 , 0],
+                    p : [this.opts.initPos, 372 , 1],
                     v : [this.opts.velocity,0,0]
         });
 
