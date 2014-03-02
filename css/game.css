@@ -5,7 +5,7 @@
     background-position: center 532px;
     background-repeat:no-repeat;
     overflow:hidden;
-    font-family: 'flappyBird' !important;
+    font-family: 'flappyBird';
 }
 
 .startup, .gameOver, .scorer, .getReady{
@@ -16,6 +16,7 @@
     text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
     line-height: 1.1em;
     font-size:50px;
+    font-family: 'flappyBird';
 }
 .startup p{
     margin-top:250px;
@@ -172,7 +173,3 @@ button{
     /*margin-top:20px;*/
 }
 
-
-/*------Scorer---------*/
-.scorer{
-}
