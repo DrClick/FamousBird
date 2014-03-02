@@ -21,7 +21,8 @@ define(function(require, exports, module) {
         this.surface = new Surface({
             size: [640, 960],
             properties: {
-                backgroundColor: 'pink'
+                backgroundColor: 'pink',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
             },
             content: "<h1>Boring</h1>",
             classes: ["boring"]

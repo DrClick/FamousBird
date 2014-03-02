@@ -151,22 +151,29 @@ define(function(require, exports, module) {
 
         this.spec.push({
             transform: Matrix.translate(this.gameViewPos.get(), 0, this.cardIndex.game),
+            opacity: _getOpacityOfCard(this.gameViewPos.get()),
             target: this.gameView.render()
         });
 
         this.spec.push({
             transform: Matrix.translate(this.boringViewPos.get(), 0, this.cardIndex.boring),
+            opacity: _getOpacityOfCard(this.boringViewPos.get()),
             target: this.boringView.render()
         });
 
         this.spec.push({
             transform: Matrix.translate(this.mainViewPos.get(), 0, this.cardIndex.main),
+            opacity: _getOpacityOfCard(this.mainViewPos.get()),
             target: this.mainView.render()
         });
 
         return this.spec;
     };
 
+
+    function _getOpacityOfCard(pos){
+        return 1/(Math.abs(pos)/640 + 1);
+    }
 
     module.exports = Resume;
 });

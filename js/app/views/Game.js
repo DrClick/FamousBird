@@ -73,7 +73,8 @@ define(function(require, exports, module) {
             size : this.opts.boardSize,
             classes: ["game"],
             properties: {
-                border: "2px solid black"
+                border: "2px solid black",
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
             }
         });
 
