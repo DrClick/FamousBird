@@ -15,10 +15,10 @@ define(function(require, exports, module) {
     Transitionable.registerMethod('spring', SpringTransition);
 
 
-	function SlideUpPane(view, options){
+	function SlideUpPane(node, options){
         View.apply(this, [options]);
 
-		_create.call(this, view);
+		_create.call(this, node);
 	};
     SlideUpPane.prototype = Object.create(View.prototype);
     SlideUpPane.prototype.constructor = SlideUpPane;
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
         size        : [300,300]
     };
 
-    function _create(view){
+    function _create(node){
         this.surface = new ContainerSurface({
             size : this.options.size,
         });
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
                 opacity: 0
         });
 
-        view._add(this.modifier).link(this.surface);
+        node.add(this.modifier).link(this.surface);
 
 
         this.surface.pipe(this.eventOutput);
@@ -63,7 +63,7 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.show = function(){
-    	this.modifier.setTransform(Matrix.translate(0,-50,0), this.spring);
+    	this.modifier.setTransform(Matrix.translate(0,-50,1), this.spring);
     	this.modifier.setOpacity(1, {duration:200});
 
     	this.visible = true;

@@ -41,20 +41,25 @@ define(function(require, exports, module) {
 
     Transitionable.registerMethod("spring", SpringTransition);
 
-    function Game(opts){
+    function Game(){
         View.apply(this, arguments);
 
-        if(!opts) opts = {};
-        this.opts = {
-            gravityStrength     : .002,
-            boardSize           : [640,960],
-            pipeSpawnTime       : 1000,
-            cloudSpawnTime      : 1000
-        };
-        if (opts) this.setOpts(opts);
+        _create.call(this);
+        _init.call(this);
 
+    };//end class
+    Game.prototype = Object.create(View.prototype); 
+    Game.prototype.constructor=Game; 
+    Game.DEFAULT_OPTIONS = {
+        gravityStrength     : .002,
+        boardSize           : [640,960],
+        pipeSpawnTime       : 1000,
+        cloudSpawnTime      : 1000,
+        gameVelocity        : 1
+    };
 
-        //Properties
+    function _create(){
+        this.visible        = true;
         this.started        = false;
         this.ended          = false;
         this.scorer         = null;
@@ -64,13 +69,13 @@ define(function(require, exports, module) {
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
         this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
         this.node           = new RenderNode();
-        this.physicsEngine  = new PhysicsEngine({numConstraints : 4});
+        this.physicsEngine = new PhysicsEngine({numConstraints: 4});
 
         this.birdie         = new Birdie(this.physicsEngine);
 
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
-            size : this.opts.boardSize,
+            size : this.options.boardSize,
             classes: ["game"],
             properties: {
                 border: "2px solid black",
@@ -83,16 +88,14 @@ define(function(require, exports, module) {
             origin: [.5,0]
         });
         
-        //note node is part of the base view
-       
-        
+        //add the surface to the view and the physics to the surface
         this._add(this.modifier).link(this.surface);
         this.surface.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({
             name : VectorField.FIELDS.CONSTANT, 
-            strength : this.opts.gravityStrength
+            strength : this.options.gravityStrength
         });
 
         //create the initial floor
@@ -100,55 +103,37 @@ define(function(require, exports, module) {
         initFloor.attachToPhysics(this.physicsEngine);
 
 
-
-        var me = this;
+        //pipe events up and handle clicks
         this.surface.pipe(this.eventOutput);
-        this.surface.on("keyup", function(){me.handleClicks();});
-        this.surface.on("click", function(){me.handleClicks();});
-        this.surface.on("touchstart", function(){me.handleClicks();});
-
-        this.init();
-    };//end class
-    Game.prototype = Object.create(View.prototype); 
-    Game.prototype.constructor=Game; 
+        this.surface.on("keyup", _handleClicks.bind(this));
+        this.surface.on("click", _handleClicks.bind(this));
+        this.surface.on("touchstart", _handleClicks.bind(this));
+    }//end create
 
 
+    function _init(){ 
+        _showWelcomeScreen.call(this);
+        _spawn.call(this);
+    }//end init
 
+    function _start(){
 
-    Game.prototype.setOpts = function(opts){
-        for (var key in opts) this.opts[key] = opts[key];
-    };//end method
-
-    Surface.prototype.on = function(type, fn) {
-        if(this._currTarget) this._currTarget.addEventListener(type, this.eventForwarder);
-        this.eventHandler.on(type, fn);
-    };
-
-    Game.prototype.init = function(){
-        var me = this;
-        showWelcomeScreen(me);
-        spawn(me);
-    };
-
-    Game.prototype.start = function(){
-        var me = this;
-
-        me.started = true;
-        me.ended = false;
+        this.started = true;
+        this.ended = false;
         
         //get the UI in the correct state
-        me.panes.welcome.hide();
-        me.panes.welcomeButtons.hide();
-        me.panes.ready.hide();
+        this.panes.welcome.hide();
+        this.panes.welcomeButtons.hide();
+        this.panes.ready.hide();
 
-        me.scorer = new Score();
-        me.scorer.attachToPhysics(me.physicsEngine);
+        this.scorer = new Score();
+        this.scorer.attachToPhysics(this.physicsEngine);
 
-        me.timers.pipes = Timer.setInterval(function(){spawnPipes(me);},1000);
+        this.timers.pipes = Timer.setInterval(_spawnPipes.bind(this),1000);
         
 
         //attach forces to physics
-        me.physicsEngine.attach([this.gravity]);
+        this.physicsEngine.attach([this.gravity]);
 
         //create a wall to cover the floor
         var wall = new Wall({
@@ -159,50 +144,54 @@ define(function(require, exports, module) {
 
         //attatch the wall and look for collisions with the birdie
         this.physicsEngine.attach(wall, this.birdie.particle);
-        wall.on("collision", function(){me.end();});
+        wall.on("collision", _end.bind(this));
 
         //let er fly!
         this.birdie.start();
-    };
+    }//end start
 
-    Game.prototype.restart = function(){
-        this.eventOutput.emit("restart");
-    };
+    function _restart(){
+        this.physicsEngine = null;
+        this.surface = null;
+        this.node.object = null;
 
-    Game.prototype.stop = function(){
+        _create.call(this);
+        _init.call(this);
+    }//end restart
+
+    function _stop(){
         this.birdie.stop();
 
         var len = this.physicsEngine._particles.length - 1;
         for (var i = len; i >= 0; i--) {
             this.physicsEngine._particles[i].v.x = 0;
         };
-    };//end method
+    };//end stop
 
 
-     //Bummer dude, game over
-    Game.prototype.end = function(){
+    function _end(){
+         //Bummer dude, game over
         if(!this.ended){
-            var me = this;
-            me.ended = true;
+            this.ended = true;
             
             //clean up timers
-            Timer.removeInterval(me.timers.pipes);
-            Timer.removeInterval(me.timers.floor);
-            Timer.removeInterval(me.timers.clouds);
+            Timer.removeInterval(this.timers.pipes);
+            Timer.removeInterval(this.timers.floor);
+            Timer.removeInterval(this.timers.clouds);
 
             //stop everything moving
-            me.stop();
+            _stop.call(this);
 
             //flash and shake the screen
-            Doooooh(me);
+            _doooooh.call(this);
 
             //show the game over screen
-            showGameOverScreen(me);
+            _showGameOverScreen.call(this);
         }//end if game playing
-    };//end method
+    }//end end
 
 
-    Game.prototype.incrementScore = function(data){
+    function _incrementScore(data){
         //read the score from the pipe
         var score = data.target.node.object.content;
 
@@ -215,13 +204,12 @@ define(function(require, exports, module) {
     };//end method
 
 
-    Game.prototype.handleClicks = function(evt){
+    function _handleClicks(evt){
+        evt.stopPropagation();//dont want to pass these up
         
         if (!this.ended && this.started){
-            console.log("click!!!")
             //fly little birdie fly 
             this.birdie.flap();
-
         }//end if playing
     };//end method
 
@@ -230,111 +218,136 @@ define(function(require, exports, module) {
 
 
     //DO THIS NEXT - EXTRACT SPAWN CLASS
-    var spawnClouds = function(game){
-        if(!game.ended){
+    function _spawnClouds(){
+        if(!this.ended){
             var cloud = new Cloud();
-            cloud.attachToPhysics(game.physicsEngine);
+            cloud.attachToPhysics(this.physicsEngine);
         }//end if game not ended
     };//end method
 
-    var spawnPipes = function(game){
-        if(!game.ended){
-            var pipe = new Pipe({id:game.pipeCounter});
-            var pipeParticles = pipe.attachToPhysics(game.physicsEngine);
+    function _spawnPipes(){
+        if(!this.ended){
+            var pipe = new Pipe({id:this.pipeCounter});
+            var pipeParticles = pipe.attachToPhysics(this.physicsEngine);
 
-            game.pipeCounter++;//increment pipe
+            this.pipeCounter++;//increment pipe
 
 
             //detects overlaps with pipes and the birdie
             var overlap = new Overlap();
-            overlap.on("hit", function(){game.end();});
-            game.physicsEngine.attach(overlap, pipeParticles, game.birdie.particle);
+            overlap.on("hit", _end.bind(this));
+            this.physicsEngine.attach(overlap, pipeParticles, this.birdie.particle);
 
             //detect overlaps with the upper pipe and the scorer
             var overlapScore = new Overlap();
-            overlapScore.on("hit", function(data){game.incrementScore(data);});
-            game.physicsEngine.attach(overlapScore, pipeParticles[0], game.scorer.particle);
+            overlapScore.on("hit", function(data){
+                _incrementScore.call(this, data);
+            }.bind(this));
+            this.physicsEngine.attach(overlapScore, pipeParticles[0], this.scorer.particle);
         }//end if game not over
     };//end method
 
-    var spawnFloor = function(game){
-        if(!game.ended){
+    function _spawnFloor(){
+        if(!this.ended){
             var floor = new Floor();
-            var floorParticle = floor.attachToPhysics(game.physicsEngine);
+            var floorParticle = floor.attachToPhysics(this.physicsEngine);
         }//end if not game over
     };//end method
 
-    var cleanupObjects = function(physicsEngine){
-        var numParticles = physicsEngine._particles.length;
 
-        for (var i = physicsEngine._particles.length - 30; i >= 3; i--) {
-            physicsEngine.remove(physicsEngine._particles[i]);
-        };
+
+
+    // var cleanupObjects = function(physicsEngine){
+    //     var numParticles = physicsEngine._particles.length;
+
+    //     for (var i = physicsEngine._particles.length - 30; i >= 3; i--) {
+    //         physicsEngine.remove(physicsEngine._particles[i]);
+    //     };
         
-    };//end method
+    // };//end method
 
-    var spawn = function(game){
+
+
+
+    function _spawn(){
         //Spawn the scene
-        game.timers.clouds  = Timer.setInterval(function(){spawnClouds(game);},1000);
-        game.timers.floor   = Timer.setInterval(function(){spawnFloor(game);},2000);
-        game.timers.clean   = Timer.setInterval(function(){cleanupObjects(game.physicsEngine);}, 2000);
-    };//end method
+        this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
+        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),2000);
+    }//end spawn
 
 
     
 
-    var showWelcomeScreen = function(game){
-        game.panes.welcome = new BouncyPane(game.physicsEngine, {
+    function  _showWelcomeScreen(){
+        this.panes.welcome = new BouncyPane(this.physicsEngine, {
             content: "<h1>Famous Bird</h1>",
             classes: ["startup"]
         })
-        game.panes.welcome.show();
+        this.panes.welcome.show();
 
-        game.panes.welcomeButtons = new ButtonPane(game, {
+        this.panes.welcomeButtons = new ButtonPane(this.surface, {
             buttons: [
-            {text: "START", callback: function(){showGetReadyScreen(game);}, offsetX: -120},
-            {text: "SCORES", callback: function(){showHighScores(game);}, offsetX: 120}
+                {text: "START", callback: _showGetReadyScreen.bind(this), offsetX: -120},
+                {text: "SCORES", callback: _showHighScores.bind(this), offsetX: 120}
             ]
         });
-        game.panes.welcomeButtons.show();
+        this.panes.welcomeButtons.show();
 
 
         //make sure draggable events on these views are piped up
-        game.panes.welcome.pipe(game.eventOutput);
-        game.panes.welcomeButtons.pipe(game.eventOutput);
+        this.panes.welcome.pipe(this.eventOutput);
+        this.panes.welcomeButtons.pipe(this.eventOutput);
     };
 
-    var showGetReadyScreen = function(game){
-        game.panes.welcome.hide();
-        game.panes.welcomeButtons.hide();
+    function _showGetReadyScreen(){
+        this.panes.welcome.hide();
+        this.panes.welcomeButtons.hide();
 
-        game.panes.ready = new BouncyPane(game.physicsEngine, {
+        this.panes.ready = new BouncyPane(this.physicsEngine, {
             content: "<h1>Get Ready</h1><p></p>",
             classes: ["getReady"]
         });
 
         //make sure draggable events on these views are piped up
-        game.panes.ready.pipe(game.eventOutput);
-        Timer.setTimeout(function(){game.start();}, 2000);
+        this.panes.ready.pipe(this.eventOutput);
+        Timer.setTimeout(_start.bind(this), 2000);
     };
 
-    var showGameOverScreen = function(game){
-        game.scorer.hide();
+    function _showGameOverScreen(){
+        this.scorer.hide();
 
-        game.panes.gameOver = new BouncyPane(game.physicsEngine, {
+        this.panes.gameOver = new BouncyPane(this.physicsEngine, {
             content: "<h1>Game Over</h1>",
             classes: ["gameOver"]
         });
-        game.panes.gameOver.show();
+        this.panes.gameOver.show();
 
-        game.panes.gameOverButtons = new ButtonPane(game, {
+        this.panes.gameOverButtons = new ButtonPane(this.surface, {
             buttons: [
-                {text: "OK", callback: function(){game.restart();}, offsetX: -120},
-                {text: "SHARE", callback: function(){share(game);}, offsetX: 120}
+                {text: "OK", callback: _restart.bind(this), offsetX: -120},
+                {text: "SHARE", callback: _share.bind(this), offsetX: 120}
             ]
         });
 
-        var scoreSurface = new Surface({
+        //make sure draggable events on these views are piped up
+        this.panes.gameOver.pipe(this.eventOutput);
+        this.panes.gameOverButtons.pipe(this.eventOutput);
+
+        //display the score pane
+        AppUtils.loadFragment(
+            "/fragments/finalScore.html", 
+            {score:1, highScore:999},
+            _createFinalScorePane.bind(this)
+        );
+
+        //display the buttons pane
+        Timer.setTimeout(function(){
+            this.panes.gameOverButtons.show();
+        }.bind(this),300);
+    };//end function
+
+    function _createFinalScorePane(content){
+         var scoreSurface = new Surface({
             content: "<h1>0</h1>",
             size: [100,50],
             classes: ["scorer"]
@@ -355,56 +368,39 @@ define(function(require, exports, module) {
         });
 
 
-        //make sure draggable events on these views are piped up
-        game.panes.gameOver.pipe(game.eventOutput);
-        game.panes.gameOverButtons.pipe(game.eventOutput);
+        this.panes.finalScore = new SlideUpPane(this.surface,
+            {
+                size:[500,250],
+                content: content,
+                classes: ["finalScore"]
+            }
+        );
+        this.panes.finalScore.surface.add(scoreModifier).link(scoreSurface);
+        this.panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
+        this.panes.finalScore.show();
 
-        //display the score pane
-        Timer.setTimeout(function(){
-            AppUtils.loadFragment("/fragments/finalScore.html", 
-                {score:1, highScore:999},
-                function(frag){
-                    game.panes.finalScore = new SlideUpPane(game,
-                    {
-                        size:[500,250],
-                        content: frag,
-                        classes: ["finalScore"]
-                    });
-                    game.panes.finalScore.surface.add(scoreModifier).link(scoreSurface);
-                    game.panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
-                    game.panes.finalScore.show();
-                }
-                );
-
-            //start the score counting up
-            var scoreUpCounter = 0;
-            game.timers.counter = Timer.setInterval(function(){
-                scoreUpCounter++;
-                if(scoreUpCounter<= game.score){
-                    scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
-                }
-                else{
-                    Timer.removeInterval(game.timers.counter);
-                }
-            },40);
-
-        }, 300);
-
-        //display the buttons pane
-        Timer.setTimeout(function(){
-            game.panes.gameOverButtons.show();
-        },600);
-    };//end function
+        //start the score counting up
+        var scoreUpCounter = 0;
+        this.timers.counter = Timer.setInterval(function(){
+            scoreUpCounter++;
+            if(scoreUpCounter<= this.score){
+                scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
+            }
+            else{
+                Timer.removeInterval(this.timers.counter);
+            }
+        }.bind(this),40);
+    }//end create final score pane
 
 
-    var Doooooh = function(game){
+    function _doooooh(){
 
         AppUtils.playSound(Sounds.die);
 
 
         //create the game over flash surface
         var flashSurface = new Surface({
-            size : game.opts.boardSize,
+            size : this.options.boardSize,
             classes: ["gameOverFlash"]
         });
         var flashModifier = new Modifier({
@@ -413,7 +409,7 @@ define(function(require, exports, module) {
         });
 
         //add the flash screen
-        game._add(flashModifier).link(flashSurface);
+        this._add(flashModifier).link(flashSurface);
 
         
 
@@ -436,20 +432,41 @@ define(function(require, exports, module) {
 
         //in order to shake the screen, we displace it, then move it back using our spring
         //we do this so that it shake about the origin
-        game.modifier.setTransform(Matrix.translate(-10,-10,0));
-        game.modifier.setTransform(Matrix.translate(0,0,0),spring);
+        this.modifier.setTransform(Matrix.translate(-10,-10,0));
+        this.modifier.setTransform(Matrix.translate(0,0,0),spring);
 
     };//end method
 
 
-    var showHighScores = function(game){
+    function _showHighScores(){
         alert("Whoah! This agression will not stand man! This hasnt been implemented.");
     };
 
-    var share = function(game){
+    function _share(){
         alert("This is a private beta, no sharing for now.");
     };
 
+    Game.prototype.hide = function(){
+        this.visible = false;
+    };//end show
+    Game.prototype.show = function(){
+        this.visible = true;
+    };//end show
+
+    Game.prototype.render = function(){
+        var spec = [];
+        // return startupSurface.render();
+        if(this.visible){
+            spec.push({
+                transform : this.modifier.getTransform(),
+                target : this.surface.render(),
+                origin : this.modifier.getOrigin(),
+                opacity : this.modifier.getOpacity()
+            });
+        }//end if visible
+
+        return spec;
+    };//end render
   
     module.exports = Game;
 });

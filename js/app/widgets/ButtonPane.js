@@ -9,10 +9,10 @@ define(function(require, exports, module) {
 	var View = require("famous/View");
 	
 
-	function ButtonPane(view, options){
+	function ButtonPane(node, options){
         View.apply(this, [options]);
 
-		_create.call(this, view);     
+		_create.call(this, node);     
 	}
     ButtonPane.prototype = Object.create(View.prototype);
     ButtonPane.prototype.constructor = ButtonPane;
@@ -20,14 +20,13 @@ define(function(require, exports, module) {
         classes     : [],
         visible     : false,
         origin      : [.5,.5],
-        position    : [0,150,0],
+        position    : [0,150,10],
         size        : [600,100],
-        zPos        : 0,
         buttons     : []
     };
 
 
-    function _create(view){
+    function _create(node){
         this.surface = new ContainerSurface({
             size : this.options.size,
             classes : ['unselectable'].concat(this.options.classes)
@@ -40,7 +39,7 @@ define(function(require, exports, module) {
             }
         );
 
-        view._add(this.modifier).link(this.surface);
+        node.add(this.modifier).link(this.surface);
         this.surface.pipe(this.eventOutput);
 
         
@@ -58,7 +57,7 @@ define(function(require, exports, module) {
         });
 
         var buttonModifier = new Modifier({
-            transform: Matrix.translate(button.offsetX,0,0),
+            transform: Matrix.translate(button.offsetX,0,10),
             origin: [.5,.5]
         });
 
@@ -86,7 +85,7 @@ define(function(require, exports, module) {
 
     ButtonPane.prototype.show = function(){
         this.modifier.setTransform(
-            Matrix.translate(this.options.position[0],this.options.position[1],this.options.zPos), 
+            Matrix.translate(this.options.position[0],this.options.position[1],this.options.position[2]), 
             {}, 
             function(){
                 this.modifier.setOpacity(1, {duration: 100});
