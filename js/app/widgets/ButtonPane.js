@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         classes     : [],
         visible     : false,
         origin      : [.5,.5],
-        position    : [0,150,10],
+        position    : [0,150,2010],
         size        : [600,100],
         buttons     : []
     };
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
         });
 
         var buttonModifier = new Modifier({
-            transform: Matrix.translate(button.offsetX,0,10),
+            transform: Matrix.translate(button.offsetX,0,this.options.position[2]),
             origin: [.5,.5]
         });
 
