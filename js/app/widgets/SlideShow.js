@@ -20,7 +20,9 @@ define(function(require, exports, module) {
         origin: [.5,0],
         loop: false,
         autostart: true,
-        startDelay: 1000
+        startDelay: 1000,
+        controlsYOffset: 300,
+        controlOpacity: .3
     };
 
     function _create(){
@@ -34,7 +36,39 @@ define(function(require, exports, module) {
 
         this.currentSlide = this.options.startAt || 0;
         this.playing = false;
+
+        this.controls = {
+            restart: _createControl.call(this, {xPos: -280, control: "restart"}),
+            stop: _createControl.call(this, {xPos: -150, control: "stop"}),
+            backward: _createControl.call(this, {xPos: 0, control: "backward"}),
+            play: _createControl.call(this, {xPos: 150, control: "play"}),
+            forward: _createControl.call(this, {xPos: 280, control: "forward"})
+        };
+
+
+       
     }//end create
+
+    function _createControl(opts){
+
+        var modifier = new Modifier({
+                transform: Matrix.multiply(
+                    Matrix.translate(opts.xPos,this.options.controlsYOffset,1),
+                    Matrix.scale(1, 1, 0)),
+                opacity: this.options.controlOpacity,
+                origin: [.5, .5]
+        });
+
+        //add the cloud off screen
+        var surface = new Surface({
+            size : [80, 80],
+            classes : ["controls", "icon-slide-" + opts.control]
+        });
+
+        this._add(modifier).link(surface);
+
+        return surface;
+    }//end create controls
 
 
     SlideShow.prototype.start = function(){
