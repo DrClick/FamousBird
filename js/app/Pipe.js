@@ -9,7 +9,8 @@ define(function(require, exports, module) {
 
       
     /** @constructor */
-    function Pipe(physicsEngine, opts){
+    function Pipe(game, physicsEngine, opts){
+        this.game = game;
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);
@@ -73,6 +74,9 @@ define(function(require, exports, module) {
         //Render the Famous Surface from the particle
         this.particles[0].link(this.modifier).link(this.surfaces[0]);
         this.particles[1].link(this.surfaces[1]);
+
+        this.surfaces[0].pipe(this.game.surface);
+        this.surfaces[1].pipe(this.game.surface);
 
     }//end create
 

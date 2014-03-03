@@ -5,6 +5,11 @@ define(function(require, exports, module) {
         var Matrix = require("famous/Matrix");
         var Resume = require("app/views/Resume");
 
+        var Profiler = require('famous-performance/Profiler');
+        var ProfilerView = require('famous-performance/ProfilerView');
+    
+        Engine.pipe(Profiler);
+
         //instantiate a new resume        
         var resume = new Resume();
 
@@ -17,13 +22,18 @@ define(function(require, exports, module) {
         var scaleX = window.innerHeight / 960;
         var scaleY = window.innerWidth / 640;
         var scale = Math.min(scaleX, scaleY);
+        
+
+
+        context.add(new Modifier({
+            origin : [0,0],
+            transform: Matrix.translate(0,0,10)
+        })).link(ProfilerView);
+
         context.add(new Modifier({
             origin : [.5,.5],
             transform: Matrix.scale(scale,scale,1)
         })).link(resume);
-
-
-
         //That was easy!!!
 
 });

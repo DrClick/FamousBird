@@ -7,7 +7,8 @@ define(function(require, exports, module) {
 
       
     /** @constructor */
-    function Cloud(physicsEngine, opts){
+    function Cloud(game, physicsEngine, opts){
+        this.game = game;
         this.physicsEngine = physicsEngine;
         _init.call(this);
         _create.call(this);
@@ -51,10 +52,12 @@ define(function(require, exports, module) {
         //Render the Famous Surface from the particle
         this.particle.link(this.modifier).link(this.surface);
 
+        this.surface.pipe(this.game.surface);
+
     };
 
     Cloud.prototype.restart = function(){
-        this.particle.setPos([500, -Math.random() * 450, 0])
+        this.particle.setPos([500, -Math.random() * 450, 0]);
     };
 
 

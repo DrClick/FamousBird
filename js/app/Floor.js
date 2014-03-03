@@ -6,7 +6,8 @@ define(function(require, exports, module) {
 
   
     /** @constructor */
-    function Floor(physicsEngine, opts){
+    function Floor(game, physicsEngine, opts){
+        this.game = game;
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);
@@ -23,7 +24,7 @@ define(function(require, exports, module) {
     function _create(){
     	//add the floor off screen
         
-        this.surfaces = 
+        this.surface = 
             new Surface({
                 size    : [128*20, 215],
                 classes : ['floor']
@@ -44,9 +45,9 @@ define(function(require, exports, module) {
         });
 
         //Render the Famous Surface from the particle
-        this.particle.link(this.surfaces);
+        this.particle.link(this.surface);
 
-
+        this.surface.pipe(this.game.surface);
 
         //add collision
         return this.particle;
