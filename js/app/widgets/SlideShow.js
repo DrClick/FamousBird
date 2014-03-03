@@ -11,22 +11,30 @@ define(function(require, exports, module) {
     function SlideShow() {
         View.apply(this, arguments);
 
-        AppUtils.loadFragment("/fragments/SlideShowDef.js",{}, function(data){
-            this.slides = JSON.parse(data);
-            this.start();
-        }.bind(this));
-
-        this.currentSlide = this.options.startAt || 0;
-        this.playing = false;
-
+        _create.call(this);      
     }
     SlideShow.prototype = Object.create(View.prototype);
     SlideShow.prototype.constructor = SlideShow;
     SlideShow.DEFAULT_OPTIONS = {
         size: [600,500],
         origin: [.5,0],
-        loop: false
+        loop: false,
+        autostart: true,
+        startDelay: 1000
     };
+
+    function _create(){
+        AppUtils.loadFragment("/fragments/SlideShowDef.js",{}, function(data){
+            this.slides = JSON.parse(data);
+
+            if(this.options.autostart){
+                Timer.setTimeout(this.start.bind(this), this.options.startDelay);
+            }//end if autostart
+        }.bind(this));
+
+        this.currentSlide = this.options.startAt || 0;
+        this.playing = false;
+    }//end create
 
 
     SlideShow.prototype.start = function(){
@@ -69,11 +77,11 @@ define(function(require, exports, module) {
             this._add(modifier).link(surface);
 
             //animate it
-            modifier.setOpacity(1, {duration:300});
+            modifier.setOpacity(1, {duration:600});
 
             if(this.isPlaying && this.currentSlide < (this.slides.length - 1)){
                 Timer.setTimeout(function(){
-                    modifier.setOpacity(0, {duration:1000});
+                    modifier.setOpacity(0, {duration:300});
                     this.currentSlide++;
                     _showSlide.call(this, this.currentSlide);
                 }.bind(this), slide.duration);
