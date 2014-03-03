@@ -24,14 +24,13 @@ define(function(require, exports, module) {
 
   
     function _create(){
-    	this.transforms = [
+    	this.modifier =
             new Modifier({
-    	        transform: Matrix.translate(0,this.opts.yPos,0),
+    	        transform: Matrix.multiply(
+                    Matrix.translate(0,this.opts.yPos,0),
+                    Matrix.scale(this.opts.scale, this.opts.scale, 0)),
                 opacity: this.opts.opacity
-    	    }),
-            new Modifier({
-                transform: Matrix.scale(this.opts.scale, this.opts.scale, 0)
-            })];
+    	    });
 
 	    //add the cloud off screen
         this.surface = new Surface({
@@ -49,7 +48,7 @@ define(function(require, exports, module) {
         });
 
         //Render the Famous Surface from the particle
-        this.particle.link(this.transforms[0]).link(this.transforms[1]).link(this.surface);
+        this.particle.link(this.modifier).link(this.surface);
 
     };
 
