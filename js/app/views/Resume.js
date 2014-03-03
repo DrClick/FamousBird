@@ -98,7 +98,6 @@ define(function(require, exports, module) {
     }
 
     function _slideCards(data){
-        console.log(this.cardIndex);
         if(Math.abs(data.p)>5){//if its not just an accidental touch
             this.topCardPos.set(data.p);
         }

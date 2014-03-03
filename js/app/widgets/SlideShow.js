@@ -70,15 +70,14 @@ define(function(require, exports, module) {
     }//end create controls
 
     SlideShow.prototype.restart = function(){
-        this.isPlaying = true;
         this.currentSlide = 0;
-        _showSlide.call(this, this.currentSlide); 
+        this.start();
     };//end start
     
 
     SlideShow.prototype.start = function(){
         this.isPlaying = true;
-        this.controls.play.surface.setContent("");
+        this.controls.play.surface.setContent("");  
         this.controls.play.surface.setClasses(['icon-slide-pause']);
         _showSlide.call(this, this.currentSlide); 
     };//end start
@@ -101,13 +100,15 @@ define(function(require, exports, module) {
     };//end start
 
     SlideShow.prototype.forward = function(){
+        this.stop();
         var slideNum = (this.currentSlide + 1) % this.slides.length;
         this.currentSlide = slideNum;
         _showSlide.call(this, slideNum);
     };//end start
 
     SlideShow.prototype.back = function(){
-        var slideNum = (this.currentSlide - 1) % this.slides.length;
+        this.stop();
+        var slideNum = (this.currentSlide - 1) > 0 ? this.currentSlide -1 : this.slides.length -1;
         this.currentSlide = slideNum;
         _showSlide.call(this, slideNum);
     };//end start
