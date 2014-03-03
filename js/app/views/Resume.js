@@ -6,6 +6,8 @@ define(function(require, exports, module) {
     var Matrix          = require("famous/Matrix");
     var View            = require("famous/View");
     var GenericSync     = require('famous-sync/GenericSync');
+    var MouseSync       = require("famous-sync/MouseSync");
+    var TouchSync      = require("famous-sync/TouchSync");
     var Transitionable  = require('famous/Transitionable');
     var Timer           = require("famous-utils/Time");
 
@@ -28,15 +30,15 @@ define(function(require, exports, module) {
         //create syncs to handle updates
         this.mainSync = new GenericSync(function() {
             return this.mainViewPos.get(0);
-        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        }.bind(this), {direction: GenericSync.DIRECTION_X, syncClasses:[MouseSync, TouchSync]});
         
         this.gameSync = new GenericSync(function() {
             return this.gameViewPos.get(0);
-        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        }.bind(this), {direction: GenericSync.DIRECTION_X, syncClasses:[MouseSync, TouchSync]});
         
         this.boringSync = new GenericSync(function() {
             return this.boringViewPos.get(0);
-        }.bind(this), {direction: GenericSync.DIRECTION_X});
+        }.bind(this), {direction: GenericSync.DIRECTION_X, syncClasses:[MouseSync, TouchSync]});
 
 
         //create the views
@@ -56,6 +58,7 @@ define(function(require, exports, module) {
 
     function _createMainView() {
         this.mainViewPos = new Transitionable(0);
+        this.mainViewPos.name = 'mainView';
         this.topCardPos = this.mainViewPos;
 
         this.mainView = new MainView();
@@ -67,6 +70,7 @@ define(function(require, exports, module) {
 
     function _createGameView() {
         this.gameViewPos = new Transitionable(0);
+        this.gameViewPos.name = 'gameView';
         this.gameView = new GameView();
         this.gameMod = new Modifier({
             transform: Matrix.translate(0, 0, 2)
@@ -98,10 +102,9 @@ define(function(require, exports, module) {
     }
 
     function _slideCards(data){
-        if(Math.abs(data.p)>5){//if its not just an accidental touch
+        if(Math.abs(data.p)>8){//if its not just an accidental touch
             this.topCardPos.set(data.p);
         }
-        
 
         //change what card is visible
         if(this.cardIndex.main == 2){
@@ -133,11 +136,11 @@ define(function(require, exports, module) {
 
 
     Resume.prototype.shuffle = function(){
-        console.log('shuffle');
-        
         for (var card in this.cardIndex){
-            this.cardIndex[card] = (this.cardIndex[card] + 1) % 3
+            this.cardIndex[card] = (this.cardIndex[card] + 1) % 3;
         }
+
+        if( this.cardIndex.main==2){console.log("Main On TOp");}
 
         if(this.cardIndex.main == 2){this.topCardPos = this.mainViewPos};
         if(this.cardIndex.game == 2){this.topCardPos = this.gameViewPos};
@@ -149,19 +152,19 @@ define(function(require, exports, module) {
         this.spec = [];
 
         this.spec.push({
-            transform: Matrix.translate(this.gameViewPos.get(), 0, this.cardIndex.game),
+            transform: Matrix.translate(this.gameViewPos.get(), 0, this.cardIndex.game * 1000),
             opacity: _getOpacityOfCard(this.gameViewPos.get()),
             target: this.gameView.render()
         });
 
         this.spec.push({
-            transform: Matrix.translate(this.boringViewPos.get(), 0, this.cardIndex.boring),
+            transform: Matrix.translate(this.boringViewPos.get(), 0, this.cardIndex.boring * 1000),
             opacity: _getOpacityOfCard(this.boringViewPos.get()),
             target: this.boringView.render()
         });
 
         this.spec.push({
-            transform: Matrix.translate(this.mainViewPos.get(), 0, this.cardIndex.main),
+            transform: Matrix.translate(this.mainViewPos.get(), 0, this.cardIndex.main * 1000),
             opacity: _getOpacityOfCard(this.mainViewPos.get()),
             target: this.mainView.render()
         });
