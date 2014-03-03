@@ -224,7 +224,7 @@ define(function(require, exports, module) {
         if(!this.ended){
             var cloud = this.clouds[this.counters.cloud];
             if(cloud == null){
-                cloud = new Cloud(this.physicsEngine);
+                cloud = new Cloud(this, this.physicsEngine);
                 this.clouds[this.counters.cloud] = cloud;
             }//end if cloud not created yet
             else{
@@ -240,6 +240,7 @@ define(function(require, exports, module) {
             var pipes = this.pipes[this.counters.pipe % this.pipes.length];
             if(pipes == null){
                 pipes = new Pipe(
+                    this,
                     this.physicsEngine,
                     {id:this.counters.pipe + 1}
                 );
@@ -274,39 +275,23 @@ define(function(require, exports, module) {
             if(floor == null){
                 var opts = {};
                 if (this.counters.floor == 0){opts.initPos = 0;}
-                floor = new Floor(this.physicsEngine, opts);
+                floor = new Floor(this, this.physicsEngine, opts);
                 this.floor[this.counters.floor] = floor;
             }//end if floor not created yet
             else{
                 floor.restart();
             }
+
+
             this.counters.floor = (this.counters.floor + 1) % this.floor.length;
         }//end if game not ended
     };//end method
-
-
-
-
-    // var cleanupObjects = function(physicsEngine){
-    //     var numParticles = physicsEngine._particles.length;
-
-    //     for (var i = physicsEngine._particles.length - 30; i >= 3; i--) {
-    //         physicsEngine.remove(physicsEngine._particles[i]);
-    //     };
-        
-    // };//end method
-
-
-
 
     function _spawn(){
         //Spawn the scene
         this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
         this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),2500);
     }//end spawn
-
-
-    
 
     function  _showWelcomeScreen(){
         this.panes.welcome = new BouncyPane(this.physicsEngine, {
