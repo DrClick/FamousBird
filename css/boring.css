@@ -1,0 +1,10 @@
+.boring{
+	background-color: black;
+
+}
+.boring pre{
+	font-family: 'PT Mono'
+	height:900px;
+	font-size:14px;
+	overflow-y: scroll;
+}
