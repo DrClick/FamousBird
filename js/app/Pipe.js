@@ -9,25 +9,26 @@ define(function(require, exports, module) {
 
       
     /** @constructor */
-    function Pipe(opts){
+    function Pipe(physicsEngine, opts){
+        this.physicsEngine = physicsEngine;
+        _init.call(this, opts);
+        _create.call(this);
+    };
 
+    function _init(opts){
         if(!opts) opts = {};
         this.opts = {
             id              : opts.id,
-            velocity	    : -.4,
-            gapHeight	    : Math.random() * 190,
+            velocity        : -.4,
+            gapHeight       : Math.random() * 190,
             gapDirection    : (Math.random() * 100 % 2) == 0 ? -1: 1,
             pipeHeight      : 480,
             pipeWidth       : 113,
             pipeScale       : 2
         };
-    };
+    }//end init
 
-    Pipe.prototype.id = function(){
-        return "Hello World"
-    };
-
-    Pipe.prototype.attachToPhysics = function(physicsEngine){
+    function _create(){
     	this.modifier =
             new Modifier({
                 transform: Matrix.rotateZ(Math.PI),
@@ -52,16 +53,16 @@ define(function(require, exports, module) {
         this.particles = 
             [
                 //upper pipe
-                physicsEngine.createBody({
-                    shape : physicsEngine.BODIES.RECTANGLE,
+                this.physicsEngine.createBody({
+                    shape : this.physicsEngine.BODIES.RECTANGLE,
                     m : 0,
                     size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) + gapOffset],
                     p : [400, -370 + gapOffset/2, 0],
                     v : [this.opts.velocity,0,0]
                 }),
                 //lower pipe
-                physicsEngine.createBody({
-                    shape : physicsEngine.BODIES.RECTANGLE,
+                this.physicsEngine.createBody({
+                    shape : this.physicsEngine.BODIES.RECTANGLE,
                     m : 0,
                     size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) - gapOffset],
                     p : [400, 125 + gapOffset/2, 0],
@@ -73,8 +74,13 @@ define(function(require, exports, module) {
         this.particles[0].link(this.modifier).link(this.surfaces[0]);
         this.particles[1].link(this.surfaces[1]);
 
-        return this.particles;
+    }//end create
 
+    Pipe.prototype.restart = function(opts){
+        this.physicsEngine.remove(this.particles[0]);
+        this.physicsEngine.remove(this.particles[1]);
+        _init.call(this, opts);
+        _create.call(this);
     };
 
 

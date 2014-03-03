@@ -7,19 +7,23 @@ define(function(require, exports, module) {
 
       
     /** @constructor */
-    function Cloud(opts){
-
-        if(!opts){opts = {};}
-        this.opts = {
-            yPos		: -Math.random() * 450,
-            scale       : 2 + 2 * Math.random(),
-            opacity     : 1 / (1.1 + Math.random()),
-            velocity	: -.1 - Math.random() * .5,
-            cloudType	: "cloud-type-" + parseInt((Math.random() * 1000)) % 3
-        };
+    function Cloud(physicsEngine, opts){
+        this.physicsEngine = physicsEngine;
+        this.restart();
     }
 
-    Cloud.prototype.attachToPhysics = function(physicsEngine){
+    function _init(){
+        this.opts = {
+            yPos        : -Math.random() * 450,
+            scale       : 2 + 2 * Math.random(),
+            opacity     : 1 / (1.1 + Math.random()),
+            velocity    : -.1 - Math.random() * .5,
+            cloudType   : "cloud-type-" + parseInt((Math.random() * 1000)) % 3
+        };
+    }//end init
+
+  
+    function _create(){
     	this.transforms = [
             new Modifier({
     	        transform: Matrix.translate(0,this.opts.yPos,0),
@@ -36,8 +40,8 @@ define(function(require, exports, module) {
         });
 
 	    //Create a physical particle
-        this.particle = physicsEngine.createBody({
-            shape : physicsEngine.BODIES.CIRCLE,
+        this.particle = this.physicsEngine.createBody({
+            shape : this.physicsEngine.BODIES.CIRCLE,
             m : 0,
             r : 0,
             p : [500,0,0],
@@ -47,10 +51,12 @@ define(function(require, exports, module) {
         //Render the Famous Surface from the particle
         this.particle.link(this.transforms[0]).link(this.transforms[1]).link(this.surface);
 
-        //TODO: set the scale of the cloud
-        //make sure it is removed after
-        //figure out why it stops
+    };
 
+    Cloud.prototype.restart = function(){
+        this.physicsEngine.remove(this.particles);
+        _init.call(this);
+        _create.call(this);
     };
 
 

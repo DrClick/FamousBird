@@ -64,7 +64,7 @@ define(function(require, exports, module) {
         this.ended          = false;
         this.scorer         = null;
         this.score          = null;
-        this.pipeCounter    = 1;
+        this.counters       = {pipe: 0, cloud: 0, floor: 0};
         this.birdie         = null;
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
         this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
@@ -72,6 +72,12 @@ define(function(require, exports, module) {
         this.physicsEngine = new PhysicsEngine({numConstraints: 4});
 
         this.birdie         = new Birdie(this.physicsEngine);
+
+        //holders for the objects
+        this.pipes     = [null, null, null];
+        this.clouds         = [null, null, null, null, null, null, null, null, null, null, 
+                               null, null, null, null, null, null, null, null, null, null];
+        this.Floor          = [null, null, null];
 
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
@@ -220,30 +226,49 @@ define(function(require, exports, module) {
     //DO THIS NEXT - EXTRACT SPAWN CLASS
     function _spawnClouds(){
         if(!this.ended){
-            var cloud = new Cloud();
-            cloud.attachToPhysics(this.physicsEngine);
+            var cloud = this.clouds[this.counters.cloud];
+            if(cloud == null){
+                cloud = new Cloud(this.physicsEngine);
+                this.clouds[cloud];
+            }//end if cloud not created yet
+            else{
+                cloud.start();
+            }
+
+            this.counters.cloud = (this.counters.cloud++ % this.clouds.length);
         }//end if game not ended
     };//end method
 
     function _spawnPipes(){
         if(!this.ended){
-            var pipe = new Pipe({id:this.pipeCounter});
-            var pipeParticles = pipe.attachToPhysics(this.physicsEngine);
+            var pipes = this.pipes[this.counters.pipe % this.pipes.length];
+            if(pipes == null){
+                pipes = new Pipe(
+                    this.physicsEngine,
+                    {id:this.counters.pipe + 1}
+                );
+                this.pipes[this.counters.pipe % this.pipes.length] = pipes;
 
-            this.pipeCounter++;//increment pipe
+            }//end if pipes did not exist
+            else{
+                pipes.restart({id:this.counters.pipe + 1});
+            }
 
-
-            //detects overlaps with pipes and the birdie
+             //detects overlaps with pipes and the birdie
             var overlap = new Overlap();
             overlap.on("hit", _end.bind(this));
-            this.physicsEngine.attach(overlap, pipeParticles, this.birdie.particle);
+            this.physicsEngine.attach(overlap, pipes.particles, this.birdie.particle);
 
             //detect overlaps with the upper pipe and the scorer
             var overlapScore = new Overlap();
             overlapScore.on("hit", function(data){
                 _incrementScore.call(this, data);
             }.bind(this));
-            this.physicsEngine.attach(overlapScore, pipeParticles[0], this.scorer.particle);
+            this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
+
+                
+            //incrament the counter
+            this.counters.pipe++;
         }//end if game not over
     };//end method
 
