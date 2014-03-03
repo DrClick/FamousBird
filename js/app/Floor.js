@@ -6,33 +6,39 @@ define(function(require, exports, module) {
 
   
     /** @constructor */
-    function Floor(opts){
-
-        if(!opts) opts = {};
-        this.opts = {
-            velocity	  : -.4,
-            initPos: opts.initPos !== undefined?opts.initPos : 700
-        };
+    function Floor(physicsEngine, opts){
+        this.physicsEngine = physicsEngine;
+        _init.call(this, opts);
+        _create.call(this);
     };
 
-    Floor.prototype.attachToPhysics = function(physicsEngine){
+    function _init(opts){
+        if(!opts) opts = {};
+        this.opts = {
+            velocity      : -.4,
+            initPos: opts.initPos !== undefined?opts.initPos : 700
+        };
+    }//end init
+
+    function _create(){
     	//add the floor off screen
         
         this.surfaces = 
             new Surface({
-                size    : [128*12, 215],
-                classes : ['floor'],
-                content : '<img width="100" src="/content/images/logos.svg"/>'+
-                    '<b>By: Tom Watson</b>' +
-                    '<label>Built on: Famo.us</label>' +
-                    '<p>Original Game Design: Dong Nguyen</p>'
+                size    : [128*20, 215],
+                classes : ['floor']
         });
 
+            /*content : '<img width="100" src="/content/images/logos.svg"/>'+
+                    '<b>By: Tom Watson</b>' +
+                    '<label>Built on: Famo.us</label>' +
+                    '<p>Original Game Design: Dong Nguyen</p>'*/
+
 	    //Create a physical particle
-        this.particle = physicsEngine.createBody({
-                    shape : physicsEngine.BODIES.RECTANGLE,
+        this.particle = this.physicsEngine.createBody({
+                    shape : this.physicsEngine.BODIES.RECTANGLE,
                     m : 0,
-                    size : [128*12, 265],
+                    size : [128*20, 265],
                     p : [this.opts.initPos, 372 , 1],
                     v : [this.opts.velocity,0,0]
         });
@@ -44,7 +50,11 @@ define(function(require, exports, module) {
 
         //add collision
         return this.particle;
-    };
+    }//end create
+
+    Floor.prototype.restart = function(){
+        this.particle.setPos([this.opts.initPos, 372,0]);
+    }
 
 
 	module.exports = Floor;

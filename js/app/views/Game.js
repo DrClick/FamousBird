@@ -75,9 +75,8 @@ define(function(require, exports, module) {
 
         //holders for the objects
         this.pipes     = [null, null, null];
-        this.clouds         = [null, null, null, null, null, null, null, null, null, null, 
-                               null, null, null, null, null, null, null, null, null, null];
-        this.Floor          = [null, null, null];
+        this.clouds         = [null, null, null, null, null, null, null, null, null, null];
+        this.floor          = [null, null, null];
 
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
@@ -104,10 +103,7 @@ define(function(require, exports, module) {
             strength : this.options.gravityStrength
         });
 
-        //create the initial floor
-        var initFloor = new Floor({initPos:400});
-        initFloor.attachToPhysics(this.physicsEngine);
-
+        _spawnFloor.call(this);
 
         //pipe events up and handle clicks
         this.surface.pipe(this.eventOutput);
@@ -229,13 +225,13 @@ define(function(require, exports, module) {
             var cloud = this.clouds[this.counters.cloud];
             if(cloud == null){
                 cloud = new Cloud(this.physicsEngine);
-                this.clouds[cloud];
+                this.clouds[this.counters.cloud] = cloud;
             }//end if cloud not created yet
             else{
-                cloud.start();
+                cloud.restart();
             }
 
-            this.counters.cloud = (this.counters.cloud++ % this.clouds.length);
+            this.counters.cloud = (this.counters.cloud + 1) % this.clouds.length;
         }//end if game not ended
     };//end method
 
@@ -274,9 +270,18 @@ define(function(require, exports, module) {
 
     function _spawnFloor(){
         if(!this.ended){
-            var floor = new Floor();
-            var floorParticle = floor.attachToPhysics(this.physicsEngine);
-        }//end if not game over
+            var floor = this.floor[this.counters.floor];
+            if(floor == null){
+                var opts = {};
+                if (this.counters.floor == 0){opts.initPos = 0;}
+                floor = new Floor(this.physicsEngine, opts);
+                this.floor[this.counters.floor] = floor;
+            }//end if floor not created yet
+            else{
+                floor.restart();
+            }
+            this.counters.floor = (this.counters.floor + 1) % this.floor.length;
+        }//end if game not ended
     };//end method
 
 
@@ -297,7 +302,7 @@ define(function(require, exports, module) {
     function _spawn(){
         //Spawn the scene
         this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
-        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),2000);
+        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),2500);
     }//end spawn
 
 

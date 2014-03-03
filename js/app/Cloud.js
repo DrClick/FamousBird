@@ -9,7 +9,8 @@ define(function(require, exports, module) {
     /** @constructor */
     function Cloud(physicsEngine, opts){
         this.physicsEngine = physicsEngine;
-        this.restart();
+        _init.call(this);
+        _create.call(this);
     }
 
     function _init(){
@@ -53,9 +54,7 @@ define(function(require, exports, module) {
     };
 
     Cloud.prototype.restart = function(){
-        this.physicsEngine.remove(this.particles);
-        _init.call(this);
-        _create.call(this);
+        this.particle.setPos([500, -Math.random() * 450, 0])
     };
 
 

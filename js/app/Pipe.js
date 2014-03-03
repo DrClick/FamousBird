@@ -77,10 +77,18 @@ define(function(require, exports, module) {
     }//end create
 
     Pipe.prototype.restart = function(opts){
-        this.physicsEngine.remove(this.particles[0]);
-        this.physicsEngine.remove(this.particles[1]);
-        _init.call(this, opts);
-        _create.call(this);
+        var gapHeight       = Math.random() * 190;
+        var gapDirection    = (Math.random() * 100 % 2) == 0 ? -1: 1;
+        var gapOffset = this.opts.gapHeight * this.opts.gapDirection;
+
+        this.surfaces[0].setContent(opts.id);
+
+        this.surfaces[0].size = [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset];
+        this.particles[0].p.setFromArray([400, -370 + gapOffset/2, 0]);
+
+        this.surfaces[1].size = [this.opts.pipeWidth, this.opts.pipeHeight-200 - gapOffset];
+        this.particles[1].p.setFromArray([400, 125 + gapOffset/2, 0]);
+
     };
 
 
