@@ -10,7 +10,7 @@
 	{"name": "About", "duration": 3000, "href": "main_9.html"},
 	{"name": "Coolest", "duration": 8000, "href": "main_10.html"},
 	{"name": "Won", "duration": 4000, "href": "main_10_2.html"},
-	{"name": "60K", "duration": 3000, "href": "main_11.html"},
+	{"name": "60K", "duration": 4500, "href": "main_11.html"},
 	{"name": "Education", "duration": 2500, "href": "main_12.html"},
 	{"name": "Education Detail", "duration": 7000, "href": "main_13.html"},
 	{"name": "Experience", "duration": 2500, "href": "main_14.html"},
