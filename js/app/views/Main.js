@@ -36,6 +36,7 @@ define(function(require, exports, module) {
 
         this.modifier = new Modifier({
             transform: Matrix.translate(0,0,0),
+            size: [640, 960],
             origin: [.5,0]
         });
 

@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     SlideShow.prototype = Object.create(View.prototype);
     SlideShow.prototype.constructor = SlideShow;
     SlideShow.DEFAULT_OPTIONS = {
-        size: [600,500],
+        size: [640,960],
         origin: [.5,0],
         loop: false,
         autostart: true,

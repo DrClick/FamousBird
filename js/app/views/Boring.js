@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var Modifier        = require("famous/Modifier");
     var Matrix          = require("famous/Matrix");
     var View            = require("famous/View");
+    var Scrollview      = require('famous-views/Scrollview');
 
     //App
     var AppUtils        = require("app/Util");
@@ -28,22 +29,35 @@ define(function(require, exports, module) {
         AppUtils.loadFragment("/fragments/boring.html", {}, function(frag){
 
             this.surface = new Surface({
-                size: [640, 960],
+                size: [640, 4000],
                 properties: {
                     boxShadow: '0 0 20px rgba(0,0,0,0.5)'
                 },
-                content: "<pre class='prettyprint lang-js'>" + frag + "</pre>",
+                content: frag,
                 classes: ["boring"]
             });
 
             this.modifier = new Modifier({
                 transform: Matrix.translate(0,0,0),
+                size: [640,960],
                 origin: [.5,0]
             });
 
-            this._add(this.modifier).link(this.surface);
+
+            // create the scrollview
+            this.boringScrollView = new Scrollview({
+                direction: "y",
+                margin: 4000
+            });
+
+            // link the tweet widgets in
+            this.boringScrollView.sequenceFrom(this.surface);
+
+
+            this._add(this.modifier).link(this.boringScrollView);
 
             this.surface.pipe(this.eventOutput);
+            this.surface.pipe(this.boringScrollView);            
 
         }.bind(this));
         

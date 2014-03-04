@@ -54,6 +54,10 @@
 
 .slide{
     text-align: center;
+    overflow:hidden;
+    height:960px;
+    width:640px;
+
 }
 .slide h1{
     font-weight: 100;
@@ -121,4 +125,8 @@
     font-size: 230px;
     font-weight: 600;
     opacity: .3;
+}
+
+a{
+    color:white;
 }
