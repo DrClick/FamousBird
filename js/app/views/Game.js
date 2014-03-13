@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var SlideUpPane = require("app/widgets/SlideUpPane");
 
     //Utils
+    var Utils = require('famous-utils/Utils');
     var AppUtils = require("app/Util");
     //var Sounds = require("app/Sounds");
 
@@ -109,8 +110,14 @@ define(function(require, exports, module) {
         //pipe events up and handle clicks
         this.surface.pipe(this._eventOutput);
         this.surface.on("keyup", _handleClicks.bind(this));
-        this.surface.on("click", _handleClicks.bind(this));
-        this.surface.on("touchstart", _handleClicks.bind(this));
+
+        if( Utils.isMobile() ) { 
+
+            this.surface.on("touchstart", _handleClicks.bind(this));
+            
+        } else { 
+            this.surface.on("click", _handleClicks.bind(this));
+        }
     }//end create
 
 
@@ -352,11 +359,12 @@ define(function(require, exports, module) {
         this.panes.gameOverButtons.pipe(this._eventOutput);
 
         //display the score pane
-        AppUtils.loadFragment(
-            "../../fragments/finalScore.html", 
-            {score:1, highScore:999},
-            _createFinalScorePane.bind(this)
-        );
+        //AppUtils.loadFragment(
+        //    "fragments/finalScore.html", 
+        //    {score:1, highScore:999},
+        //    _createFinalScorePane.bind(this)
+        //);
+        _createFinalScorePane.call(this, "<div class='currentScore'>SCORE</div><div class='highScore'>BEST</div><div class='medal'>MEDAL</div>");
 
         //display the buttons pane
         Timer.setTimeout(function(){

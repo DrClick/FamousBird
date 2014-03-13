@@ -2,6 +2,12 @@ define(function(require, exports, module) {
     var Constraint = require('famous-physics/constraints/Constraint');
     var Vector = require('famous-math/Vector');
     var EventHandler = require('famous/EventHandler');
+    var Circle = require('famous-physics/bodies/Circle');
+    var Rectangle = require('famous-physics/bodies/Rectangle');
+
+    var CircleName = Circle.prototype.constructor.name;
+    var RectangleName = Rectangle.prototype.constructor.name;
+    
 
     /** @constructor */
     function Overlap(opts){
@@ -33,7 +39,7 @@ define(function(require, exports, module) {
 
         var sourceType = source.constructor.name;
 
-        if(sourceType == "Rectangle"){
+        if(sourceType == RectangleName){
             //wrap in circle that hold entire object
             r1 = Math.sqrt(Math.pow(source.size[0]/2, 2) + Math.pow(source.size[1]/2, 2));
         }
@@ -56,7 +62,7 @@ define(function(require, exports, module) {
             //will require further processing
             
             var targetType = target.constructor.name;
-            if(targetType == "Rectangle"){
+            if(targetType == RectangleName){
                 //find the largest dimension of the rectangle and approximate it as a sphere
                 r2 = Math.sqrt(Math.pow(target.size[0]/2, 2) + Math.pow(target.size[1]/2, 2));
             }
@@ -70,7 +76,7 @@ define(function(require, exports, module) {
             if (overlap > 0){//It's a hit (maybe)
                 var isHit = true;
 
-                if(targetType == "Rectangle" || sourceType == "Rectangle"){
+                if(targetType == RectangleName || sourceType == RectangleName){
                     isHit = DetermineIfOverlapped(source, target);
                 }
                 
@@ -91,11 +97,12 @@ define(function(require, exports, module) {
         /*NOTE: http://www.wildbunny.co.uk/blog/2011/04/20/collision-detection-for-dummies/
         is a good place to start when growing this function up.
         */
-        if(source.constructor.name == target.constructor.name) 
-            throw "Only supported for circle on rectangle hot action!"
+        
+        //if(source.constructor.name == target.constructor.name) 
+        //    throw "Only supported for circle on rectangle hot action!"
 
-        var circle      = source.constructor.name == "Circle" ? source: target;
-        var rectangle   = source.constructor.name == "Rectangle" ? source: target;
+        var circle      = source.constructor.name == CircleName ? source: target;
+        var rectangle   = source.constructor.name == RectangleName ? source: target;
 
         var circ = {x: circle.p.x, y: circle.p.y, r: circle.r};
         var rect = {x: rectangle.p.x, y: rectangle.p.y, width: rectangle.size[0], height: rectangle.size[1]};
