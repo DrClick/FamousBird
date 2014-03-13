@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     var Text = require('Text');
     var Hogan = require('lib/Hogan');
-    var Matrix = require('famous/Matrix');
+    var Transform = require('famous/Transform');
 
     /**
      * @class Collection of various utility functions
@@ -22,9 +22,9 @@ define(function(require, exports, module) {
         pulse: function(modifier){
             var m = modifier;
             m.setTransform(
-                Matrix.scale(1.05,1.05, 1), { duration: 300 }, 
+                Transform.scale(1.05,1.05, 1), { duration: 300 }, 
                 function(){
-                    m.setTransform(Matrix.scale(1,1, 1), { duration: 100 });
+                    m.setTransform(Transform.scale(1,1, 1), { duration: 100 });
                 });
         },//end function
 

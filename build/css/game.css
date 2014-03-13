@@ -1,0 +1,175 @@
+
+.game{
+    background-color:#6dc6d0;
+    background-image: url('/content/images/background.png');
+    background-position: center 532px;
+    background-repeat:no-repeat;
+    overflow:hidden;
+    font-family: 'flappyBird';
+}
+
+.startup, .gameOver, .scorer, .getReady{
+    text-align: center;
+    color:white;
+}
+.startup h1, .scorer h1, .gameOver h1, .gameOver h3, .getReady h1{
+    text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+    line-height: 1.1em;
+    font-size:50px;
+    font-family: 'flappyBird';
+}
+.startup p{
+    margin-top:250px;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    font-size:30px;
+}
+.gameOver h1, .gameOver h3{
+
+    color:orange;
+}
+
+.getReady{
+    color: lightgreen;
+}
+
+.getReady p{
+    background-image: url(/content/images/ready.png);
+    width:227px;
+    height:195px;
+    margin-top:120px;
+}
+
+.finalScore{
+    font-family: 'terminal';
+    color:brown;
+    font-size: 30px;
+    background-color:#e2ca91;
+    background-image: url(/content/images/medal.png);
+    background-position: 30px 70px;
+    background-repeat: no-repeat;
+    border: ridge 5px tan;
+    box-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000;
+}
+.finalScore .currentScore, .finalScore .highScore, .finalScore .medal{
+    position: absolute;
+}
+
+.finalScore .currentScore{
+    right:50px;
+    top:20px;
+}
+.finalScore .highScore{
+    right:50px;
+    top:120px;
+}
+.finalScore .medal{
+    left:60px;
+    top:20px;
+}
+
+button{
+    width:130px;
+    height:40px;
+    background-color:#ec4200;
+    color:white;
+    font-family: 'terminal';
+    font-size:24px;
+    border: solid 3px white;
+    letter-spacing:0.1em;
+    font-weight: bold;
+    display: inline;
+    box-shadow: -1px 1px 0 3px black; 
+}
+
+
+
+.scorer h1{
+    font-size:40px;
+}
+
+.gameOverFlash{
+    background-color: white;
+}
+.gameOverFlashActive{
+}
+
+/*------The birdie-------*/
+.birdie{
+    background-image: url('/content/images/birdie.png');
+    background-position: left top;
+    background-attachment: fixed;
+    overflow: hidden;
+    background-repeat:no-repeat;
+}
+.birdie-down{
+    background-position: -79px top;
+}
+.birdie-up{
+    background-position: -158px top;
+}
+
+
+
+/*------Clouds---------*/
+.cloud{
+    background-image: url('/content/images/clouds.png');
+    background-size: 128 256px;
+    overflow: hidden;
+    background-repeat:no-repeat;
+}
+.cloud-type-0{
+    background-position: 0px 0px;
+}
+.cloud-type-1{
+    background-position: 0px -64px;
+}
+.cloud-type-2{
+    background-position: 0px -128px;
+}
+.cloud-type-3{
+    background-position: 0px -196px;
+}
+
+
+/*------Pipes---------*/
+.pipe{
+    background-image: url('/content/images/pipe.png');
+    color:transparent;
+    background-size: cover;
+    overflow: hidden;
+    background-repeat:no-repeat;
+}
+
+
+/*------Floor---------*/
+.floor{
+    background-image: url('/content/images/floor.png');
+    background-color:tan;
+    background-size: 128 41;
+    overflow: hidden;
+    background-repeat:repeat-x;
+    font-family: 'terminal';
+    color: rgba(255,255,255,.4);
+    font-size:20px;
+}
+.floor *{
+    margin-left:500px;
+}
+.floor img{
+    float:left;
+    margin-top:50px;
+    opacity:.2;
+}
+.floor b{
+    display:block;
+    margin-top:60px;
+}
+.floor label{
+    display: block;
+    /*margin-top:20px;*/
+}
+.floor p{
+    display:block;
+    /*margin-top:20px;*/
+}
+

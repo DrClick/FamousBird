@@ -1,15 +1,15 @@
 define(function(require, exports, module) {
 	var Timer = require('famous-utils/Time');
 	var AppUtils = require('app/Util');
-	var Matrix = require('famous/Matrix');
+	var Transform = require('famous/Transform');
 	var Modifier = require('famous/Modifier');
     var Surface = require('famous/Surface');
-	var ContainerSurface = require('famous/ContainerSurface');
+	var ContainerSurface = require('famous-surfaces/ContainerSurface');
     var View = require("famous/View");
 	
 	//Transitions
-    var Transitionable = require('famous/Transitionable');
-    var SpringTransition = require('famous-physics/utils/SpringTransition')
+    var Transitionable = require('famous-transitions/Transitionable');
+    var SpringTransition = require('famous-transitions/SpringTransition')
 
 
     Transitionable.registerMethod('spring', SpringTransition);
@@ -42,16 +42,16 @@ define(function(require, exports, module) {
         };
 
         this.modifier = new Modifier({
-                transform: Matrix.translate(0,500,0),
+                transform: Transform.translate(0,500,0),
                 origin: [0.5, 0.5],
                 opacity: 0
         });
 
-        node.add(this.modifier).link(this.surface);
+        node.add(this.modifier).add(this.surface);
 
 
         this.surface.pipe(this.eventOutput);
-        this.surface.add(new Modifier({origin:[.5,.5]})).link(new Surface({
+        this.surface.add(new Modifier({origin:[.5,.5]})).add(new Surface({
             classes : ['unselectable'].concat(this.options.classes),
             content: this.options.content
         }));
@@ -63,7 +63,7 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.show = function(){
-    	this.modifier.setTransform(Matrix.translate(0,-50,1), this.spring);
+    	this.modifier.setTransform(Transform.translate(0,-50,1), this.spring);
     	this.modifier.setOpacity(1, {duration:200});
 
     	this.visible = true;

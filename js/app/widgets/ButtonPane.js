@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
 	var Timer = require('famous-utils/Time');
 	var AppUtils = require('app/Util');
-	var Matrix = require('famous/Matrix');
+	var Transform = require('famous/Transform');
 	var Modifier = require('famous/Modifier');
 	var Surface = require('famous/Surface');
-    var ContainerSurface = require('famous/ContainerSurface');
+    var ContainerSurface = require('famous-surfaces/ContainerSurface');
     var Modifier = require('famous/Modifier');
 	var View = require("famous/View");
 	
@@ -33,14 +33,14 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-                transform: Matrix.translate(this.options.position[0], this.options.position[1], this.options.position[2]),
+                transform: Transform.translate(this.options.position[0], this.options.position[1], this.options.position[2]),
                 origin: [0.5, 0.5],
                 opacity: 0
             }
         );
 
-        node.add(this.modifier).link(this.surface);
-        this.surface.pipe(this.eventOutput);
+        node.add(this.modifier).add(this.surface);
+        this.surface.pipe(this._eventOutput);
 
         
         //build the buttons
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
         });
 
         var buttonModifier = new Modifier({
-            transform: Matrix.translate(button.offsetX,0,this.options.position[2]),
+            transform: Transform.translate(button.offsetX,0,this.options.position[2]),
             origin: [.5,.5]
         });
 
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
         });
 
         //add the button
-        this.surface.add(buttonModifier).link(buttonSurface);
+        this.surface.add(buttonModifier).add(buttonSurface);
         
     }//end build buttons
 
@@ -79,13 +79,13 @@ define(function(require, exports, module) {
     ButtonPane.prototype.hide = function(){
         this.visible = false;
     	this.modifier.setOpacity(0, {duration: 100}, function(){
-            this.modifier.setTransform(Matrix.translate(0,0,-1));//hides the buttons
+            this.modifier.setTransform(Transform.translate(0,0,-1));//hides the buttons
         }.bind(this));
     };//end method
 
     ButtonPane.prototype.show = function(){
         this.modifier.setTransform(
-            Matrix.translate(this.options.position[0],this.options.position[1],this.options.position[2]), 
+            Transform.translate(this.options.position[0],this.options.position[1],this.options.position[2]), 
             {}, 
             function(){
                 this.modifier.setOpacity(1, {duration: 100});

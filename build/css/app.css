@@ -1,0 +1,26 @@
+@font-face{
+    font-family: 'flappyBird';
+    src: url(/content/font/04B_19__.TTF);
+}
+@font-face {
+  font-family: 'terminal';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/content/font/terminal.woff) format('woff');
+}
+body{
+    background : rgba(0,0,0,1);
+    font-family: 'lato' !important;
+    font-weight: 300;
+    color: gainsboro;
+    font-size:40px;
+}
+
+/*------Utils---------*/
+.unselectable{
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    -o-user-select: none;
+    user-select: none;  
+}

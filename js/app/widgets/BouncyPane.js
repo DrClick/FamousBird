@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
 	var Timer = require('famous-utils/Time');
 	var AppUtils = require('app/Util');
-	var Matrix = require('famous/Matrix');
+	var Transform = require('famous/Transform');
 	var Modifier = require('famous/Modifier');
 	var Surface = require('famous/Surface');
 	var View = require("famous/View");
@@ -53,13 +53,13 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-                transform: Matrix.translate(0,0,50),
+                transform: Transform.translate(0,0,50),
                 origin: [0.5, 0.5]
             }
         );
 
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
-        this.particle.link(this.modifier).link(this.surface);
+        this.particle.add(this.modifier).add(this.surface);
     }//end create
 
 	BouncyPane.prototype.pulse = function(){
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
     };//end method
 
     BouncyPane.prototype.hide = function(){
-    	this.modifier.setTransform(Matrix.translate(0,-500,0), {duration: 800},
+    	this.modifier.setTransform(Transform.translate(0,-500,0), {duration: 800},
     		function(){
     			this.visible = false;
     	}.bind(this));
@@ -75,7 +75,7 @@ define(function(require, exports, module) {
     };//end method
 
     BouncyPane.prototype.show = function(){
-    	this.modifier.setTransform(Matrix.translate(0,-100,10));
+    	this.modifier.setTransform(Transform.translate(0,-100,10));
     	this.modifier.setOpacity(1);
 
     	this.visible = true;

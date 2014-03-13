@@ -1,40 +1,173 @@
 define(function(require, exports, module) {
-        //includes Famous
-        var Engine = require("famous/Engine");
-        var Modifier = require("famous/Modifier");
-        var Matrix = require("famous/Matrix");
-        var Resume = require("app/views/Resume");
-
-        var Profiler = require('famous-performance/Profiler');
-        var ProfilerView = require('famous-performance/ProfilerView');
-    
-        Engine.pipe(Profiler);
-
-        //instantiate a new resume        
-        var resume = new Resume();
-
-        //create the new one
-        var context = Engine.createContext();
-
-        
-
-         //scale the window
-        var scaleX = window.innerHeight / 960;
-        var scaleY = window.innerWidth / 640;
-        var scale = Math.min(scaleX, scaleY);
-        
-
-
-        context.add(new Modifier({
-            origin : [0,0],
-            transform: Matrix.translate(0,0,10)
-        })).link(ProfilerView);
-
-        context.add(new Modifier({
-            origin : [.5,.5],
-            transform: Matrix.scale(scale,scale,1)
-        })).link(resume);
-        //That was easy!!!
-
-});
-
+var Famous = function(cb) { cb.call(this, require) };
+Famous.App = {};
+Famous.App.Views_Boring = require('app/views/Boring');
+Famous.App.Views_Game = require('app/views/Game');
+Famous.App.Views_Main = require('app/views/Main');
+Famous.App.Views_Resume = require('app/views/Resume');
+Famous.App.Widgets_BouncyPane = require('app/widgets/BouncyPane');
+Famous.App.Widgets_ButtonPane = require('app/widgets/ButtonPane');
+Famous.App.Widgets_SlideShow = require('app/widgets/SlideShow');
+Famous.App.Widgets_SlideUpPane = require('app/widgets/SlideUpPane');
+Famous.App.Bird = require('app/Bird');
+Famous.App.Cloud = require('app/Cloud');
+Famous.App.Floor = require('app/Floor');
+Famous.App.Overlap = require('app/Overlap');
+Famous.App.Pipe = require('app/Pipe');
+Famous.App.Score = require('app/Score');
+Famous.App.Sounds = require('app/Sounds');
+Famous.App.Util = require('app/Util');
+Famous.App.OldMain = require('app/oldMain');
+Famous.Famous = {};
+Famous.Famous.Context = require('famous/Context');
+Famous.Famous.ElementAllocator = require('famous/ElementAllocator');
+Famous.Famous.Engine = require('famous/Engine');
+Famous.Famous.Entity = require('famous/Entity');
+Famous.Famous.EventArbiter = require('famous/EventArbiter');
+Famous.Famous.EventHandler = require('famous/EventHandler');
+Famous.Famous.Group = require('famous/Group');
+Famous.Famous.Modifier = require('famous/Modifier');
+Famous.Famous.OptionsManager = require('famous/OptionsManager');
+Famous.Famous.RenderNode = require('famous/RenderNode');
+Famous.Famous.Scene = require('famous/Scene');
+Famous.Famous.SpecParser = require('famous/SpecParser');
+Famous.Famous.Surface = require('famous/Surface');
+Famous.Famous.Transform = require('famous/Transform');
+Famous.Famous.View = require('famous/View');
+Famous.Famous.ViewSequence = require('famous/ViewSequence');
+Famous.FamousAnimation = {};
+Famous.FamousAnimation.Animation = require('famous-animation/Animation');
+Famous.FamousAnimation.AnimationEngine = require('famous-animation/AnimationEngine');
+Famous.FamousAnimation.CubicBezier = require('famous-animation/CubicBezier');
+Famous.FamousAnimation.Easing = require('famous-animation/Easing');
+Famous.FamousAnimation.Idle = require('famous-animation/Idle');
+Famous.FamousAnimation.LayoutEngine = require('famous-animation/LayoutEngine');
+Famous.FamousAnimation.PiecewiseCubicBezier = require('famous-animation/PiecewiseCubicBezier');
+Famous.FamousAnimation.RegisterEasing = require('famous-animation/RegisterEasing');
+Famous.FamousAnimation.Sequence = require('famous-animation/Sequence');
+Famous.FamousAnimation.Timer = require('famous-animation/Timer');
+Famous.FamousColor = {};
+Famous.FamousColor.Color = require('famous-color/Color');
+Famous.FamousColor.ColorPalette = require('famous-color/ColorPalette');
+Famous.FamousColor.ColorPalettes = require('famous-color/ColorPalettes');
+Famous.FamousMath = {};
+Famous.FamousMath.Quaternion = require('famous-math/Quaternion');
+Famous.FamousMath.Random = require('famous-math/Random');
+Famous.FamousMath.Vector = require('famous-math/Vector');
+Famous.FamousModifiers = {};
+Famous.FamousModifiers.Camera = require('famous-modifiers/Camera');
+Famous.FamousModifiers.Draggable = require('famous-modifiers/Draggable');
+Famous.FamousModifiers.Lift = require('famous-modifiers/Lift');
+Famous.FamousModifiers.ModifierChain = require('famous-modifiers/ModifierChain');
+Famous.FamousPerformance = {};
+Famous.FamousPerformance.Profiler = require('famous-performance/Profiler');
+Famous.FamousPerformance.ProfilerMetric = require('famous-performance/ProfilerMetric');
+Famous.FamousPerformance.ProfilerMetricView = require('famous-performance/ProfilerMetricView');
+Famous.FamousPerformance.ProfilerView = require('famous-performance/ProfilerView');
+Famous.FamousPhysics = {};
+Famous.FamousPhysics.Bodies_Body = require('famous-physics/bodies/Body');
+Famous.FamousPhysics.Bodies_Circle = require('famous-physics/bodies/Circle');
+Famous.FamousPhysics.Bodies_Particle = require('famous-physics/bodies/Particle');
+Famous.FamousPhysics.Bodies_Rectangle = require('famous-physics/bodies/Rectangle');
+Famous.FamousPhysics.Constraints_Collision = require('famous-physics/constraints/Collision');
+Famous.FamousPhysics.Constraints_CollisionJacobian = require('famous-physics/constraints/CollisionJacobian');
+Famous.FamousPhysics.Constraints_Constraint = require('famous-physics/constraints/Constraint');
+Famous.FamousPhysics.Constraints_Curve = require('famous-physics/constraints/Curve');
+Famous.FamousPhysics.Constraints_Distance = require('famous-physics/constraints/Distance');
+Famous.FamousPhysics.Constraints_Distance1D = require('famous-physics/constraints/Distance1D');
+Famous.FamousPhysics.Constraints_Joint = require('famous-physics/constraints/Joint');
+Famous.FamousPhysics.Constraints_Rod = require('famous-physics/constraints/Rod');
+Famous.FamousPhysics.Constraints_Rope = require('famous-physics/constraints/Rope');
+Famous.FamousPhysics.Constraints_StiffSpring = require('famous-physics/constraints/StiffSpring');
+Famous.FamousPhysics.Constraints_Surface = require('famous-physics/constraints/Surface');
+Famous.FamousPhysics.Constraints_Wall = require('famous-physics/constraints/Wall');
+Famous.FamousPhysics.Constraints_Walls = require('famous-physics/constraints/Walls');
+Famous.FamousPhysics.Forces_Drag = require('famous-physics/forces/Drag');
+Famous.FamousPhysics.Forces_Force = require('famous-physics/forces/Force');
+Famous.FamousPhysics.Forces_Repulsion = require('famous-physics/forces/Repulsion');
+Famous.FamousPhysics.Forces_RotationDrag = require('famous-physics/forces/RotationDrag');
+Famous.FamousPhysics.Forces_Spring = require('famous-physics/forces/Spring');
+Famous.FamousPhysics.Forces_TorqueSpring = require('famous-physics/forces/TorqueSpring');
+Famous.FamousPhysics.Forces_VectorField = require('famous-physics/forces/VectorField');
+Famous.FamousPhysics.Integrator_SymplecticEuler = require('famous-physics/integrator/SymplecticEuler');
+Famous.FamousPhysics.Integrator_verlet = require('famous-physics/integrator/verlet');
+Famous.FamousPhysics.Utils_GaussSeidel = require('famous-physics/utils/GaussSeidel');
+Famous.FamousPhysics.Utils_matrix = require('famous-physics/utils/matrix');
+Famous.FamousPhysics.PhysicsEngine = require('famous-physics/PhysicsEngine');
+Famous.FamousSurfaces = {};
+Famous.FamousSurfaces.CanvasSurface = require('famous-surfaces/CanvasSurface');
+Famous.FamousSurfaces.ContainerSurface = require('famous-surfaces/ContainerSurface');
+Famous.FamousSurfaces.ImageSurface = require('famous-surfaces/ImageSurface');
+Famous.FamousSurfaces.InputSurface = require('famous-surfaces/InputSurface');
+Famous.FamousSurfaces.VideoSurface = require('famous-surfaces/VideoSurface');
+Famous.FamousSurfaces.WebGLSurface = require('famous-surfaces/WebGLSurface');
+Famous.FamousSync = {};
+Famous.FamousSync.FastClick = require('famous-sync/FastClick');
+Famous.FamousSync.GenericSync = require('famous-sync/GenericSync');
+Famous.FamousSync.MouseSync = require('famous-sync/MouseSync');
+Famous.FamousSync.PinchSync = require('famous-sync/PinchSync');
+Famous.FamousSync.RotateSync = require('famous-sync/RotateSync');
+Famous.FamousSync.ScaleSync = require('famous-sync/ScaleSync');
+Famous.FamousSync.ScrollSync = require('famous-sync/ScrollSync');
+Famous.FamousSync.TouchSync = require('famous-sync/TouchSync');
+Famous.FamousSync.TouchTracker = require('famous-sync/TouchTracker');
+Famous.FamousSync.TwoFingerSync = require('famous-sync/TwoFingerSync');
+Famous.FamousTransitions = {};
+Famous.FamousTransitions.DragTransition = require('famous-transitions/DragTransition');
+Famous.FamousTransitions.Easing = require('famous-transitions/Easing');
+Famous.FamousTransitions.MultipleTransition = require('famous-transitions/MultipleTransition');
+Famous.FamousTransitions.SpringTransition = require('famous-transitions/SpringTransition');
+Famous.FamousTransitions.StiffSpringTransition = require('famous-transitions/StiffSpringTransition');
+Famous.FamousTransitions.Transitionable = require('famous-transitions/Transitionable');
+Famous.FamousTransitions.TweenTransition = require('famous-transitions/TweenTransition');
+Famous.FamousTransitions.WallTransition = require('famous-transitions/WallTransition');
+Famous.FamousUi = {};
+Famous.FamousUi.Buttons_ButtonBase = require('famous-ui/Buttons/ButtonBase');
+Famous.FamousUi.Buttons_RotateButton = require('famous-ui/Buttons/RotateButton');
+Famous.FamousUi.Buttons_SpringButton = require('famous-ui/Buttons/SpringButton');
+Famous.FamousUi.Buttons_SpringButton.ui = require('famous-ui/Buttons/SpringButton.ui');
+Famous.FamousUi.ColorPicker_AlphaPicker = require('famous-ui/ColorPicker/AlphaPicker');
+Famous.FamousUi.ColorPicker_CanvasPicker = require('famous-ui/ColorPicker/CanvasPicker');
+Famous.FamousUi.ColorPicker_ColorButton = require('famous-ui/ColorPicker/ColorButton');
+Famous.FamousUi.ColorPicker_ColorPicker = require('famous-ui/ColorPicker/ColorPicker');
+Famous.FamousUi.ColorPicker_GradientPicker = require('famous-ui/ColorPicker/GradientPicker');
+Famous.FamousUi.ColorPicker_HuePicker = require('famous-ui/ColorPicker/HuePicker');
+Famous.FamousUi.Dropdown_Dropdown = require('famous-ui/Dropdown/Dropdown');
+Famous.FamousUi.Dropdown_DropdownItem = require('famous-ui/Dropdown/DropdownItem');
+Famous.FamousUi.Easing_CanvasDrawer = require('famous-ui/Easing/CanvasDrawer');
+Famous.FamousUi.Easing_EasingBool = require('famous-ui/Easing/EasingBool');
+Famous.FamousUi.Easing_EasingVisualizer = require('famous-ui/Easing/EasingVisualizer');
+Famous.FamousUi.Easing_MultiEasingToggle = require('famous-ui/Easing/MultiEasingToggle');
+Famous.FamousUi.Text_Label = require('famous-ui/Text/Label');
+Famous.FamousUi.Toggles_BoolToggle = require('famous-ui/Toggles/BoolToggle');
+Famous.FamousUi.Toggles_MultiBoolToggle = require('famous-ui/Toggles/MultiBoolToggle');
+Famous.FamousUi.AutoUI = require('famous-ui/AutoUI');
+Famous.FamousUi.PanelScrollview = require('famous-ui/PanelScrollview');
+Famous.FamousUi.Slider = require('famous-ui/Slider');
+Famous.FamousUtilities = {};
+Famous.FamousUtilities.Color = require('famous-utilities/Color');
+Famous.FamousUtilities.KeyCodes = require('famous-utilities/KeyCodes');
+Famous.FamousUtilities.Timer = require('famous-utilities/Timer');
+Famous.FamousUtilities.Utility = require('famous-utilities/Utility');
+Famous.FamousUtils = {};
+Famous.FamousUtils.FormatTime = require('famous-utils/FormatTime');
+Famous.FamousUtils.KeyCodes = require('famous-utils/KeyCodes');
+Famous.FamousUtils.NoiseImage = require('famous-utils/NoiseImage');
+Famous.FamousUtils.Time = require('famous-utils/Time');
+Famous.FamousUtils.TimeAgo = require('famous-utils/TimeAgo');
+Famous.FamousUtils.Utils = require('famous-utils/Utils');
+Famous.FamousViews = {};
+Famous.FamousViews.ControlSet = require('famous-views/ControlSet');
+Famous.FamousViews.DragSort = require('famous-views/DragSort');
+Famous.FamousViews.Flip = require('famous-views/Flip');
+Famous.FamousViews.LightBox = require('famous-views/LightBox');
+Famous.FamousViews.LinkedNode = require('famous-views/LinkedNode');
+Famous.FamousViews.ScrollContainer = require('famous-views/ScrollContainer');
+Famous.FamousViews.Scrollview = require('famous-views/Scrollview');
+Famous.FamousViews.SequentialLayout = require('famous-views/SequentialLayout');
+Famous.FamousViews.Shaper = require('famous-views/Shaper');
+Famous.FamousViews.Swappable = require('famous-views/Swappable');
+Famous.FamousViews.TableView = require('famous-views/TableView');
+Famous.Spec = {};
+Famous.Spec.Overlap.spec = require('spec/Overlap.spec');
+module.exports = Famous; });

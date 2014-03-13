@@ -1,5 +1,4 @@
 define(function(require, exports, module) {
-    var Matrix = require('famous/Matrix');
     
     //one place to load sounds
     var resources = [

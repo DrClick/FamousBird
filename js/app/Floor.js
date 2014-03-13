@@ -45,7 +45,7 @@ define(function(require, exports, module) {
         });
 
         //Render the Famous Surface from the particle
-        this.particle.link(this.surface);
+        this.particle.add(this.surface);
 
         this.surface.pipe(this.game.surface);
 

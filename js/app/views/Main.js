@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     //famous 
     var Surface         = require("famous/Surface");
     var Modifier        = require("famous/Modifier");
-    var Matrix          = require("famous/Matrix");
+    var Transform          = require("famous/Transform");
     var View            = require("famous/View");
 
 
@@ -35,27 +35,27 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-            transform: Matrix.translate(0,0,0),
+            transform: Transform.translate(0,0,0),
             size: [640, 960],
             origin: [.5,0]
         });
 
-        this._add(this.modifier).link(this.surface);
+        this._add(this.modifier).add(this.surface);
 
 
 
 
-        this.surface.pipe(this.eventOutput);
+        this.surface.pipe(this._eventOutput);
     }//end createPage
 
 
     function _createSlideShow(){
         var slideShow = new SlideShow({startAt: 0});
-        slideShow.pipe(this.eventOutput);
+        slideShow.pipe(this._eventOutput);
         var modifier = new Modifier({
-            transform: Matrix.translate(0,0,0),
+            transform: Transform.translate(0,0,0),
             origin:[0.5,.5]});
-        this._add(modifier).link(slideShow);
+        this._add(modifier).add(slideShow);
     }//end createSlideShow
 
     module.exports = MainView;

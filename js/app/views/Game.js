@@ -2,10 +2,10 @@ define(function(require, exports, module) {
     "use strict";
 	//includes Famous
     var Surface = require("famous/Surface");
-    var ContainerSurface = require("famous/ContainerSurface");
+    var ContainerSurface = require("famous-surfaces/ContainerSurface");
     var RenderNode = require("famous/RenderNode");
     var Modifier = require("famous/Modifier");
-    var Matrix = require("famous/Matrix");
+    var Transform = require("famous/Transform");
     var Timer = require("famous-utils/Time");
     var PhysicsEngine = require('famous-physics/PhysicsEngine');
 
@@ -32,8 +32,8 @@ define(function(require, exports, module) {
     var Sounds = require("app/Sounds");
 
     //Transitions
-    var Transitionable = require("famous/Transitionable");
-    var SpringTransition = require("famous-physics/utils/SpringTransition")
+    var Transitionable = require("famous-transitions/Transitionable");
+    var SpringTransition = require("famous-transitions/SpringTransition")
 
     //View
     var View = require("famous/View");
@@ -89,12 +89,12 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-            transform: Matrix.translate(0,0,0),
+            transform: Transform.translate(0,0,0),
             origin: [.5,0]
         });
         
         //add the surface to the view and the physics to the surface
-        this._add(this.modifier).link(this.surface);
+        this._add(this.modifier).add(this.surface);
         this.surface.add(this.physicsEngine);
 
         //create gravity
@@ -106,7 +106,7 @@ define(function(require, exports, module) {
         _spawnFloor.call(this);
 
         //pipe events up and handle clicks
-        this.surface.pipe(this.eventOutput);
+        this.surface.pipe(this._eventOutput);
         this.surface.on("keyup", _handleClicks.bind(this));
         this.surface.on("click", _handleClicks.bind(this));
         this.surface.on("touchstart", _handleClicks.bind(this));
@@ -310,8 +310,8 @@ define(function(require, exports, module) {
 
 
         //make sure draggable events on these views are piped up
-        this.panes.welcome.pipe(this.eventOutput);
-        this.panes.welcomeButtons.pipe(this.eventOutput);
+        this.panes.welcome.pipe(this._eventOutput);
+        this.panes.welcomeButtons.pipe(this._eventOutput);
     };
 
     function _showGetReadyScreen(){
@@ -324,7 +324,7 @@ define(function(require, exports, module) {
         });
 
         //make sure draggable events on these views are piped up
-        this.panes.ready.pipe(this.eventOutput);
+        this.panes.ready.pipe(this._eventOutput);
         Timer.setTimeout(_start.bind(this), 2000);
     };
 
@@ -345,8 +345,8 @@ define(function(require, exports, module) {
         });
 
         //make sure draggable events on these views are piped up
-        this.panes.gameOver.pipe(this.eventOutput);
-        this.panes.gameOverButtons.pipe(this.eventOutput);
+        this.panes.gameOver.pipe(this._eventOutput);
+        this.panes.gameOverButtons.pipe(this._eventOutput);
 
         //display the score pane
         AppUtils.loadFragment(
@@ -368,7 +368,7 @@ define(function(require, exports, module) {
             classes: ["scorer"]
         });
         var scoreModifier = new Modifier({
-            transform: Matrix.translate(180,-60,50),
+            transform: Transform.translate(180,-60,50),
             origin: [.5,.5]
         });
 
@@ -378,7 +378,7 @@ define(function(require, exports, module) {
             classes: ["scorer"]
         });
         var highScoreModifier = new Modifier({
-            transform: Matrix.translate(180,40,50),
+            transform: Transform.translate(180,40,50),
             origin: [.5,.5]
         });
 
@@ -390,8 +390,8 @@ define(function(require, exports, module) {
                 classes: ["finalScore"]
             }
         );
-        this.panes.finalScore.surface.add(scoreModifier).link(scoreSurface);
-        this.panes.finalScore.surface.add(highScoreModifier).link(highScoreSurface);
+        this.panes.finalScore.surface.add(scoreModifier).add(scoreSurface);
+        this.panes.finalScore.surface.add(highScoreModifier).add(highScoreSurface);
         this.panes.finalScore.show();
 
         //start the score counting up
@@ -424,7 +424,7 @@ define(function(require, exports, module) {
         });
 
         //add the flash screen
-        this._add(flashModifier).link(flashSurface);
+        this._add(flashModifier).add(flashSurface);
 
         
 
@@ -433,7 +433,7 @@ define(function(require, exports, module) {
         flashModifier.setOpacity(.75, {duration: 50}, function(){
             flashModifier.setOpacity(0, {duration: 50});
             flashSurface.setClasses(["gameOverFlash"]);
-            flashModifier.setTransform(Matrix.translate(0,0,-1));
+            flashModifier.setTransform(Transform.translate(0,0,-1));
         });
 
 
@@ -447,8 +447,8 @@ define(function(require, exports, module) {
 
         //in order to shake the screen, we displace it, then move it back using our spring
         //we do this so that it shake about the origin
-        this.modifier.setTransform(Matrix.translate(-10,-10,0));
-        this.modifier.setTransform(Matrix.translate(0,0,0),spring);
+        this.modifier.setTransform(Transform.translate(-10,-10,0));
+        this.modifier.setTransform(Transform.translate(0,0,0),spring);
 
     };//end method
 
@@ -485,4 +485,3 @@ define(function(require, exports, module) {
   
     module.exports = Game;
 });
-

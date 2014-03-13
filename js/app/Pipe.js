@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var Surface = require('famous/Surface');
 
     var Modifier = require("famous/Modifier");
-    var Matrix = require("famous/Matrix");
+    var Transform = require("famous/Transform");
 
       
     /** @constructor */
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
     function _create(){
     	this.modifier =
             new Modifier({
-                transform: Matrix.rotateZ(Math.PI),
+                transform: Transform.rotateZ(Math.PI),
                 origin: [0.5, 0.5]
             });
         
@@ -72,8 +72,8 @@ define(function(require, exports, module) {
             ];
 
         //Render the Famous Surface from the particle
-        this.particles[0].link(this.modifier).link(this.surfaces[0]);
-        this.particles[1].link(this.surfaces[1]);
+        this.particles[0].add(this.modifier).add(this.surfaces[0]);
+        this.particles[1].add(this.surfaces[1]);
 
         this.surfaces[0].pipe(this.game.surface);
         this.surfaces[1].pipe(this.game.surface);

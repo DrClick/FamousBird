@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     //Famous
     var Surface         = require("famous/Surface");
     var Modifier        = require("famous/Modifier");
-    var Matrix          = require("famous/Matrix");
+    var Transform          = require("famous/Transform");
     var View            = require("famous/View");
     var Scrollview      = require('famous-views/Scrollview');
 
@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             });
 
             this.modifier = new Modifier({
-                transform: Matrix.translate(0,0,0),
+                transform: Transform.translate(0,0,0),
                 size: [640,960],
                 origin: [.5,0]
             });
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
             this.boringScrollView.sequenceFrom(this.surface);
 
 
-            this._add(this.modifier).link(this.boringScrollView);
+            this._add(this.modifier).add(this.boringScrollView);
 
             this.surface.pipe(this.eventOutput);
             this.surface.pipe(this.boringScrollView);            

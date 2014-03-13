@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var Surface         = require("famous/Surface");
     var Modifier        = require("famous/Modifier");
-    var Matrix          = require("famous/Matrix");
+    var Transform          = require("famous/Transform");
     var View            = require("famous/View");
     var AppUtils        = require("app/Util");
     var Timer           = require("famous-utils/Time");
@@ -64,7 +64,7 @@ define(function(require, exports, module) {
 
         });
 
-        this._add(new Modifier({origin:[.5,.5]})).link(button);
+        this._add(new Modifier({origin:[.5,.5]})).add(button);
 
         return button;
     }//end create controls
@@ -137,7 +137,7 @@ define(function(require, exports, module) {
                     content: data
                 });
                 var modifier = new Modifier({
-                    transform: Matrix.translate(0,0,0),
+                    transform: Transform.translate(0,0,0),
                     origin: this.options.origin,
                     opacity: 0
                 });
@@ -147,7 +147,7 @@ define(function(require, exports, module) {
 
                 //add it to the view
                 slide.obj = {surface: surface, modifier: modifier};
-                this._add(modifier).link(surface);
+                this._add(modifier).add(surface);
 
                 _animateSlide.call(this, slideNumber);
             }.bind(this));

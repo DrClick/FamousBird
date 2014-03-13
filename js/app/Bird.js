@@ -4,8 +4,8 @@ define(function(require, exports, module) {
     //Includes Famous Repositories
     var Surface = require("famous/Surface");
     var Modifier = require("famous/Modifier");
-    var Matrix = require("famous/Matrix");
-    var Vector = require("famous-physics/math/Vector");
+    var Transform = require("famous/Transform");
+    var Vector = require("famous-math/Vector");
 
     //Include Physics
     var Spring = require("famous-physics/forces/Spring");     //spring effect
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         });
 
         this.modifier = new Modifier({
-            transform: Matrix.multiply(Matrix.rotateZ(0), Matrix.translate(0,0,10)),
+            transform: Transform.multiply(Transform.rotateZ(0), Transform.translate(0,0,10)),
             origin: [0.5, 0.5]
         });
 
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
 
 
         //Render the Famous Surface from the particle
-        this.particle.link(this.modifier).link(this.surface);
+        this.particle.add(this.modifier).add(this.surface);
 
         this.hangout();
     }
@@ -124,7 +124,7 @@ define(function(require, exports, module) {
        var rotation = (direction === "up" ? Math.PI * -0.25 : Math.PI * .5);
        var duration = (direction === "up" ? 100 : 800);
        this.modifier.halt();
-       this.modifier.setTransform(Matrix.rotateZ(rotation), { duration: duration }, callback);
+       this.modifier.setTransform(Transform.rotateZ(rotation), { duration: duration }, callback);
     };
 
     module.exports = Birdie;

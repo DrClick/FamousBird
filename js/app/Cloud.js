@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 	//Includes Famous Repositories
     var Surface = require("famous/Surface");
     var Modifier = require("famous/Modifier");
-    var Matrix = require("famous/Matrix");
+    var Transform = require("famous/Transform");
 
       
     /** @constructor */
@@ -28,9 +28,9 @@ define(function(require, exports, module) {
     function _create(){
     	this.modifier =
             new Modifier({
-    	        transform: Matrix.multiply(
-                    Matrix.translate(0,this.opts.yPos,0),
-                    Matrix.scale(this.opts.scale, this.opts.scale, 0)),
+    	        transform: Transform.multiply(
+                    Transform.translate(0,this.opts.yPos,0),
+                    Transform.scale(this.opts.scale, this.opts.scale, 0)),
                 opacity: this.opts.opacity
     	    });
 
@@ -50,7 +50,7 @@ define(function(require, exports, module) {
         });
 
         //Render the Famous Surface from the particle
-        this.particle.link(this.modifier).link(this.surface);
+        this.particle.add(this.modifier).add(this.surface);
 
         this.surface.pipe(this.game.surface);
 

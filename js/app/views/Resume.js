@@ -3,12 +3,12 @@ define(function(require, exports, module) {
     //Famous
     var Surface         = require("famous/Surface");
     var Modifier        = require("famous/Modifier");
-    var Matrix          = require("famous/Matrix");
+    var Transform       = require("famous/Transform");
     var View            = require("famous/View");
     var GenericSync     = require('famous-sync/GenericSync');
     var MouseSync       = require("famous-sync/MouseSync");
-    var TouchSync      = require("famous-sync/TouchSync");
-    var Transitionable  = require('famous/Transitionable');
+    var TouchSync       = require("famous-sync/TouchSync");
+    var Transitionable  = require('famous-transitions/Transitionable');
     var Timer           = require("famous-utils/Time");
 
     //App
@@ -63,9 +63,9 @@ define(function(require, exports, module) {
 
         this.mainView = new MainView();
         this.mainMod = new Modifier({
-            transform: Matrix.translate(0, 0, 3)
+            transform: Transform.translate(0, 0, 3)
         });
-        this._add(this.mainMod).link(this.mainView);
+        this._add(this.mainMod).add(this.mainView);
     }
 
     function _createGameView() {
@@ -73,17 +73,17 @@ define(function(require, exports, module) {
         this.gameViewPos.name = 'gameView';
         this.gameView = new GameView();
         this.gameMod = new Modifier({
-            transform: Matrix.translate(0, 0, 2)
+            transform: Transform.translate(0, 0, 2)
         });
-        this._add(this.gameMod).link(this.gameView);
+        this._add(this.gameMod).add(this.gameView);
     }
     function _createBoringView() {
         this.boringViewPos = new Transitionable(0);
         this.boringView = new BoringView();
         this.boringMod = new Modifier({
-            transform: Matrix.translate(0, 0, 1)
+            transform: Transform.translate(0, 0, 1)
         });
-        this._add(this.boringMod).link(this.boringView);
+        this._add(this.boringMod).add(this.boringView);
     }
 
     function _handleTouch() {
@@ -152,19 +152,19 @@ define(function(require, exports, module) {
         this.spec = [];
 
         this.spec.push({
-            transform: Matrix.translate(this.gameViewPos.get(), 0, this.cardIndex.game * 1000),
+            transform: Transform.translate(this.gameViewPos.get(), 0, this.cardIndex.game * 1000),
             opacity: _getOpacityOfCard(this.gameViewPos.get()),
             target: this.gameView.render()
         });
 
         this.spec.push({
-            transform: Matrix.translate(this.boringViewPos.get(), 0, this.cardIndex.boring * 1000),
+            transform: Transform.translate(this.boringViewPos.get(), 0, this.cardIndex.boring * 1000),
             opacity: _getOpacityOfCard(this.boringViewPos.get()),
             target: this.boringView.render()
         });
 
         this.spec.push({
-            transform: Matrix.translate(this.mainViewPos.get(), 0, this.cardIndex.main * 1000),
+            transform: Transform.translate(this.mainViewPos.get(), 0, this.cardIndex.main * 1000),
             opacity: _getOpacityOfCard(this.mainViewPos.get()),
             target: this.mainView.render()
         });
