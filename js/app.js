@@ -3,7 +3,6 @@ define(function(require, exports, module) {
         var Engine = require("famous/Engine");
         var Modifier = require("famous/Modifier");
         var Transform = require("famous/Transform");
-        //var Resume = require("app/views/Resume");
         var GameView        = require("app/views/Game");
 
         //create the new one
@@ -31,6 +30,5 @@ define(function(require, exports, module) {
             size: [window.innerWidth, window.innerHeight],
             transform: offsetMatrix
         })).add(game);
-
 });
 

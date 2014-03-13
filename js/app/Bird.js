@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
     //Utilities
     var AppUtils = require("app/Util");
-    var Sounds = require("app/Sounds");
+    var GameSounds = require("app/GameSounds");
     var Timer = require("famous-utils/Time");
 
    
@@ -117,7 +117,7 @@ define(function(require, exports, module) {
         this.rotateBirdie("up", function(){
             me.rotateBirdie("down");}
         );
-        AppUtils.playSound("flap");
+        GameSounds.playSound(0, 1.0);
     };
 
     Birdie.prototype.rotateBirdie = function(direction, callback) {

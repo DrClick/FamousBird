@@ -43,3 +43,9 @@
 [submodule "js/famous-audio"]
 	path = js/famous-audio
 	url = git@github.com:Famous/audio.git
+[submodule "pkgtool"]
+	path = pkgtool
+	url = https://github.com/Famous/pkgtool.git
+[submodule "js/famous-math"]
+	path = js/famous-math
+	url = https://github.com/Famous/math.git

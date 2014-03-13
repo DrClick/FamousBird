@@ -20,7 +20,7 @@ define(function(require, exports, module) {
     var Pipe = require("app/Pipe");
     var Floor = require("app/Floor");
     var Score = require("app/Score");
-    //var Sounds = require("app/Sounds");
+    
     var GameSounds = require("app/GameSounds");
 
     //Widgets
@@ -31,7 +31,6 @@ define(function(require, exports, module) {
     //Utils
     var Utils = require('famous-utils/Utils');
     var AppUtils = require("app/Util");
-    //var Sounds = require("app/Sounds");
 
     //Transitions
     var Transitionable = require("famous-transitions/Transitionable");
@@ -211,7 +210,6 @@ define(function(require, exports, module) {
             this.scorer.setScore(score);
 
             GameSounds.playSound( 2, 1.0 );
-            //AppUtils.playSound(Sounds.score);
         }
     };//end method
 
@@ -421,8 +419,7 @@ define(function(require, exports, module) {
 
     function _doooooh(){
 
-        GameSounds.playSound(2, 1.0);
-        //AppUtils.playSound(Sounds.die);
+        GameSounds.playSound(1, 1.0);
 
 
         //create the game over flash surface
