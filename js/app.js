@@ -3,37 +3,41 @@ define(function(require, exports, module) {
         var Engine = require("famous/Engine");
         var Modifier = require("famous/Modifier");
         var Transform = require("famous/Transform");
-        var Resume = require("app/views/Resume");
+        //var Resume = require("app/views/Resume");
+        var GameView        = require("app/views/Game");
 
-        var Profiler = require('famous-performance/Profiler');
-        var ProfilerView = require('famous-performance/ProfilerView');
+        //var Profiler = require('famous-performance/Profiler');
+        //var ProfilerView = require('famous-performance/ProfilerView');
     
-        Engine.pipe(Profiler);
+        //Engine.pipe(Profiler);
 
         //instantiate a new resume        
-        var resume = new Resume();
+        //var resume = new Resume();
 
         //create the new one
         var context = Engine.createContext();
 
+        var game = new GameView();
+        context.add( game );
+
         
 
          //scale the window
-        var scaleX = window.innerHeight / 960;
-        var scaleY = window.innerWidth / 640;
-        var scale = Math.min(scaleX, scaleY);
+        //var scaleX = window.innerHeight / 960;
+        //var scaleY = window.innerWidth / 640;
+        //var scale = Math.min(scaleX, scaleY);
         
 
 
-        context.add(new Modifier({
-            origin : [0,0],
-            transform: Transform.translate(0,0,10)
-        })).add(ProfilerView);
+        //context.add(new Modifier({
+        //    origin : [0,0],
+        //    transform: Transform.translate(0,0,10)
+        //})).add(ProfilerView);
 
-        context.add(new Modifier({
-            origin : [.5,.5],
-            transform: Transform.scale(scale,scale,1)
-        })).add(resume);
+        //context.add(new Modifier({
+        //    origin : [.5,.5],
+        //    transform: Transform.scale(scale,scale,1)
+        //})).add(resume);
         //That was easy!!!
 
 });

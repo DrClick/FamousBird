@@ -27,7 +27,7 @@ define(function(require, exports, module) {
     };
 
     function _create(){
-        AppUtils.loadFragment("/fragments/SlideShowDef.js",{}, function(data){
+        AppUtils.loadFragment("../fragments/SlideShowDef.js",{}, function(data){
             this.slides = JSON.parse(data);
 
             if(this.options.autostart){
@@ -130,7 +130,7 @@ define(function(require, exports, module) {
         };
 
         if(!slide.obj){
-            AppUtils.loadFragment("/fragments/" + slide.href, {}, function(data){
+            AppUtils.loadFragment("../fragments/" + slide.href, {}, function(data){
                 var surface = new Surface({
                     classes: ['slide', 'slide_' + slideNumber],
                     size: this.options.size,

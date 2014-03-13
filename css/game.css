@@ -1,7 +1,7 @@
 
 .game{
     background-color:#6dc6d0;
-    background-image: url('/content/images/background.png');
+    background-image: url('../content/images/background.png');
     background-position: center 532px;
     background-repeat:no-repeat;
     overflow:hidden;
@@ -33,7 +33,7 @@
 }
 
 .getReady p{
-    background-image: url(/content/images/ready.png);
+    background-image: url(../content/images/ready.png);
     width:227px;
     height:195px;
     margin-top:120px;
@@ -44,7 +44,7 @@
     color:brown;
     font-size: 30px;
     background-color:#e2ca91;
-    background-image: url(/content/images/medal.png);
+    background-image: url(../content/images/medal.png);
     background-position: 30px 70px;
     background-repeat: no-repeat;
     border: ridge 5px tan;
@@ -95,7 +95,7 @@ button{
 
 /*------The birdie-------*/
 .birdie{
-    background-image: url('/content/images/birdie.png');
+    background-image: url('../content/images/birdie.png');
     background-position: left top;
     background-attachment: fixed;
     overflow: hidden;
@@ -112,7 +112,7 @@ button{
 
 /*------Clouds---------*/
 .cloud{
-    background-image: url('/content/images/clouds.png');
+    background-image: url('../content/images/clouds.png');
     background-size: 128 256px;
     overflow: hidden;
     background-repeat:no-repeat;
@@ -133,7 +133,7 @@ button{
 
 /*------Pipes---------*/
 .pipe{
-    background-image: url('/content/images/pipe.png');
+    background-image: url('../content/images/pipe.png');
     color:transparent;
     background-size: cover;
     overflow: hidden;
@@ -143,7 +143,7 @@ button{
 
 /*------Floor---------*/
 .floor{
-    background-image: url('/content/images/floor.png');
+    background-image: url('../content/images/floor.png');
     background-color:tan;
     background-size: 128 41;
     overflow: hidden;

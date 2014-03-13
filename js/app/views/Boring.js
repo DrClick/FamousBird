@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 
     function _create(){
 
-        AppUtils.loadFragment("/fragments/boring.html", {}, function(frag){
+        AppUtils.loadFragment("fragments/boring.html", {}, function(frag){
 
             this.surface = new Surface({
                 size: [640, 4000],
