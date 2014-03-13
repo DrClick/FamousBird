@@ -8,7 +8,7 @@ define(function(require, exports, module) {
      */
      var Utils = {                
         playSound: function(sound){
-            setTimeout(function(){
+            //setTimeout(function(){
                 sound.currentTime = 0.01;
                 if (sound.Play) {
                     sound.Play();
@@ -16,7 +16,7 @@ define(function(require, exports, module) {
                     sound.play();
                 }
 
-            },1);
+            //},1);
         },//end function
 
         pulse: function(modifier){

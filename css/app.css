@@ -6,7 +6,7 @@
   font-family: 'terminal';
   font-style: normal;
   font-weight: 400;
-  src: url(/content/font/terminal.woff) format('woff');
+  src: url(../content/font/terminal.woff) format('woff');
 }
 body{
     background : rgba(0,0,0,1);

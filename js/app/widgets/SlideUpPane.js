@@ -50,7 +50,7 @@ define(function(require, exports, module) {
         node.add(this.modifier).add(this.surface);
 
 
-        this.surface.pipe(this.eventOutput);
+        this.surface.pipe(this._eventOutput);
         this.surface.add(new Modifier({origin:[.5,.5]})).add(new Surface({
             classes : ['unselectable'].concat(this.options.classes),
             content: this.options.content

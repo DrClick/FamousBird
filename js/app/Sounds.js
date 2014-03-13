@@ -15,7 +15,7 @@ define(function(require, exports, module) {
         var el = document.createElement("audio");
         el.setAttribute("controls", true);
         var src = document.createElement("source");
-        src.src = "/content/sounds/" + res.location;
+        src.src = "../../content/sounds/" + res.location;
         el.appendChild(src);
         sounds[res.sound] = el;
     };

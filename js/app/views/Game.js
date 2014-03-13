@@ -20,7 +20,8 @@ define(function(require, exports, module) {
     var Pipe = require("app/Pipe");
     var Floor = require("app/Floor");
     var Score = require("app/Score");
-    var Sounds = require("app/Sounds");
+    //var Sounds = require("app/Sounds");
+    var GameSounds = require("app/GameSounds");
 
     //Widgets
     var BouncyPane = require("app/widgets/BouncyPane");
@@ -29,7 +30,7 @@ define(function(require, exports, module) {
 
     //Utils
     var AppUtils = require("app/Util");
-    var Sounds = require("app/Sounds");
+    //var Sounds = require("app/Sounds");
 
     //Transitions
     var Transitionable = require("famous-transitions/Transitionable");
@@ -201,7 +202,9 @@ define(function(require, exports, module) {
         if(this.score != score){
             this.score = score;
             this.scorer.setScore(score);
-            AppUtils.playSound(Sounds.score);
+
+            GameSounds.playSound( 2, 1.0 );
+            //AppUtils.playSound(Sounds.score);
         }
     };//end method
 
@@ -350,7 +353,7 @@ define(function(require, exports, module) {
 
         //display the score pane
         AppUtils.loadFragment(
-            "/fragments/finalScore.html", 
+            "../../fragments/finalScore.html", 
             {score:1, highScore:999},
             _createFinalScorePane.bind(this)
         );
@@ -410,7 +413,8 @@ define(function(require, exports, module) {
 
     function _doooooh(){
 
-        AppUtils.playSound(Sounds.die);
+        GameSounds.playSound(2, 1.0);
+        //AppUtils.playSound(Sounds.die);
 
 
         //create the game over flash surface

@@ -40,3 +40,6 @@
 [submodule "js/famous-surfaces"]
 	path = js/famous-surfaces
 	url = git@github.com:Famous/famous-surfaces.git
+[submodule "js/famous-audio"]
+	path = js/famous-audio
+	url = git@github.com:Famous/audio.git
