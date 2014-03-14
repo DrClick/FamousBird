@@ -5,6 +5,7 @@
     background-position: center 532px;
     background-repeat:no-repeat;
     font-family: 'flappyBird';
+    overflow: hidden;
 }
 
 .startup, .gameOver, .scorer, .getReady{
