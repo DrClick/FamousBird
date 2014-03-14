@@ -19,7 +19,7 @@ define(function(require, exports, module) {
             yPos        : -Math.random() * 450,
             scale       : 2 + 2 * Math.random(),
             opacity     : 1 / (1.1 + Math.random()),
-            velocity    : -.1 - Math.random() * .5,
+            velocity    : -.1 - Math.random() * .1,
             cloudType   : "cloud-type-" + parseInt((Math.random() * 1000)) % 3
         };
     }//end init
