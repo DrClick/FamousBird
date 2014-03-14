@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     //Utilities
     var AppUtils = require("app/Util");
     var GameSounds = require("app/GameSounds");
-    var Timer = require("famous-utils/Time");
+    var Timer = require("famous-utilities/Timer");
 
    
     /** @constructor */
@@ -82,9 +82,9 @@ define(function(require, exports, module) {
     Birdie.prototype.fly = function(){
         this.flyState++;
         var state = this.flyState % 4;
-        if(state === 0 || state === 2 ) {this.surface.setClasses(["birdie"]);}
-        if(state === 1) {this.surface.setClasses(["birdie", "birdie-up"]);}
-        if(state === 3) {this.surface.setClasses(["birdie","birdie-down"]);}
+        // if(state === 0 || state === 2 ) {this.surface.setClasses(["birdie"]);}
+        // if(state === 1) {this.surface.setClasses(["birdie", "birdie-up"]);}
+        // if(state === 3) {this.surface.setClasses(["birdie","birdie-down"]);}
     };
 
     Birdie.prototype.start = function() {
@@ -97,14 +97,11 @@ define(function(require, exports, module) {
     };
 
     Birdie.prototype.stop = function() {
-        Timer.removeInterval(this.flyTimer);
+        Timer.clear(this.flyTimer);
     };
     
     Birdie.prototype.flap = function(isInitialFlap){
         var me = this;
-
-        console.log("flap");
-
         if(!isInitialFlap){
             //nudge the bird up
             this.particle.setVel([0,-.45,0]);//this was a hack, but it works better than below
