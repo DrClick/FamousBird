@@ -104,6 +104,16 @@ define(function(require, exports, module) {
             strength : this.options.gravityStrength
         });
 
+
+        //add the floor
+        var floorSurface = new Surface({
+            classes: ["floor"],
+            size:[640,215],
+            position: [0,365]
+        });
+        this._add(floorSurface);
+
+
         _spawnFloor.call(this);
 
         //pipe events up and handle clicks
@@ -163,6 +173,12 @@ define(function(require, exports, module) {
         this.physicsEngine = null;
         this.surface = null;
         this.node.object = null;
+
+        //clear the timers
+        for(var t in this.timers){
+            Timer.clear(this.timers[t]);
+            this.timers[t] = null;
+        }
 
         _create.call(this);
         _init.call(this);

@@ -26,8 +26,8 @@ define(function(require, exports, module) {
         
         this.surface = 
             new Surface({
-                size    : [128*20, 215],
-                classes : ['floor']
+                size    : [128*20, 18],
+                classes : ['grass']
         });
 
             /*content : '<img width="100" src="/content/images/logos.svg"/>'+
@@ -39,8 +39,8 @@ define(function(require, exports, module) {
         this.particle = this.physicsEngine.createBody({
                     shape : this.physicsEngine.BODIES.RECTANGLE,
                     m : 0,
-                    size : [128*20, 265],
-                    p : [this.opts.initPos, 372 , 1],
+                    size : [128*20, 18],
+                    p : [this.opts.initPos, 283 , 1],
                     v : [this.opts.velocity,0,0]
         });
 
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
     }//end create
 
     Floor.prototype.restart = function(){
-        this.particle.setPos([this.opts.initPos, 372,0]);
+        this.particle.setPos([this.opts.initPos, 283,1]);
     }
 
 

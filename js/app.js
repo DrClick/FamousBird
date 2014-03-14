@@ -5,30 +5,30 @@ define(function(require, exports, module) {
         var Transform = require("famous/Transform");
         var GameView        = require("app/views/Game");
 
-        //create the new one
-        var context = Engine.createContext();
-        context.setPerspective(10000);
-
-        var game = new GameView();
-        
-
          //scale the window
         var scaleY = window.innerHeight / 960;
         var scaleX = window.innerWidth / 640;
         var scale = Math.min(scaleX, scaleY);
 
-        var newSize = [640 * scale, 960 * scale];
-        var offsetX = (640 - newSize[0])*0.25;
+        console.log(scale);
 
-        var offsetMatrix = Transform.move(
-            Transform.scale(scale, scale,1),
-            [offsetX, 0]
-        );
+        var appWidth = 640 * scale;
+        var appHeight = 960 * scale;
+
+        var contextContainer = document.getElementById("contextContainer");
+        contextContainer.style.width = appWidth + "px";
+        contextContainer.style.height = appHeight + "px";
+
+        //create the new one
+        var context = Engine.createContext(contextContainer);
+
+
+        var game = new GameView();
 
         context.add(new Modifier({
-            origin: [0,0],
-            size: [window.innerWidth, window.innerHeight],
-            transform: offsetMatrix
+            origin: [.5,.5],
+            size: [640, 960],
+            transform: Transform.scale(scale, scale, 1)
         })).add(game);
 });
 

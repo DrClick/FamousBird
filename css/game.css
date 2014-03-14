@@ -4,7 +4,6 @@
     background-image: url('../content/images/background.png');
     background-position: center 532px;
     background-repeat:no-repeat;
-    overflow:hidden;
     font-family: 'flappyBird';
 }
 
@@ -141,34 +140,35 @@ button{
 }
 
 
-/*------Floor---------*/
+/*------grass---------*/
 .floor{
-    background-image: url('../content/images/floor.png');
-    background-color:tan;
-    background-size: 128 41;
-    overflow: hidden;
+    width:640;
+    height:215;
+    background-image: url('../content/images/grass.png');
     background-repeat:repeat-x;
-    font-family: 'terminal';
-    color: rgba(255,255,255,.4);
-    font-size:20px;
 }
-.floor *{
+.grass{
+    background-image: url('../content/images/grass.png');
+    background-color:tan;
+    background-size: 128 18;
+}
+.grass *{
     margin-left:500px;
 }
-.floor img{
+.grass img{
     float:left;
     margin-top:50px;
     opacity:.2;
 }
-.floor b{
+.grass b{
     display:block;
     margin-top:60px;
 }
-.floor label{
+.grass label{
     display: block;
     /*margin-top:20px;*/
 }
-.floor p{
+.grass p{
     display:block;
     /*margin-top:20px;*/
 }

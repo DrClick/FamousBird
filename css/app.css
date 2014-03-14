@@ -24,3 +24,9 @@ body{
     -o-user-select: none;
     user-select: none;  
 }
+
+#contextContainer{
+  margin-right:auto;
+  margin-left:auto;
+  overflow: hidden
+}
