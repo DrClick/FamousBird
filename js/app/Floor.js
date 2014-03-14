@@ -40,7 +40,7 @@ define(function(require, exports, module) {
                     shape : this.physicsEngine.BODIES.RECTANGLE,
                     m : 0,
                     size : [128*20, 18],
-                    p : [this.opts.initPos, 283 , 1],
+                    p : [this.opts.initPos, 273 , 1],
                     v : [this.opts.velocity,0,0]
         });
 
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
     }//end create
 
     Floor.prototype.restart = function(){
-        this.particle.setPos([this.opts.initPos, 283,1]);
+        this.particle.setPos([this.opts.initPos, 273,1]);
     }
 
 

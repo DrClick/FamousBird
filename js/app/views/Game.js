@@ -108,10 +108,9 @@ define(function(require, exports, module) {
         //add the floor
         var floorSurface = new Surface({
             classes: ["floor"],
-            size:[640,215],
-            position: [0,365]
+            size:[640,215]
         });
-        this._add(floorSurface);
+        this._add(new Modifier({transform: Transform.translate(0,365,0), origin:[.5,.5]})).add(floorSurface);
 
 
         _spawnFloor.call(this);
