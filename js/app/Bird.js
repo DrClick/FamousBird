@@ -82,9 +82,9 @@ define(function(require, exports, module) {
     Birdie.prototype.fly = function(){
         this.flyState++;
         var state = this.flyState % 4;
-        // if(state === 0 || state === 2 ) {this.surface.setClasses(["birdie"]);}
-        // if(state === 1) {this.surface.setClasses(["birdie", "birdie-up"]);}
-        // if(state === 3) {this.surface.setClasses(["birdie","birdie-down"]);}
+        if(state === 0 || state === 2 ) {this.surface.setClasses(["birdie"]);}
+        if(state === 1) {this.surface.setClasses(["birdie", "birdie-up"]);}
+        if(state === 3) {this.surface.setClasses(["birdie","birdie-down"]);}
     };
 
     Birdie.prototype.start = function() {
