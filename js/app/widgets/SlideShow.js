@@ -3,10 +3,10 @@ define(function(require, exports, module) {
 
     var Surface         = require("famous/Surface");
     var Modifier        = require("famous/Modifier");
-    var Transform          = require("famous/Transform");
+    var Transform       = require("famous/Transform");
     var View            = require("famous/View");
     var AppUtils        = require("app/Util");
-    var Timer           = require("famous-utils/Time");
+    var Timer           = require("famous-utilities/Timer");
     var SpringButton    = require("famous-ui/buttons/SpringButton");
 
     function SlideShow() {

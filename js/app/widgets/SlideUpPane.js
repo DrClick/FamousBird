@@ -1,5 +1,4 @@
 define(function(require, exports, module) {
-	var Timer = require('famous-utils/Time');
 	var AppUtils = require('app/Util');
 	var Transform = require('famous/Transform');
 	var Modifier = require('famous/Modifier');
