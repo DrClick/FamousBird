@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-
+    "use strict";
 	//Includes Famous Repositories
     var Engine = require('famous/Engine');
     var Surface = require('famous/Surface');
