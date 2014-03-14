@@ -41,8 +41,7 @@ define(function(require, exports, module) {
         this.surfaces = [
             new Surface({
                 size : [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset],
-                classes : ['pipe','upper', 'unselectable'],
-                content : this.opts.id
+                classes : ['pipe','upper', 'unselectable']
             }),
             new Surface({
                 size : [this.opts.pipeWidth, this.opts.pipeHeight-200 - gapOffset],
@@ -72,6 +71,7 @@ define(function(require, exports, module) {
             ];
 
         //Render the Famous Surface from the particle
+        this.particles[0].pipeNumber = this.opts.id;
         this.particles[0].add(this.modifier).add(this.surfaces[0]);
         this.particles[1].add(this.surfaces[1]);
 
@@ -85,7 +85,7 @@ define(function(require, exports, module) {
         var gapDirection    = (Math.random() * 100 % 2) == 0 ? -1: 1;
         var gapOffset = this.opts.gapHeight * this.opts.gapDirection;
 
-        this.surfaces[0].setContent(opts.id);
+        this.particles[0].pipeNumber = opts.id;
 
         this.surfaces[0].size = [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset];
         this.particles[0].p.setFromArray([400, -370 + gapOffset/2, 0]);

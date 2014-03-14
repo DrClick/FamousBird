@@ -219,7 +219,7 @@ define(function(require, exports, module) {
 
     function _incrementScore(data){
         //read the score from the pipe
-        var score = data.target.node._child._child._object.content;
+        var score = data.target.pipeNumber;
 
         //NOTE: Each pipe ends up creating a lot of hits, so only score it once
         if(this.score != score){
