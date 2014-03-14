@@ -42,17 +42,16 @@ define(function(require, exports, module) {
             transform: Transform.scale(1, 1, 0)
         });
 
-        var me = this;
         this.modifier.render = function(){
-            if(me.visible){
+            if(this.visible){
                 return {
-                    transform : me.modifier.getTransform(),
-                    target : me.surface.render(),
-                    origin : me.modifier.getOrigin(),
-                    opacity : me.modifier.getOpacity()
+                    transform : this.modifier.getTransform(),
+                    target : this.surface.render(),
+                    origin : this.modifier.getOrigin(),
+                    opacity : this.modifier.getOpacity()
                 };
             }//end if visible
-        };
+        }.bind(this);
 
 
 	    //Create a physical particle. This will be used when a pipe overlaps this particle, 

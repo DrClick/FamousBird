@@ -491,18 +491,12 @@ define(function(require, exports, module) {
     };//end show
 
     Game.prototype.render = function(){
-        var spec = [];
         // return startupSurface.render();
         if(this.visible){
-            spec.push({
-                transform : this.modifier.getTransform(),
-                target : this.surface.render(),
-                origin : this.modifier.getOrigin(),
-                opacity : this.modifier.getOpacity()
-            });
+            return this._node.render();
         }//end if visible
 
-        return spec;
+        return undefined;
     };//end render
   
     module.exports = Game;

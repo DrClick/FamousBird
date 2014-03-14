@@ -73,8 +73,7 @@ define(function(require, exports, module) {
         });
 
         this.springID = this.physicsEngine.attach(spring, this.particle);
-        var me = this;
-        this.flyTimer = Timer.setInterval(function(){me.fly();},100);
+        this.flyTimer = Timer.setInterval(function(){this.fly()}.bind(this),100);
 
 
     };
@@ -101,7 +100,6 @@ define(function(require, exports, module) {
     };
     
     Birdie.prototype.flap = function(isInitialFlap){
-        var me = this;
         if(!isInitialFlap){
             //nudge the bird up
             this.particle.setVel([0,-.50,0]);//this was a hack, but it works better than below
@@ -111,9 +109,7 @@ define(function(require, exports, module) {
         }
         
         //adjust the birdie rotation
-        this.rotateBirdie("up", function(){
-            me.rotateBirdie("down");}
-        );
+        this.rotateBirdie("up", function(){this.rotateBirdie("down")}.bind(this));
         GameSounds.playSound(0, 1.0);
     };
 
