@@ -6,7 +6,7 @@ define(function(require, exports, module) {
     var RenderNode = require("famous/RenderNode");
     var Modifier = require("famous/Modifier");
     var Transform = require("famous/Transform");
-    var Timer = require("famous-utils/Time");
+    var Timer = require("famous-utilities/Timer");
     var PhysicsEngine = require('famous-physics/PhysicsEngine');
 
     //include forces and constraints
@@ -174,11 +174,7 @@ define(function(require, exports, module) {
         this.surface = null;
         this.node.object = null;
 
-        //clear the timers
-        for(var t in this.timers){
-            Timer.clear(this.timers[t]);
-            this.timers[t] = null;
-        }
+        _clearTimers.call(this);
 
         _create.call(this);
         _init.call(this);
@@ -193,16 +189,21 @@ define(function(require, exports, module) {
         };
     };//end stop
 
+    function _clearTimers(){
+        //clear the timers
+        for(var t in this.timers){
+            Timer.clear(this.timers[t]);
+            this.timers[t] = null;
+        }
+    }
+
 
     function _end(){
          //Bummer dude, game over
         if(!this.ended){
             this.ended = true;
             
-            //clean up timers
-            Timer.removeInterval(this.timers.pipes);
-            Timer.removeInterval(this.timers.floor);
-            Timer.removeInterval(this.timers.clouds);
+            _clearTimers.call(this);
 
             //stop everything moving
             _stop.call(this);
@@ -427,7 +428,7 @@ define(function(require, exports, module) {
                 scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
             }
             else{
-                Timer.removeInterval(this.timers.counter);
+                Timer.clear(this.timers.counter);
             }
         }.bind(this),40);
     }//end create final score pane
