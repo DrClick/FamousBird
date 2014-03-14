@@ -21,7 +21,7 @@ define(function(require, exports, module) {
         this.opts = {
             id              : opts.id,
             velocity        : -.3,
-            gapHeight       : Math.random() * 190,
+            gapHeight       : -100 + Math.random() * 300,
             gapDirection    : (Math.random() * 100 % 2) == 0 ? -1: 1,
             pipeHeight      : 480,
             pipeWidth       : 113,
