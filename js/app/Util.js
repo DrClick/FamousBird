@@ -1,6 +1,5 @@
 define(function(require, exports, module) {
-    var Text = require('Text');
-    var Hogan = require('lib/Hogan');
+    "use strict";
     var Transform = require('famous/Transform');
 
     /**
@@ -26,13 +25,6 @@ define(function(require, exports, module) {
                 function(){
                     m.setTransform(Transform.scale(1,1, 1), { duration: 100 });
                 });
-        },//end function
-
-        loadFragment: function(fragment, data, callback){
-             require(['text!' + fragment], function(frag){
-                var result = Hogan.compile(frag).render(data);
-                callback(result);
-            });
         }//end function
     };
 
