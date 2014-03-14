@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+	"use strict";
     var SoundPlayer = require('famous-audio/SoundPlayer');
 
 
