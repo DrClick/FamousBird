@@ -82,11 +82,7 @@ define(function(require, exports, module) {
         //create the container and link the physics engine
         this.surface = new ContainerSurface({
             size : this.options.boardSize,
-            classes: ["game"],
-            properties: {
-                border: "2px solid black",
-                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
-            }
+            classes: ["game"]
         });
 
         this.modifier = new Modifier({
@@ -108,9 +104,10 @@ define(function(require, exports, module) {
         //add the floor
         var floorSurface = new Surface({
             classes: ["floor"],
-            size:[640,215]
+            size:[640,215],
+            properties: {backgroundColor:"pink"}
         });
-        this._add(new Modifier({transform: Transform.translate(0,365,0), origin:[.5,.5]})).add(floorSurface);
+        this.surface.add(new Modifier({transform: Transform.translate(0,372,1), origin:[.5,.5]})).add(floorSurface);
 
 
         _spawnFloor.call(this);

@@ -145,7 +145,7 @@ button{
 .floor{
     width:640;
     height:215;
-    background-image: url('../content/images/grass.png');
+    background-image: url('../content/images/floor.png');
     background-repeat:repeat-x;
 }
 .grass{
