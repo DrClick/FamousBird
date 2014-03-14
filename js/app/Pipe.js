@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         if(!opts) opts = {};
         this.opts = {
             id              : opts.id,
-            velocity        : -.4,
+            velocity        : -.3,
             gapHeight       : Math.random() * 190,
             gapDirection    : (Math.random() * 100 % 2) == 0 ? -1: 1,
             pipeHeight      : 480,

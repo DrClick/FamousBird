@@ -32,7 +32,7 @@ define(function(require, exports, module) {
         
         //create surface
         this.surface = new Surface({
-            size : [78, 57],
+            size : [77, 57],
             classes : ["birdie"]
         });
 
@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 
         this.springID = this.physicsEngine.attach(spring, this.particle);
         var me = this;
-        this.flyTimer = Timer.setInterval(function(){me.fly();},150);
+        this.flyTimer = Timer.setInterval(function(){me.fly();},100);
 
 
     };
@@ -104,7 +104,7 @@ define(function(require, exports, module) {
         var me = this;
         if(!isInitialFlap){
             //nudge the bird up
-            this.particle.setVel([0,-.45,0]);//this was a hack, but it works better than below
+            this.particle.setVel([0,-.50,0]);//this was a hack, but it works better than below
         }
         else{
             this.particle.applyForce({x : 0, y : -this.opts.flapStrength, z : 0});
