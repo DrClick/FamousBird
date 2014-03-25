@@ -175,6 +175,11 @@ define(function(require, exports, module) {
         this.physicsEngine.detachAll();
 
 
+        this.pipes.forEach(function(p){
+            p = null;
+        });
+
+
         _clearTimers.call(this);
 
         _create.call(this);
@@ -324,7 +329,7 @@ define(function(require, exports, module) {
     function _spawn(){
         //Spawn the scene
         this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
-        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),2500);
+        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),1000);
     }//end spawn
 
     function  _showWelcomeScreen(){

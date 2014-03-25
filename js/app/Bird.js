@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 
         this.opts = {
             flapStrength        : .035,
-            birdieRadius        : 28
+            birdieRadius        : 25
         };
         if (opts){this.setOpts(opts);}
 
@@ -109,7 +109,6 @@ define(function(require, exports, module) {
         }
         
         //adjust the birdie rotation
-        debugger
         this.rotateBirdie("up");
         Timer.setTimeout(function(){this.rotateBirdie("down")}.bind(this), 100)
         GameSounds.playSound(0, 1.0);
