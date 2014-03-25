@@ -19,12 +19,14 @@ define(function(require, exports, module) {
 
         //create the new one
         var context = Engine.createContext(contextContainer);
+        context.setPerspective(100);
         
 
         modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
         var game = new GameView();
 
         context.add(modifier).add(game);
+        Engine.on("orientationchange", function(){alert("test")});
         Engine.on("resize", _resize);
 
 

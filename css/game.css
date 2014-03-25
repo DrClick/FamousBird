@@ -136,6 +136,10 @@ button{
     overflow: hidden;
     background-repeat:no-repeat;
 }
+.pipe.upper{
+    background-image: url('../content/images/pipe_up.png');
+    background-position: bottom;
+}
 
 
 /*------grass---------*/

@@ -32,7 +32,6 @@ define(function(require, exports, module) {
     function _create(){
     	this.modifier =
             new Modifier({
-                transform: Transform.rotateZ(Math.PI),
                 origin: [0.5, 0.5]
             });
         
