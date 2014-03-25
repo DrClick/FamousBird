@@ -93,18 +93,16 @@ button{
 
 /*------The birdie-------*/
 .birdie{
-    background-image: url('../content/images/birdie.png');
-    background-position: 0px top;
+    background-image: url('../content/images/birdie_1.png');
     width:77px;
-    background-attachment: fixed;
     overflow: hidden;
     background-repeat:no-repeat;
 }
 .birdie-down{
-    background-position: -77px top;
+    background-image: url('../content/images/birdie_2.png');
 }
 .birdie-up{
-    background-position: -154px top;
+    background-image: url('../content/images/birdie_3.png');
 }
 
 
