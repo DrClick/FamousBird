@@ -62,6 +62,11 @@ define(function(require, exports, module) {
     };
 
     
+    Birdie.prototype.reset = function(){
+        this.physicsEngine.remove(this.particle);
+        this.particle.setPos([-120,-40,10]);
+    }
+
     Birdie.prototype.hangout = function(){
         //Define Physical Agents: Forces & constraints
         var spring = new Spring({

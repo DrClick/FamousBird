@@ -166,14 +166,23 @@ define(function(require, exports, module) {
     }//end start
 
     function _restart(){
-        this.physicsEngine = null;
+        this.panes.gameOverButtons.hide();
+
+
+        //remove all the particles from the physics engine
+        this.physicsEngine._particles = [];
+        this.physicsEngine.detachAll();
+
+
         this.surface = null;
         this.node.object = null;
+        this.birdie.reset();
 
         _clearTimers.call(this);
 
         _create.call(this);
         _init.call(this);
+        
     }//end restart
 
     function _stop(){
@@ -206,6 +215,7 @@ define(function(require, exports, module) {
 
             //flash and shake the screen
             _doooooh.call(this);
+
 
             //show the game over screen
             _showGameOverScreen.call(this);
@@ -395,7 +405,7 @@ define(function(require, exports, module) {
         });
 
         var highScoreSurface = new Surface({
-            content: "<h1>999</h1>",
+            content: "<h1>" + (localStorage.getItem("HighScore") || 0) + "</h1>",
             size: [100,50],
             classes: ["scorer"]
         });
@@ -422,6 +432,12 @@ define(function(require, exports, module) {
             scoreUpCounter++;
             if(scoreUpCounter<= this.score){
                 scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
+
+                //set the highscore if higher than the local score
+                if(scoreUpCounter > localStorage.getItem("HighScore")){
+                    localStorage.setItem("HighScore", scoreUpCounter);
+                    highScoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
+                }
             }
             else{
                 Timer.clear(this.timers.counter);
