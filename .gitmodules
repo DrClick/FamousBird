@@ -49,3 +49,6 @@
 [submodule "js/famous-math"]
 	path = js/famous-math
 	url = https://github.com/Famous/math.git
+[submodule "famous"]
+	path = famous
+	url = git@github.com:Famous/famous.git
