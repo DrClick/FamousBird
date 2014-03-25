@@ -45,6 +45,12 @@ define(function(require, exports, module) {
     function Game(){
         View.apply(this, arguments);
 
+        //create the container and link the physics engine
+        this.surface = new ContainerSurface({
+            size : this.options.boardSize,
+            classes: ["game"]
+        });
+
         _create.call(this);
         _init.call(this);
 
@@ -79,11 +85,7 @@ define(function(require, exports, module) {
         this.clouds         = [null, null, null, null, null, null, null, null, null, null];
         this.floor          = [null, null, null];
 
-        //create the container and link the physics engine
-        this.surface = new ContainerSurface({
-            size : this.options.boardSize,
-            classes: ["game"]
-        });
+        
 
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
@@ -114,12 +116,9 @@ define(function(require, exports, module) {
 
         //pipe events up and handle clicks
         this.surface.pipe(this._eventOutput);
-        this.surface.on("keyup", _handleClicks.bind(this));
 
         if( Utils.isMobile() ) { 
-
             this.surface.on("touchstart", _handleClicks.bind(this));
-            
         } else { 
             this.surface.on("click", _handleClicks.bind(this));
         }
@@ -167,16 +166,14 @@ define(function(require, exports, module) {
 
     function _restart(){
         this.panes.gameOverButtons.hide();
+        this.panes.gameOver.hide();
+        this.panes.finalScore.hide();
 
 
         //remove all the particles from the physics engine
         this.physicsEngine._particles = [];
         this.physicsEngine.detachAll();
 
-
-        this.surface = null;
-        this.node.object = null;
-        this.birdie.reset();
 
         _clearTimers.call(this);
 
@@ -275,6 +272,25 @@ define(function(require, exports, module) {
                     this.physicsEngine,
                     {id:this.counters.pipe + 1}
                 );
+
+
+
+                //detects overlaps with pipes and the birdie
+                var overlap = new Overlap();
+                overlap.on("hit", _end.bind(this));
+                this.physicsEngine.attach(overlap, pipes.particles, this.birdie.particle);
+
+                //detect overlaps with the upper pipe and the scorer
+                var overlapScore = new Overlap();
+                overlapScore.on("hit", function(data){
+                    _incrementScore.call(this, data);
+                }.bind(this));
+                this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
+
+
+
+
+
                 this.pipes[this.counters.pipe % this.pipes.length] = pipes;
 
             }//end if pipes did not exist
@@ -282,19 +298,6 @@ define(function(require, exports, module) {
                 pipes.restart({id:this.counters.pipe + 1});
             }
 
-             //detects overlaps with pipes and the birdie
-            var overlap = new Overlap();
-            overlap.on("hit", _end.bind(this));
-            this.physicsEngine.attach(overlap, pipes.particles, this.birdie.particle);
-
-            //detect overlaps with the upper pipe and the scorer
-            var overlapScore = new Overlap();
-            overlapScore.on("hit", function(data){
-                _incrementScore.call(this, data);
-            }.bind(this));
-            this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
-
-                
             //incrament the counter
             this.counters.pipe++;
         }//end if game not over
@@ -379,12 +382,7 @@ define(function(require, exports, module) {
         this.panes.gameOver.pipe(this._eventOutput);
         this.panes.gameOverButtons.pipe(this._eventOutput);
 
-        //display the score pane
-        //AppUtils.loadFragment(
-        //    "fragments/finalScore.html", 
-        //    {score:1, highScore:999},
-        //    _createFinalScorePane.bind(this)
-        //);
+
         _createFinalScorePane.call(this, "<div class='currentScore'>SCORE</div><div class='highScore'>BEST</div><div class='medal'>MEDAL</div>");
 
         //display the buttons pane
@@ -396,7 +394,7 @@ define(function(require, exports, module) {
     function _createFinalScorePane(content){
          var scoreSurface = new Surface({
             content: "<h1>0</h1>",
-            size: [100,50],
+            size: [100,80],
             classes: ["scorer"]
         });
         var scoreModifier = new Modifier({
@@ -406,7 +404,7 @@ define(function(require, exports, module) {
 
         var highScoreSurface = new Surface({
             content: "<h1>" + (localStorage.getItem("HighScore") || 0) + "</h1>",
-            size: [100,50],
+            size: [100,80],
             classes: ["scorer"]
         });
         var highScoreModifier = new Modifier({

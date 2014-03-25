@@ -61,11 +61,6 @@ define(function(require, exports, module) {
         for (var key in opts){this.opts[key] = opts[key];}
     };
 
-    
-    Birdie.prototype.reset = function(){
-        this.physicsEngine.remove(this.particle);
-        this.particle.setPos([-120,-40,10]);
-    }
 
     Birdie.prototype.hangout = function(){
         //Define Physical Agents: Forces & constraints
@@ -114,7 +109,9 @@ define(function(require, exports, module) {
         }
         
         //adjust the birdie rotation
-        this.rotateBirdie("up", function(){this.rotateBirdie("down")}.bind(this));
+        debugger
+        this.rotateBirdie("up");
+        Timer.setTimeout(function(){this.rotateBirdie("down")}.bind(this), 100)
         GameSounds.playSound(0, 1.0);
     };
 
