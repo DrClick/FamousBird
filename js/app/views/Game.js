@@ -165,25 +165,7 @@ define(function(require, exports, module) {
     }//end start
 
     function _restart(){
-        this.panes.gameOverButtons.hide();
-        this.panes.gameOver.hide();
-        this.panes.finalScore.hide();
-
-
-        //remove all the particles from the physics engine
-        this.physicsEngine._particles = [];
-        this.physicsEngine.detachAll();
-
-
-        this.pipes.forEach(function(p){
-            p = null;
-        });
-
-
-        _clearTimers.call(this);
-
-        _create.call(this);
-        _init.call(this);
+        location.reload();
         
     }//end restart
 

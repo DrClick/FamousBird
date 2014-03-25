@@ -26,8 +26,10 @@ define(function(require, exports, module) {
         var game = new GameView();
 
         context.add(modifier).add(game);
-        Engine.on("orientationchange", function(){alert("test")});
+
+
         Engine.on("resize", _resize);
+        window.addEventListener("orientationchange", _resize);
 
 
         function _resize(){
