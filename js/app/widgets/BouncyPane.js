@@ -67,7 +67,7 @@ define(function(require, exports, module) {
 
 
     BouncyPane.prototype.hide = function(){
-    	this.modifier.setTransform(Transform.translate(320,-100,10), {duration: 800},
+    	this.modifier.setTransform(Transform.translate(0,-100,10), {duration: 800},
     		function(){
     			this.visible = false;
     	}.bind(this));

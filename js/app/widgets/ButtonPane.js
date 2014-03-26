@@ -83,7 +83,6 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.show = function(){
-        debugger
         this.modifier.setTransform(
             Transform.translate(this.options.position[0],this.options.position[1],this.options.position[2]), 
             {}, 
