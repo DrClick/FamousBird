@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         classes     : [],
         visible     : false,
         origin      : [.5,.5],
-        position    : [0,150,2010],
+        position    : [0,150,10],
         size        : [600,100],
         buttons     : []
     };
@@ -94,18 +94,7 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.render = function(){
-        var spec = [];
-        // return startupSurface.render();
-        if(this.visible){
-        	spec.push({
-        		transform : this.modifier.getTransform(),
-        		target : this.surface.render(),
-        		origin : this.modifier.getOrigin(),
-        		opacity : this.modifier.getOpacity()
-        	});
-        }//end if visible
-
-        return spec;
+        return this.visible ? this.surface.render() : [];
     };//end render
 
     module.exports = ButtonPane;

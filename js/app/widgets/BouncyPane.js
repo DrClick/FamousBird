@@ -39,7 +39,7 @@ define(function(require, exports, module) {
         this.particle = new Circle({
             mass : 1,
             radius : 1,
-            particle : [0,-180,0],
+            position : [270,-100,10],
             velocity : [0,1,0]
         });
 
@@ -48,43 +48,41 @@ define(function(require, exports, module) {
             dampingRatio    : .2,
             length          : 100,
             bidirectional   : false,
-            anchor          : [0,-0,0]
+            anchor          : [270,200,0]
         });
 
         this.modifier = new Modifier({
-                transform: Transform.translate(0,0,50),
                 origin: [0.5, 0.5]
             }
         );
 
         this.physicsEngine.addBody(this.particle);
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
-        //this._add(this.particle).add(this.modifier).add(this.surface);
+        this._add(this.particle).add(this.modifier).add(this.surface);
     }//end create
 
 	BouncyPane.prototype.pulse = function(){
-		this.particle.setVelocity([0,2,0]);
+		this.particle.setVelocity([0,1,0]);
     };//end method
 
+
     BouncyPane.prototype.hide = function(){
-    	this.modifier.setTransform(Transform.translate(0,-500,0), {duration: 800},
+    	this.particle.setTransform(Transform.translate(320,-100,10), {duration: 800},
     		function(){
     			this.visible = false;
     	}.bind(this));
     	this.modifier.setOpacity(0, {duration: 400});
     };//end method
 
+
     BouncyPane.prototype.show = function(){
-    	this.modifier.setTransform(Transform.translate(0,-100,10));
+    	this.modifier.setTransform(Transform.translate(0,200,10));
     	this.modifier.setOpacity(1);
 
     	this.visible = true;
     	this.pulse();
     };//end method
 
-    BouncyPane.prototype.render = function(){
-        return this.visible ? this._node.render(): [];
-    };//end method
 
     module.exports = BouncyPane;
 });

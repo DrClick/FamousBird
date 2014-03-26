@@ -332,7 +332,7 @@ define(function(require, exports, module) {
             classes: ["startup"]
         });
 
-        this._add(this.panes.welcome);
+        this.surface.add(this.panes.welcome);
         this.panes.welcome.show();
 
         this.panes.welcomeButtons = new ButtonPane(this.surface, {
@@ -341,6 +341,7 @@ define(function(require, exports, module) {
                 {text: "SCORES", callback: _showHighScores.bind(this), offsetX: 120}
             ]
         });
+        this.surface.add(this.panes.welcomeButtons);
         this.panes.welcomeButtons.show();
 
 
