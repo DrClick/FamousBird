@@ -34,8 +34,8 @@ define(function(require, exports, module) {
 
         if (source === undefined) return;
 
-        var p1 = source.p;
-        var r1 = source.r;
+        var p1 = source.position;
+        var r1 = source.radius;
 
         var sourceType = source.constructor.name;
 
@@ -54,8 +54,8 @@ define(function(require, exports, module) {
 
             if (source == target) continue;
 
-            var p2 = target.p;
-            var r2 = target.r;
+            var p2 = target.position;
+            var r2 = target.radius;
 
 
             //here we need to determine if target is a circle of rectangle. The rectangle
@@ -104,8 +104,8 @@ define(function(require, exports, module) {
         var circle      = source.constructor.name == CircleName ? source: target;
         var rectangle   = source.constructor.name == RectangleName ? source: target;
 
-        var circ = {x: circle.p.x, y: circle.p.y, r: circle.r};
-        var rect = {x: rectangle.p.x, y: rectangle.p.y, width: rectangle.size[0], height: rectangle.size[1]};
+        var circ = {x: circle.position.x, y: circle.position.y, r: circle.radius};
+        var rect = {x: rectangle.position.x, y: rectangle.position.y, width: rectangle.size[0], height: rectangle.size[1]};
 
         //calc distance of circle from rectangle
         var dist = {};

@@ -58,7 +58,7 @@ define(function(require, exports, module) {
     Game.prototype = Object.create(View.prototype); 
     Game.prototype.constructor=Game; 
     Game.DEFAULT_OPTIONS = {
-        gravityStrength     : .002,
+        gravityStrength     : .0015,
         boardSize           : [640,960],
         pipeSpawnTime       : 1000,
         cloudSpawnTime      : 1000,
@@ -90,7 +90,7 @@ define(function(require, exports, module) {
 
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
-            origin: [.5,0]
+            origin: [0,0]
         });
         
         //add the surface to the view and the physics to the surface
@@ -108,7 +108,10 @@ define(function(require, exports, module) {
         });
 
         //add the bird
-        this.surface.add(this.birdie.particle).add(this.birdie);
+        this.surface.add(this.birdie.particle)
+            .add(this.birdie.originModifier)
+            .add(this.birdie.rotationModifier)
+            .add(this.birdie);
 
 
         //add the floor
@@ -164,9 +167,9 @@ define(function(require, exports, module) {
             restitution : 0
         });
 
-        //attatch the wall and look for collisions with the birdie
-        this.physicsEngine.attach(wall, this.birdie.particle);
-        wall.on("collision", _end.bind(this));
+        // //attatch the wall and look for collisions with the birdie
+        // this.physicsEngine.attach(wall, this.birdie.particle);
+        // wall.on("collision", _end.bind(this));
 
         //let er fly!
         this.birdie.start();
@@ -265,7 +268,6 @@ define(function(require, exports, module) {
             var pipes = this.pipes[this.counters.pipe % this.pipes.length];
             if(pipes == null){
                 pipes = new Pipe(
-                    this,
                     this.physicsEngine,
                     {id:this.counters.pipe + 1}
                 );
@@ -285,7 +287,7 @@ define(function(require, exports, module) {
                 this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
 
 
-
+                this.surface.add(pipes);
 
 
                 this.pipes[this.counters.pipe % this.pipes.length] = pipes;
@@ -379,7 +381,7 @@ define(function(require, exports, module) {
                 {text: "SHARE", callback: _share.bind(this), offsetX: 120}
             ]
         });
-        this.surface.add(this.panges.gameOverButtons);
+        this.surface.add(this.panes.gameOverButtons);
 
         //make sure draggable events on these views are piped up
         this.panes.gameOver.pipe(this._eventOutput);
@@ -459,7 +461,7 @@ define(function(require, exports, module) {
         });
         var flashModifier = new Modifier({
             opacity: .001,//hack to get around a bug
-            origin: [.5,.5]
+            origin: [0,0]
         });
 
         //add the flash screen

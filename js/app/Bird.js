@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     //Include Physics
     var Spring      = require("famous/physics/forces/Spring");     //spring effect
     var Circle      = require("famous/physics/bodies/Circle");
+    var Force       = require("famous/physics/forces/Force");
 
     //Utilities
     var AppUtils    = require("app/Util");
@@ -44,6 +45,15 @@ define(function(require, exports, module) {
         this.flyTimer = null;
         this.flyState = 0;
         this.started = false;
+
+
+        this.originMod = new Modifier({
+            size: [.001, .001]
+        });
+
+        this.rotationModifier = new Modifier({
+            origin: [.5,.5],
+        });
         
         this.birdieModifier = [];
 
@@ -126,10 +136,10 @@ define(function(require, exports, module) {
     Birdie.prototype.flap = function(isInitialFlap){
         if(!isInitialFlap){
             //nudge the bird up
-            this.particle.setVel([0,-.50,0]);//this was a hack, but it works better than below
+            this.particle.setVelocity([0,-.50,0]);//this was a hack, but it works better than below
         }
         else{
-            this.particle.applyForce({x : 0, y : -this.opts.flapStrength, z : 0});
+            this.particle.applyForce(new Force({x : 0, y : -this.opts.flapStrength, z : 0}));
         }
         
         //adjust the birdie rotation
@@ -141,8 +151,8 @@ define(function(require, exports, module) {
     Birdie.prototype.rotateBirdie = function(direction, callback) {
        var rotation = (direction === "up" ? Math.PI * -0.25 : Math.PI * .5);
        var duration = (direction === "up" ? 100 : 800);
-       this.modifier.halt();
-       this.modifier.setTransform(Transform.rotateZ(rotation), { duration: duration }, callback);
+       this.rotationModifier.halt();
+       this.rotationModifier.setTransform(Transform.rotateZ(rotation), { duration: duration, curve: "easeIn" }, callback);
     };
 
     module.exports = Birdie;

@@ -6,17 +6,23 @@
 
     var Modifier = require("famous/core/Modifier");
     var Transform = require("famous/core/Transform");
+    var Circle = require("famous/physics/bodies/Circle");
+    var View = require("famous/core/View");
 
     var AppUtils = require('app/Util');
 
       
     /** @constructor */
     function Score(){
+        View.apply(this);
         this.score      = 0;
         this.surface    = null;
         this.particle   = null;
         this.visible    = true;
     };
+    Score.prototype = Object.create(View.prototype); 
+    Score.prototype.constructor = Score; 
+
 
     Score.prototype.attachToPhysics = function(physicsEngine){
     	//add the point to the screen so that it will score
@@ -42,31 +48,30 @@
             transform: Transform.scale(1, 1, 0)
         });
 
-        this.modifier.render = function(){
-            if(this.visible){
-                return {
-                    transform : this.modifier.getTransform(),
-                    target : this.surface.render(),
-                    origin : this.modifier.getOrigin(),
-                    opacity : this.modifier.getOpacity()
-                };
-            }//end if visible
-        }.bind(this);
+        // this.modifier.render = function(){
+        //     if(this.visible){
+        //         return {
+        //             transform : this.modifier.getTransform(),
+        //             target : this.surface.render(),
+        //             origin : this.modifier.getOrigin(),
+        //             opacity : this.modifier.getOpacity()
+        //         };
+        //     }//end if visible
+        // }.bind(this);
 
 
 	    //Create a physical particle. This will be used when a pipe overlaps this particle, 
         //the player will have scored
-        this.particle = physicsEngine.createBody({
-                    shape : physicsEngine.BODIES.CIRCLE,
-                    m : 0,
-                    r: 5,
-                    p : [-230, -450 , 0],
-                    v : [0,0,0]
+        this.particle = new Circle({
+                    mass: 0,
+                    radius: 5,
+                    position : [110, 0 , 0],
+                    velocity : [0,0,0]
                 });
 
         //Render the Famous Surface from the particle. Note we did not need to link in the surface
         //here because we have created a custom render method on this.modifier
-        this.particle.add(this.translateModifier).add(this.modifier);
+        this._add(this.particle).add(this.translateModifier).add(this.modifier);
     };
 
     Score.prototype.setScore = function(score){

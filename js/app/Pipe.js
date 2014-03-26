@@ -6,15 +6,20 @@ define(function(require, exports, module) {
 
     var Modifier = require("famous/core/Modifier");
     var Transform = require("famous/core/Transform");
+    var View        = require("famous/core/View");
+    var Rectangle   = require("famous/physics/bodies/Rectangle");
 
       
     /** @constructor */
-    function Pipe(game, physicsEngine, opts){
-        this.game = game;
+    function Pipe(physicsEngine, opts){
+        View.apply(this);
+
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);
     };
+    Pipe.prototype = Object.create(View.prototype); 
+    Pipe.prototype.constructor = Pipe; 
 
     function _init(opts){
         if(!opts) opts = {};
@@ -30,10 +35,6 @@ define(function(require, exports, module) {
     }//end init
 
     function _create(){
-    	this.modifier =
-            new Modifier({
-                origin: [0.5, 0.5]
-            });
         
 	    //add the pipe off screen
         var gapOffset = this.opts.gapHeight * this.opts.gapDirection;
@@ -52,30 +53,31 @@ define(function(require, exports, module) {
         this.particles = 
             [
                 //upper pipe
-                this.physicsEngine.createBody({
-                    shape : this.physicsEngine.BODIES.RECTANGLE,
-                    m : 0,
+                new Rectangle({
+                    mass: 0,
                     size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) + gapOffset],
-                    p : [400, -370 + gapOffset/2, 0],
-                    v : [this.opts.velocity,0,0]
+                    position : [720, 0, 0],
+                    velocity : [this.opts.velocity,0,0]
                 }),
                 //lower pipe
-                this.physicsEngine.createBody({
-                    shape : this.physicsEngine.BODIES.RECTANGLE,
-                    m : 0,
+                new Rectangle({
+                    mass : 0,
                     size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) - gapOffset],
-                    p : [400, 125 + gapOffset/2, 0],
-                    v : [this.opts.velocity,0,0]
+                    position : [720, 480 + gapOffset, 0],
+                    velocity : [this.opts.velocity,0,0]
                 })
             ];
 
         //Render the Famous Surface from the particle
         this.particles[0].pipeNumber = this.opts.id;
-        this.particles[0].add(this.modifier).add(this.surfaces[0]);
-        this.particles[1].add(this.surfaces[1]);
+        this._add(this.particles[0]).add(this.surfaces[0]);
+        this._add(this.particles[1]).add(this.surfaces[1]);
 
-        this.surfaces[0].pipe(this.game.surface);
-        this.surfaces[1].pipe(this.game.surface);
+        this.surfaces[0].pipe(this._eventOutput);
+        this.surfaces[1].pipe(this._eventOutput);
+
+        this.physicsEngine.addBody(this.particles[0]);
+        this.physicsEngine.addBody(this.particles[1]);
 
     }//end create
 
@@ -87,10 +89,10 @@ define(function(require, exports, module) {
         this.particles[0].pipeNumber = opts.id;
 
         this.surfaces[0].size = [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset];
-        this.particles[0].p.setFromArray([400, -370 + gapOffset/2, 0]);
+        this.particles[0].setPosition([720, 0, 0]);
 
         this.surfaces[1].size = [this.opts.pipeWidth, this.opts.pipeHeight-200 - gapOffset];
-        this.particles[1].p.setFromArray([400, 125 + gapOffset/2, 0]);
+        this.particles[1].setPosition([720, 480 + gapOffset, 0]);
 
     };
 

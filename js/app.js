@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 
         //create the new one
         var context = Engine.createContext(contextContainer);
-        context.setPerspective(100);
+        context.setPerspective(1);
         
 
         modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
