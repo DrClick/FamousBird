@@ -25,6 +25,13 @@ define(function(require, exports, module) {
                 function(){
                     m.setTransform(Transform.scale(1,1, 1), { duration: 100 });
                 });
+        },//end function
+
+        isMobile: function() { 
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+                return true;
+            } 
+            return false;
         }//end function
     };
 

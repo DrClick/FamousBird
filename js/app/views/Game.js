@@ -122,14 +122,14 @@ define(function(require, exports, module) {
 
         _spawnFloor.call(this);
 
-        // //pipe events up and handle clicks
-        // this.surface.pipe(this._eventOutput);
+        //pipe events up and handle clicks
+        this.surface.pipe(this._eventOutput);
 
-        // if( Utils.isMobile() ) { 
-        //     this.surface.on("touchstart", _handleClicks.bind(this));
-        // } else { 
-        //     this.surface.on("click", _handleClicks.bind(this));
-        // }
+        if( AppUtils.isMobile() ) { 
+            this.surface.on("touchstart", _handleClicks.bind(this));
+        } else { 
+            this.surface.on("click", _handleClicks.bind(this));
+        }
     }//end create
 
 
@@ -247,8 +247,10 @@ define(function(require, exports, module) {
         if(!this.ended){
             var cloud = this.clouds[this.counters.cloud];
             if(cloud == null){
-                cloud = new Cloud(this, this.physicsEngine);
+                cloud = new Cloud(this.physicsEngine);
                 this.clouds[this.counters.cloud] = cloud;
+
+                this.surface.add(cloud);
             }//end if cloud not created yet
             else{
                 cloud.restart();
@@ -320,7 +322,7 @@ define(function(require, exports, module) {
 
     function _spawn(){
         //Spawn the scene
-        //this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
+        this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
         this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),1000);
     }//end spawn
 

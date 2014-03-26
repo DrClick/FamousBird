@@ -1,25 +1,31 @@
 define(function(require, exports, module) {
     "use strict";
 	//Includes Famous Repositories
-    var Surface = require("famous/core/Surface");
-    var Modifier = require("famous/core/Modifier");
-    var Transform = require("famous/core/Transform");
+    var Surface     = require("famous/core/Surface");
+    var Modifier    = require("famous/core/Modifier");
+    var Transform   = require("famous/core/Transform");
+    var View        = require("famous/core/View");
+    var Circle      = require("famous/physics/bodies/Circle");
 
       
     /** @constructor */
-    function Cloud(game, physicsEngine, opts){
-        this.game = game;
+    function Cloud(physicsEngine, opts){
+        View.apply(this);
+
         this.physicsEngine = physicsEngine;
         _init.call(this);
         _create.call(this);
     }
 
+    Cloud.prototype = Object.create(View.prototype); 
+    Cloud.prototype.constructor = Cloud; 
+
     function _init(){
         this.opts = {
-            yPos        : -Math.random() * 450,
+            yPos        : _getYPos(),
             scale       : 2 + 2 * Math.random(),
             opacity     : 1 / (1.1 + Math.random()),
-            velocity    : -.1 - Math.random() * .1,
+            velocity    : -.2 - Math.random() * .1,
             cloudType   : "cloud-type-" + parseInt((Math.random() * 1000)) % 3
         };
     }//end init
@@ -41,23 +47,27 @@ define(function(require, exports, module) {
         });
 
 	    //Create a physical particle
-        this.particle = this.physicsEngine.createBody({
-            shape : this.physicsEngine.BODIES.CIRCLE,
-            m : 0,
-            r : 0,
-            p : [500,0,0],
-            v : [this.opts.velocity,0,0]
+        this.particle = new Circle({
+            mass : 0,
+            radius : 0,
+            position : [820,0,0],
+            velocity : [this.opts.velocity,0,0]
         });
 
         //Render the Famous Surface from the particle
-        this.particle.add(this.modifier).add(this.surface);
+        this.physicsEngine.addBody(this.particle);
+        this._add(this.particle).add(this.modifier).add(this.surface);
 
-        this.surface.pipe(this.game.surface);
+        this.surface.pipe(this._eventOutput);
 
     };
 
+    function _getYPos(){
+        return -10 + Math.random() * 200;
+    }
+
     Cloud.prototype.restart = function(){
-        this.particle.setPos([500, -Math.random() * 450, 0]);
+        this.particle.setPosition([820, _getYPos(), 0]);
     };
 
 
