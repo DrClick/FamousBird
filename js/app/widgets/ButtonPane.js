@@ -8,10 +8,10 @@ define(function(require, exports, module) {
 	var View = require("famous/core/View");
 	
 
-	function ButtonPane(node, options){
+	function ButtonPane(options){
         View.apply(this, [options]);
 
-		_create.call(this, node);     
+		_create.call(this);     
 	}
     ButtonPane.prototype = Object.create(View.prototype);
     ButtonPane.prototype.constructor = ButtonPane;
@@ -19,26 +19,26 @@ define(function(require, exports, module) {
         classes     : [],
         visible     : false,
         origin      : [.5,.5],
-        position    : [0,150,10],
+        position    : [580,700,10],
         size        : [600,100],
         buttons     : []
     };
 
 
-    function _create(node){
+    function _create(){
         this.surface = new ContainerSurface({
             size : this.options.size,
             classes : ['unselectable'].concat(this.options.classes)
         });
 
         this.modifier = new Modifier({
-                transform: Transform.translate(this.options.position[0], this.options.position[1], this.options.position[2]),
-                origin: [0.5, 0.5],
-                opacity: 0
-            }
-        );
+            transform: Transform.translate(this.options.position[0], this.options.position[1], this.options.position[2]),
+            origin: [0.5, 0.5],
+            size: this.options.size,
+            opacity: 0.001
+        });
 
-        node.add(this.modifier).add(this.surface);
+        this._add(this.modifier).add(this.surface);
         this.surface.pipe(this._eventOutput);
 
         
@@ -83,6 +83,7 @@ define(function(require, exports, module) {
     };//end method
 
     ButtonPane.prototype.show = function(){
+        debugger
         this.modifier.setTransform(
             Transform.translate(this.options.position[0],this.options.position[1],this.options.position[2]), 
             {}, 
@@ -93,9 +94,7 @@ define(function(require, exports, module) {
         );//hides the buttons
     };//end method
 
-    ButtonPane.prototype.render = function(){
-        return this.visible ? this.surface.render() : [];
-    };//end render
+   
 
     module.exports = ButtonPane;
 });

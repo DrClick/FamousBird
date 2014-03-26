@@ -335,7 +335,7 @@ define(function(require, exports, module) {
         this.surface.add(this.panes.welcome);
         this.panes.welcome.show();
 
-        this.panes.welcomeButtons = new ButtonPane(this.surface, {
+        this.panes.welcomeButtons = new ButtonPane({
             buttons: [
                 {text: "START", callback: _showGetReadyScreen.bind(this), offsetX: -120},
                 {text: "SCORES", callback: _showHighScores.bind(this), offsetX: 120}
@@ -373,12 +373,13 @@ define(function(require, exports, module) {
         });
         this.panes.gameOver.show();
 
-        this.panes.gameOverButtons = new ButtonPane(this.surface, {
+        this.panes.gameOverButtons = new ButtonPane({
             buttons: [
                 {text: "OK", callback: _restart.bind(this), offsetX: -120},
                 {text: "SHARE", callback: _share.bind(this), offsetX: 120}
             ]
         });
+        this.surface.add(this.panges.gameOverButtons);
 
         //make sure draggable events on these views are piped up
         this.panes.gameOver.pipe(this._eventOutput);
