@@ -1,18 +1,18 @@
 define(function(require, exports, module) {
     "use strict";
 	//includes Famous
-    var Surface = require("famous/Surface");
-    var ContainerSurface = require("famous-surfaces/ContainerSurface");
-    var RenderNode = require("famous/RenderNode");
-    var Modifier = require("famous/Modifier");
-    var Transform = require("famous/Transform");
-    var Timer = require("famous-utilities/Timer");
-    var PhysicsEngine = require('famous-physics/PhysicsEngine');
+    var Surface = require("famous/core/Surface");
+    var ContainerSurface = require("famous/surfaces/ContainerSurface");
+    var RenderNode = require("famous/core/RenderNode");
+    var Modifier = require("famous/core/Modifier");
+    var Transform = require("famous/core/Transform");
+    var Timer = require("famous/utilities/Timer");
+    var PhysicsEngine = require('famous/physics/PhysicsEngine');
 
     //include forces and constraints
-    var VectorField = require("famous-physics/forces/VectorField");
+    var VectorField = require("famous/physics/forces/VectorField");
     var Overlap = require("app/Overlap");
-    var Wall = require("famous-physics/constraints/Wall");
+    var Wall = require("famous/physics/constraints/Wall");
     
     //Game Elements
     var Birdie = require("app/Bird");
@@ -29,15 +29,15 @@ define(function(require, exports, module) {
     var SlideUpPane = require("app/widgets/SlideUpPane");
 
     //Utils
-    var Utils = require('famous-utils/Utils');
+    var Utils = require('famous/utilities/Utility');
     var AppUtils = require("app/Util");
 
     //Transitions
-    var Transitionable = require("famous-transitions/Transitionable");
-    var SpringTransition = require("famous-transitions/SpringTransition")
+    var Transitionable = require("famous/transitions/Transitionable");
+    var SpringTransition = require("famous/transitions/SpringTransition")
 
     //View
-    var View = require("famous/View");
+    var View = require("famous/core/View");
 
 
     Transitionable.registerMethod("spring", SpringTransition);
@@ -64,6 +64,7 @@ define(function(require, exports, module) {
         cloudSpawnTime      : 1000,
         gameVelocity        : 1
     };
+
 
     function _create(){
         this.visible        = true;
@@ -96,11 +97,18 @@ define(function(require, exports, module) {
         this._add(this.modifier).add(this.surface);
         this.surface.add(this.physicsEngine);
 
+
+        //this is the old way
+        //this.surface.add(this.physicsEngine);
+
         //create gravity
         this.gravity = new VectorField({
             name : VectorField.FIELDS.CONSTANT, 
             strength : this.options.gravityStrength
         });
+
+        //add the bird
+        this.surface.add(this.birdie.particle).add(this.birdie);
 
 
         //add the floor
@@ -109,19 +117,19 @@ define(function(require, exports, module) {
             size:[640,215],
             properties: {backgroundColor:"pink"}
         });
-        this.surface.add(new Modifier({transform: Transform.translate(0,372,1), origin:[.5,.5]})).add(floorSurface);
+        this.surface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
 
 
         _spawnFloor.call(this);
 
-        //pipe events up and handle clicks
-        this.surface.pipe(this._eventOutput);
+        // //pipe events up and handle clicks
+        // this.surface.pipe(this._eventOutput);
 
-        if( Utils.isMobile() ) { 
-            this.surface.on("touchstart", _handleClicks.bind(this));
-        } else { 
-            this.surface.on("click", _handleClicks.bind(this));
-        }
+        // if( Utils.isMobile() ) { 
+        //     this.surface.on("touchstart", _handleClicks.bind(this));
+        // } else { 
+        //     this.surface.on("click", _handleClicks.bind(this));
+        // }
     }//end create
 
 
@@ -298,6 +306,8 @@ define(function(require, exports, module) {
                 if (this.counters.floor == 0){opts.initPos = 0;}
                 floor = new Floor(this, this.physicsEngine, opts);
                 this.floor[this.counters.floor] = floor;
+
+                this.surface.add(floor);
             }//end if floor not created yet
             else{
                 floor.restart();
@@ -310,7 +320,7 @@ define(function(require, exports, module) {
 
     function _spawn(){
         //Spawn the scene
-        this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
+        //this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
         this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),1000);
     }//end spawn
 
@@ -318,7 +328,9 @@ define(function(require, exports, module) {
         this.panes.welcome = new BouncyPane(this.physicsEngine, {
             content: "<h1>Famous Bird</h1>",
             classes: ["startup"]
-        })
+        });
+
+        this._add(this.panes.welcome);
         this.panes.welcome.show();
 
         this.panes.welcomeButtons = new ButtonPane(this.surface, {

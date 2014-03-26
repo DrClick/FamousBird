@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
     "use strict";
 	//Includes Famous Repositories
-    var Engine = require('famous/Engine');
-    var Surface = require('famous/Surface');
+    var Engine = require('famous/core/Engine');
+    var Surface = require('famous/core/Surface');
 
-    var Modifier = require("famous/Modifier");
-    var Transform = require("famous/Transform");
+    var Modifier = require("famous/core/Modifier");
+    var Transform = require("famous/core/Transform");
 
       
     /** @constructor */

@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
-    var Transform = require('famous/Transform');
+    var Transform = require('famous/core/Transform');
 
     /**
      * @class Collection of various utility functions

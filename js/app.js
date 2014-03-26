@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
         //includes Famous
-        var Engine = require("famous/Engine");
-        var Modifier = require("famous/Modifier");
-        var Transform = require("famous/Transform");
+        var Engine = require("famous/core/Engine");
+        var Modifier = require("famous/core/Modifier");
+        var Transform = require("famous/core/Transform");
         var GameView        = require("app/views/Game");
-        var Timer   = require("famous-utilities/Timer")
+        var Timer   = require("famous/utilities/Timer")
 
 
        

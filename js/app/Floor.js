@@ -1,17 +1,22 @@
 define(function(require, exports, module) {
     "use strict";
 	//Includes Famous Repositories
-    var Engine = require('famous/Engine');
-    var Surface = require('famous/Surface');
-
+    var Engine = require('famous/core/Engine');
+    var Surface = require('famous/core/Surface');
+    var Rectangle = require("famous/physics/bodies/Rectangle")
+    var View        = require("famous/core/View");
   
     /** @constructor */
     function Floor(game, physicsEngine, opts){
+        View.apply(this);
         this.game = game;
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);
     };
+    Floor.prototype = Object.create(View.prototype); 
+    Floor.prototype.constructor = Floor; 
+
 
     function _init(opts){
         if(!opts) opts = {};
@@ -30,31 +35,23 @@ define(function(require, exports, module) {
                 classes : ['grass']
         });
 
-            /*content : '<img width="100" src="/content/images/logos.svg"/>'+
-                    '<b>By: Tom Watson</b>' +
-                    '<label>Built on: Famo.us</label>' +
-                    '<p>Original Game Design: Dong Nguyen</p>'*/
-
+       
 	    //Create a physical particle
-        this.particle = this.physicsEngine.createBody({
-                    shape : this.physicsEngine.BODIES.RECTANGLE,
-                    m : 0,
+        this.particle = new Rectangle({
+                    mass: 0,
                     size : [128*20, 18],
-                    p : [this.opts.initPos, 279 , 1],
-                    v : [this.opts.velocity,0,0]
+                    position : [this.opts.initPos, 750 , 2],
+                    velocity : [this.opts.velocity,0,0]
         });
 
         //Render the Famous Surface from the particle
-        this.particle.add(this.surface);
+        this.physicsEngine.addBody(this.particle);
+        this._add(this.particle).add(this.surface);
 
-        this.surface.pipe(this.game.surface);
-
-        //add collision
-        return this.particle;
     }//end create
 
     Floor.prototype.restart = function(){
-        this.particle.setPos([this.opts.initPos, 279,1]);
+        this.particle.setPosition([this.opts.initPos, 750,1]);
     }
 
 

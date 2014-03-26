@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
 	var AppUtils = require('app/Util');
-	var Transform = require('famous/Transform');
-	var Modifier = require('famous/Modifier');
-	var Surface = require('famous/Surface');
-    var ContainerSurface = require('famous-surfaces/ContainerSurface');
-    var Modifier = require('famous/Modifier');
-	var View = require("famous/View");
+	var Transform = require('famous/core/Transform');
+	var Modifier = require('famous/core/Modifier');
+	var Surface = require('famous/core/Surface');
+    var ContainerSurface = require('famous/surfaces/ContainerSurface');
+    var Modifier = require('famous/core/Modifier');
+	var View = require("famous/core/View");
 	
 
 	function ButtonPane(node, options){

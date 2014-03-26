@@ -1,14 +1,14 @@
 define(function(require, exports, module) {
 	var AppUtils = require('app/Util');
-	var Transform = require('famous/Transform');
-	var Modifier = require('famous/Modifier');
-    var Surface = require('famous/Surface');
-	var ContainerSurface = require('famous-surfaces/ContainerSurface');
-    var View = require("famous/View");
+	var Transform = require('famous/core/Transform');
+	var Modifier = require('famous/core/Modifier');
+    var Surface = require('famous/core/Surface');
+	var ContainerSurface = require('famous/surfaces/ContainerSurface');
+    var View = require("famous/core/View");
 	
 	//Transitions
-    var Transitionable = require('famous-transitions/Transitionable');
-    var SpringTransition = require('famous-transitions/SpringTransition')
+    var Transitionable = require('famous/transitions/Transitionable');
+    var SpringTransition = require('famous/transitions/SpringTransition')
 
 
     Transitionable.registerMethod('spring', SpringTransition);

@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
-    var Constraint = require('famous-physics/constraints/Constraint');
-    var Vector = require('famous-math/Vector');
-    var EventHandler = require('famous/EventHandler');
-    var Circle = require('famous-physics/bodies/Circle');
-    var Rectangle = require('famous-physics/bodies/Rectangle');
+    var Constraint = require('famous/physics/constraints/Constraint');
+    var Vector = require('famous/math/Vector');
+    var EventHandler = require('famous/core/EventHandler');
+    var Circle = require('famous/physics/bodies/Circle');
+    var Rectangle = require('famous/physics/bodies/Rectangle');
 
     var CircleName = Circle.prototype.constructor.name;
     var RectangleName = Rectangle.prototype.constructor.name;

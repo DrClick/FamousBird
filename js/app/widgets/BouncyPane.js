@@ -1,13 +1,14 @@
 define(function(require, exports, module) {
 	var AppUtils = require('app/Util');
-	var Transform = require('famous/Transform');
-	var Modifier = require('famous/Modifier');
-	var Surface = require('famous/Surface');
-	var View = require("famous/View");
+	var Transform = require('famous/core/Transform');
+	var Modifier = require('famous/core/Modifier');
+	var Surface = require('famous/core/Surface');
+	var View = require("famous/core/View");
 
 	//Physics
-	var PhysicsEngine = require('famous-physics/PhysicsEngine');
-	var Spring = require('famous-physics/constraints/StiffSpring');
+	var PhysicsEngine   = require('famous/physics/PhysicsEngine');
+	var Spring          = require('famous/physics/constraints/Snap');
+    var Circle          = require("famous/physics/bodies/Circle");
 
 
 	function BouncyPane(physicsEngine, options){
@@ -35,12 +36,11 @@ define(function(require, exports, module) {
         });
         
         //Create a physical particle
-        this.particle = this.physicsEngine.createBody({
-            shape : this.physicsEngine.BODIES.CIRCLE,
-            m : 1,
-            r : 1,
-            p : [0,-180,0],
-            v : [0,1,0]
+        this.particle = new Circle({
+            mass : 1,
+            radius : 1,
+            particle : [0,-180,0],
+            velocity : [0,1,0]
         });
 
         this.spring = new Spring({
@@ -57,12 +57,13 @@ define(function(require, exports, module) {
             }
         );
 
+        this.physicsEngine.addBody(this.particle);
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
-        this.particle.add(this.modifier).add(this.surface);
+        //this._add(this.particle).add(this.modifier).add(this.surface);
     }//end create
 
 	BouncyPane.prototype.pulse = function(){
-		this.particle.setVel(0,2,0);
+		this.particle.setVelocity([0,2,0]);
     };//end method
 
     BouncyPane.prototype.hide = function(){
@@ -82,18 +83,7 @@ define(function(require, exports, module) {
     };//end method
 
     BouncyPane.prototype.render = function(){
-        var spec = [];
-        // return startupSurface.render();
-        if(this.visible){
-        	spec.push({
-        		transform : this.modifier.getTransform(),
-        		target : this.surface.render(),
-        		origin : this.modifier.getOrigin(),
-        		opacity : this.modifier.getOpacity()
-        	});
-        }//end if visible
-
-        return spec;
+        return this.visible ? this._node.render(): [];
     };//end method
 
     module.exports = BouncyPane;
