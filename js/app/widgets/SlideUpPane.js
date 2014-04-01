@@ -14,7 +14,7 @@ define(function(require, exports, module) {
     Transitionable.registerMethod('spring', SpringTransition);
 
 
-	function SlideUpPane(node, options){
+	function SlideUpPane(options){
         View.apply(this, [options]);
 
 		_create.call(this, node);
@@ -46,7 +46,7 @@ define(function(require, exports, module) {
                 opacity: 0
         });
 
-        node.add(this.modifier).add(this.surface);
+        //node.add(this.modifier).add(this.surface);
 
 
         this.surface.pipe(this._eventOutput);

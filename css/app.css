@@ -10,10 +10,6 @@
 }
 body{
     background : rgba(0,0,0,1);
-    font-family: 'lato' !important;
-    font-weight: 300;
-    color: gainsboro;
-    font-size:40px;
 }
 
 /*------Utils---------*/

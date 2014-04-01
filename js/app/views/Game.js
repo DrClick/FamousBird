@@ -76,13 +76,12 @@ define(function(require, exports, module) {
         this.birdie         = null;
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
         this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
-        this.node           = new RenderNode();
-        this.physicsEngine = new PhysicsEngine({numConstraints: 4});
+        this.physicsEngine  = new PhysicsEngine({numConstraints: 4});
 
         this.birdie         = new Birdie(this.physicsEngine);
 
         //holders for the objects
-        this.pipes     = [null, null, null];
+        this.pipes          = [null, null, null];
         this.clouds         = [null, null, null, null, null, null, null, null, null, null];
         this.floor          = [null, null, null];
 
@@ -90,16 +89,13 @@ define(function(require, exports, module) {
 
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
-            origin: [0,0]
+            size: this.options.boardSize,
+            origin: [.5,.5]
         });
         
         //add the surface to the view and the physics to the surface
-        this._add(this.modifier).add(this.surface);
+        this.add(this.surface);
         this.surface.add(this.physicsEngine);
-
-
-        //this is the old way
-        //this.surface.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({
@@ -108,10 +104,7 @@ define(function(require, exports, module) {
         });
 
         //add the bird
-        this.surface.add(this.birdie.particle)
-            .add(this.birdie.originModifier)
-            .add(this.birdie.rotationModifier)
-            .add(this.birdie);
+        this.surface.add(this.birdie);
 
 
         //add the floor
@@ -158,18 +151,18 @@ define(function(require, exports, module) {
         
 
         //attach forces to physics
-        this.physicsEngine.attach([this.gravity]);
+        this.gravityID = this.physicsEngine.attach([this.gravity]);
 
         //create a wall to cover the floor
         var wall = new Wall({
-            n: [0,-1,0],
-            d: 280,
+            normal: [0,-1,0],
+            distance: 745,
             restitution : 0
         });
 
         // //attatch the wall and look for collisions with the birdie
-        // this.physicsEngine.attach(wall, this.birdie.particle);
-        // wall.on("collision", _end.bind(this));
+        this.physicsEngine.attach(wall, this.birdie.particle);
+        wall.on("collision", _end.bind(this));
 
         //let er fly!
         this.birdie.start();
@@ -182,11 +175,10 @@ define(function(require, exports, module) {
 
     function _stop(){
         this.birdie.stop();
-
-        var len = this.physicsEngine._particles.length - 1;
-        for (var i = len; i >= 0; i--) {
-            this.physicsEngine._particles[i].v.x = 0;
-        };
+        this.physicsEngine.getBodies().forEach(function(b){
+            b.setVelocity([0,0,0]);
+        });
+        this.physicsEngine.detach(this.gravityID);
     };//end stop
 
     function _clearTimers(){
@@ -275,9 +267,13 @@ define(function(require, exports, module) {
 
 
                 //detects overlaps with pipes and the birdie
-                var overlap = new Overlap();
-                overlap.on("hit", _end.bind(this));
-                this.physicsEngine.attach(overlap, pipes.particles, this.birdie.particle);
+                var overlap_top = new Overlap();
+                overlap_top.on("hit", _end.bind(this));
+                this.physicsEngine.attach(overlap_top, pipes.particles[0], this.birdie.particle);
+
+                var overlap_bottom = new Overlap();
+                overlap_bottom.on("hit", _end.bind(this));
+                this.physicsEngine.attach(overlap_bottom, pipes.particles[1], this.birdie.particle);
 
                 //detect overlaps with the upper pipe and the scorer
                 var overlapScore = new Overlap();
@@ -361,6 +357,8 @@ define(function(require, exports, module) {
             classes: ["getReady"]
         });
 
+
+        this.surface.add(this.panes.ready)
         //make sure draggable events on these views are piped up
         this.panes.ready.pipe(this._eventOutput);
         Timer.setTimeout(_start.bind(this), 2000);

@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     //Includes Famous Repositories
     var Surface     = require("famous/core/Surface");
+    var ContainerSurface = require("famous/surfaces/ContainerSurface");
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
     var Vector      = require("famous/math/Vector");
@@ -47,20 +48,12 @@ define(function(require, exports, module) {
         this.started = false;
 
 
-        this.originMod = new Modifier({
-            size: [.001, .001]
-        });
-
         this.rotationModifier = new Modifier({
+            size:[.001,.001],
             origin: [.5,.5],
         });
         
-        this.birdieModifier = [];
-
-        this.birdieModifier.push(new Modifier({ opacity: 1}));
-        this.birdieModifier.push(new Modifier({ opacity: 1}));
-        this.birdieModifier.push(new Modifier({ opacity: 1}));
-
+        
         //Create a physical particle
         this.particle = new Circle({
             mass : 1,
@@ -69,23 +62,31 @@ define(function(require, exports, module) {
             velocity : [0,0,0]
         });
         this.particle.name = "Birdie Particle";
-
-
         this.physicsEngine.addBody(this.particle);
 
-        //Render the Famous Surface from the particle
-        this._add(this.birdieModifier[0]).add(new Surface({
+        //create the birdie surface
+        this.birdieModifier = [];
+        for (var i = 0; i < 3; i++) {
+            this.birdieModifier.push(new Modifier({ opacity: 1, origin: [.5,.5]}));
+        };
+
+        var birdieContainer = new ContainerSurface({
+            size: [77,57]
+        })
+        birdieContainer.add(this.birdieModifier[0]).add(new Surface({
             size : [77, 57],
             classes : ["birdie"]
         }));
-        this._add(this.birdieModifier[1]).add(new Surface({
+        birdieContainer.add(this.birdieModifier[1]).add(new Surface({
             size : [77, 57],
             classes : ["birdie-up"]
         }));
-        this._add(this.birdieModifier[2]).add(new Surface({
+        birdieContainer.add(this.birdieModifier[2]).add(new Surface({
             size : [77, 57],
             classes : ["birdie-down"]
         }));
+
+        this._add(this.particle).add(this.rotationModifier).add(birdieContainer);
     }
 
 
@@ -131,16 +132,11 @@ define(function(require, exports, module) {
 
     Birdie.prototype.stop = function() {
         Timer.clear(this.flyTimer);
+        this.particle.setVelocity([0,0,0]);
     };
     
     Birdie.prototype.flap = function(isInitialFlap){
-        if(!isInitialFlap){
-            //nudge the bird up
-            this.particle.setVelocity([0,-.50,0]);//this was a hack, but it works better than below
-        }
-        else{
-            this.particle.applyForce(new Force({x : 0, y : -this.opts.flapStrength, z : 0}));
-        }
+        this.particle.setVelocity([0,-.50,0]);
         
         //adjust the birdie rotation
         this.rotateBirdie("up");

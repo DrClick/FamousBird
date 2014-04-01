@@ -37,7 +37,7 @@
         //NOTE: we need two transforms here, one to translate from the particle position
         //and one to scale the score (used in pulsing it)
         this.translateModifier = new Modifier({
-            transform: Transform.translate(230, 20, 60)
+            transform: Transform.translate(10, 10, 10)
         }); 
         
 
@@ -48,16 +48,14 @@
             transform: Transform.scale(1, 1, 0)
         });
 
-        // this.modifier.render = function(){
-        //     if(this.visible){
-        //         return {
-        //             transform : this.modifier.getTransform(),
-        //             target : this.surface.render(),
-        //             origin : this.modifier.getOrigin(),
-        //             opacity : this.modifier.getOpacity()
-        //         };
-        //     }//end if visible
-        // }.bind(this);
+        this.modifier.render = function(){
+            if(this.visible){
+                return {
+                    transform : this.modifier.getTransform(),
+                    target : this.surface.render()
+                };
+            }//end if visible
+        }.bind(this);
 
 
 	    //Create a physical particle. This will be used when a pipe overlaps this particle, 
@@ -65,7 +63,7 @@
         this.particle = new Circle({
                     mass: 0,
                     radius: 5,
-                    position : [110, 0 , 0],
+                    position : [0, 0 , 0],
                     velocity : [0,0,0]
                 });
 

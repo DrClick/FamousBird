@@ -1,11 +1,10 @@
 define(function(require, exports, module) {
         //includes Famous
-        var Engine = require("famous/core/Engine");
-        var Modifier = require("famous/core/Modifier");
-        var Transform = require("famous/core/Transform");
-        var GameView        = require("app/views/Game");
-        var Timer   = require("famous/utilities/Timer")
-
+        var Engine      = require("famous/core/Engine");
+        var Modifier    = require("famous/core/Modifier");
+        var Transform   = require("famous/core/Transform");
+        var GameView    = require("app/views/Game");
+        var Timer       = require("famous/utilities/Timer");
 
        
         var modifier = new Modifier({
@@ -19,7 +18,7 @@ define(function(require, exports, module) {
 
         //create the new one
         var context = Engine.createContext(contextContainer);
-        context.setPerspective(1);
+        context.setPerspective(100);
         
 
         modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
@@ -38,7 +37,7 @@ define(function(require, exports, module) {
             contextContainer.style.width = appDims[0] + "px";
             contextContainer.style.height = appDims[1] + "px";
 
-             modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
+            modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
         }
 
         function getAppDims(){

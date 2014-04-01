@@ -39,7 +39,8 @@ define(function(require, exports, module) {
         this.particle = new Circle({
             mass : 1,
             radius : 1,
-            position : [270,-100,10],
+            position : [0,0,10],
+            origin: [.5,.5],
             velocity : [0,1,0]
         });
 
@@ -47,8 +48,9 @@ define(function(require, exports, module) {
             period          : 200,
             dampingRatio    : .2,
             length          : 100,
+            origin          : [.5,.5],
             bidirectional   : false,
-            anchor          : [270,200,0]
+            anchor          : [0,200,0]
         });
 
         this.modifier = new Modifier({
@@ -58,7 +60,7 @@ define(function(require, exports, module) {
 
         this.physicsEngine.addBody(this.particle);
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
-        this._add(this.particle).add(this.modifier).add(this.surface);
+        this._add(this.particle).add(this.surface);
     }//end create
 
 	BouncyPane.prototype.pulse = function(){

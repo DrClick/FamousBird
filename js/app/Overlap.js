@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var EventHandler = require('famous/core/EventHandler');
     var Circle = require('famous/physics/bodies/Circle');
     var Rectangle = require('famous/physics/bodies/Rectangle');
+    var FamousMath = require("famous/math/Utilities");
 
     var CircleName = Circle.prototype.constructor.name;
     var RectangleName = Rectangle.prototype.constructor.name;
@@ -41,6 +42,7 @@ define(function(require, exports, module) {
 
         if(sourceType == RectangleName){
             //wrap in circle that hold entire object
+            debugger
             r1 = Math.sqrt(Math.pow(source.size[0]/2, 2) + Math.pow(source.size[1]/2, 2));
         }
 
@@ -74,6 +76,7 @@ define(function(require, exports, module) {
             var overlap = r1 + r2 - dist;//basic circle on circle detection
 
             if (overlap > 0){//It's a hit (maybe)
+                console.log("possible hit")
                 var isHit = true;
 
                 if(targetType == RectangleName || sourceType == RectangleName){
@@ -98,31 +101,58 @@ define(function(require, exports, module) {
         is a good place to start when growing this function up.
         */
         
-        //if(source.constructor.name == target.constructor.name) 
-        //    throw "Only supported for circle on rectangle hot action!"
+        if(source.constructor.name == target.constructor.name) 
+           throw "Only supported for circle on rectangle hot action!"
+
+
+
 
         var circle      = source.constructor.name == CircleName ? source: target;
         var rectangle   = source.constructor.name == RectangleName ? source: target;
 
-        var circ = {x: circle.position.x, y: circle.position.y, r: circle.radius};
-        var rect = {x: rectangle.position.x, y: rectangle.position.y, width: rectangle.size[0], height: rectangle.size[1]};
-
-        //calc distance of circle from rectangle
-        var dist = {};
-        dist.x = Math.abs(circ.x - rect.x);
-        dist.y = Math.abs(circ.y - rect.y);
-
-        //if circle distance is less than the size of the rectangle, its overlapped
-        if (dist.x > (rect.width/2 + circ.r)) { return false; }
-        if (dist.y > (rect.height/2 + circ.r)) { return false; }
-
-        if (dist.x <= (rect.width/2)) { return true; } 
-        if (dist.y <= (rect.height/2)) { return true; }
-
-        //check a corner has not penetrated
-        if (Math.pow(dist.x - rect.width/2,2) + Math.pow(dist.y - rect.height/2,2) <= Math.pow(circ.r,2)){ return true; }
         
-       return false;
+
+        if(source.name) debugger
+
+        var circ = {
+            x: circle.position.x, 
+            y: circle.position.y, 
+            r: circle.radius
+        };
+
+        var rect = {
+            x: rectangle.position.x, 
+            y: rectangle.position.y, 
+            width: rectangle.size[0], 
+            height: rectangle.size[1]
+        };
+
+
+
+        // Find the closest point to the circle within the rectangle
+        var closestX = FamousMath.clamp(circ.x, [rect.x - rect.width/2, rect.x + rect.width/2]);
+        var closestY = FamousMath.clamp(circ.y, [rect.y - rect.height/2, rect.y + rect.height/2]);
+
+        // Calculate the distance between the circle's center and this closest point
+        var distanceX = circ.x - closestX;
+        var distanceY = circ.y - closestY;
+
+        // If the distance is less than the circle's radius, an intersection occurs
+        var distanceSquared = Math.pow(distanceX,2) + Math.pow(distanceY,2);
+
+         if(source.name){
+            //ebugger
+            console.log(circ, rect, distanceX, distanceY, distanceSquared);
+        }
+
+
+        var overlapped = distanceSquared < Math.pow(circ.r,2);
+
+
+        if(source.name && overlapped)
+            debugger
+
+        return overlapped;
 
     };
 

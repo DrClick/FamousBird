@@ -26,75 +26,113 @@ define(function(require, exports, module) {
         this.opts = {
             id              : opts.id,
             velocity        : -.3,
-            gapHeight       : -100 + Math.random() * 300,
-            gapDirection    : (Math.random() * 100 % 2) == 0 ? -1: 1,
             pipeHeight      : 480,
             pipeWidth       : 113,
-            pipeScale       : 2
+            initPipePos     : 700
         };
     }//end init
 
     function _create(){
-        
-	    //add the pipe off screen
-        var gapOffset = this.opts.gapHeight * this.opts.gapDirection;
+    
+        var pipeSizeAndPos = _calcPipePositionAndSize.call(this);
+        var upperPipe = pipeSizeAndPos[0];
+        var lowerPipe = pipeSizeAndPos[1];
+
+	    
+
         this.surfaces = [
             new Surface({
-                size : [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset],
+                size : [this.opts.pipeWidth, upperPipe.height],
                 classes : ['pipe','upper', 'unselectable']
             }),
             new Surface({
-                size : [this.opts.pipeWidth, this.opts.pipeHeight-200 - gapOffset],
+                size : [this.opts.pipeWidth, lowerPipe.height],
                 classes : ['pipe','lower']
             })
         ];
 
-	    //Create a physical particle
+
         this.particles = 
             [
                 //upper pipe
                 new Rectangle({
                     mass: 0,
-                    size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) + gapOffset],
-                    position : [720, 0, 0],
+                    size : [this.opts.pipeWidth, upperPipe.height],
+                    position : [this.opts.initPipePos, upperPipe.y, 0],
                     velocity : [this.opts.velocity,0,0]
                 }),
                 //lower pipe
                 new Rectangle({
                     mass : 0,
-                    size : [this.opts.pipeWidth, (this.opts.pipeHeight-200) - gapOffset],
-                    position : [720, 480 + gapOffset, 0],
+                    size : [this.opts.pipeWidth, lowerPipe.height],
+                    position : [this.opts.initPipePos, lowerPipe.y, 0],
                     velocity : [this.opts.velocity,0,0]
                 })
             ];
 
-        //Render the Famous Surface from the particle
+        //set a property on the pipe used for scoring
         this.particles[0].pipeNumber = this.opts.id;
-        this._add(this.particles[0]).add(this.surfaces[0]);
-        this._add(this.particles[1]).add(this.surfaces[1]);
 
-        this.surfaces[0].pipe(this._eventOutput);
-        this.surfaces[1].pipe(this._eventOutput);
+        //add the particles as modifiers
+        //NOTE: It is important to add the origin modifier after adding the particle so that the
+        //particle is in the middle of the surface
+        this._add(this.particles[0])
+            .add(new Modifier({origin:[.5,.5]}))
+            .add(this.surfaces[0]);
+        this._add(this.particles[1])
+            .add(new Modifier({origin:[.5,.5]}))
+            .add(this.surfaces[1]);
 
+
+        //add the particles to the physics engine
         this.physicsEngine.addBody(this.particles[0]);
         this.physicsEngine.addBody(this.particles[1]);
+
+        //pipe events so clicks on the pipes will bubble up 
+        this.surfaces[0].pipe(this._eventOutput);
+        this.surfaces[1].pipe(this._eventOutput);
 
     }//end create
 
     Pipe.prototype.restart = function(opts){
-        var gapHeight       = Math.random() * 190;
-        var gapDirection    = (Math.random() * 100 % 2) == 0 ? -1: 1;
-        var gapOffset = this.opts.gapHeight * this.opts.gapDirection;
+        var pipeSizeAndPos = _calcPipePositionAndSize.call(this);
+        var upperPipe = pipeSizeAndPos[0];
+        var lowerPipe = pipeSizeAndPos[1];
 
+        //change the pipe number
         this.particles[0].pipeNumber = opts.id;
 
-        this.surfaces[0].size = [this.opts.pipeWidth, this.opts.pipeHeight-230 + gapOffset];
-        this.particles[0].setPosition([720, 0, 0]);
 
-        this.surfaces[1].size = [this.opts.pipeWidth, this.opts.pipeHeight-200 - gapOffset];
-        this.particles[1].setPosition([720, 480 + gapOffset, 0]);
+        this.surfaces[0].size = [this.opts.pipeWidth, upperPipe.height];
+        this.particles[0].setSize[this.surfaces[0].size];
+        this.particles[0].setPosition([this.opts.initPipePos, upperPipe.y, 0]);
+
+        this.surfaces[1].size = [this.opts.pipeWidth, lowerPipe.height];
+        this.particles[1].setSize[this.surfaces[1].size];
+        this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, 0]);
 
     };
+
+
+    function _calcGapOffset(){
+        var gapHeight       = -100 + Math.random() * 300;
+        var gapDirection    = (Math.random() * 100 % 2) == 0 ? -1: 1;
+        return gapHeight * gapDirection;
+    }
+
+    function _calcPipePositionAndSize(){
+        var gapOffset = _calcGapOffset();
+
+        var upperPipeHeight = (this.opts.pipeHeight-200) + gapOffset;
+        var lowerPipeHeight = (this.opts.pipeHeight-200) - gapOffset;
+        var upperPipeYPos = upperPipeHeight/2;
+        var lowerPipeYPos = 480 + gapOffset + lowerPipeHeight/2;
+
+        return [
+            {height: upperPipeHeight, y: upperPipeYPos},
+            {height: lowerPipeHeight, y: lowerPipeYPos}
+        ];
+    }
 
 
 	module.exports = Pipe;

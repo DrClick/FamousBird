@@ -132,7 +132,6 @@ button{
 .pipe{
     background-image: url('../content/images/pipe.png');
     color:transparent;
-    background-size: cover;
     overflow: hidden;
     background-repeat:no-repeat;
 }
