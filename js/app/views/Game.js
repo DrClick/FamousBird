@@ -359,6 +359,7 @@ define(function(require, exports, module) {
 
 
         this.surface.add(this.panes.ready)
+        this.panes.ready.show();
         //make sure draggable events on these views are piped up
         this.panes.ready.pipe(this._eventOutput);
         Timer.setTimeout(_start.bind(this), 2000);
