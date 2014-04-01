@@ -92,6 +92,9 @@ define(function(require, exports, module) {
         this.surfaces[0].pipe(this._eventOutput);
         this.surfaces[1].pipe(this._eventOutput);
 
+
+        console.log(this.opts.id, this.particles);
+
     }//end create
 
     Pipe.prototype.restart = function(opts){
@@ -102,13 +105,13 @@ define(function(require, exports, module) {
         //change the pipe number
         this.particles[0].pipeNumber = opts.id;
 
-
+        //reset the pipes surface/particle size and position
         this.surfaces[0].size = [this.opts.pipeWidth, upperPipe.height];
-        this.particles[0].setSize[this.surfaces[0].size];
+        this.particles[0].setSize(this.surfaces[0].size);
         this.particles[0].setPosition([this.opts.initPipePos, upperPipe.y, 0]);
 
         this.surfaces[1].size = [this.opts.pipeWidth, lowerPipe.height];
-        this.particles[1].setSize[this.surfaces[1].size];
+        this.particles[1].setSize(this.surfaces[1].size);
         this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, 0]);
 
     };

@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
-	var AppUtils = require('app/Util');
-	var Transform = require('famous/core/Transform');
-	var Modifier = require('famous/core/Modifier');
-	var Surface = require('famous/core/Surface');
-	var View = require("famous/core/View");
+	var AppUtils   = require('app/Util');
+	var Transform  = require('famous/core/Transform');
+	var Modifier   = require('famous/core/Modifier');
+	var Surface    = require('famous/core/Surface');
+	var View       = require("famous/core/View");
 
 	//Physics
 	var PhysicsEngine   = require('famous/physics/PhysicsEngine');
@@ -40,7 +40,6 @@ define(function(require, exports, module) {
             mass : 1,
             radius : 1,
             position : [0,0,10],
-            origin: [.5,.5],
             velocity : [0,1,0]
         });
 
@@ -52,15 +51,14 @@ define(function(require, exports, module) {
             bidirectional   : false,
             anchor          : [0,200,0]
         });
-
-        this.modifier = new Modifier({
-                origin: [0.5, 0.5]
-            }
-        );
-
+        //attach physics
         this.physicsEngine.addBody(this.particle);
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
-        this._add(this.particle).add(this.surface);
+
+
+        //setup the surface
+        this.modifier = new Modifier({origin: [.5, .5]});
+        this._add(this.particle).add(this.modifier).add(this.surface);
     }//end create
 
 	BouncyPane.prototype.pulse = function(){

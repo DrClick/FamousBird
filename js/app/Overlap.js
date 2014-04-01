@@ -76,7 +76,6 @@ define(function(require, exports, module) {
             var overlap = r1 + r2 - dist;//basic circle on circle detection
 
             if (overlap > 0){//It's a hit (maybe)
-                console.log("possible hit")
                 var isHit = true;
 
                 if(targetType == RectangleName || sourceType == RectangleName){
@@ -112,8 +111,6 @@ define(function(require, exports, module) {
 
         
 
-        if(source.name) debugger
-
         var circ = {
             x: circle.position.x, 
             y: circle.position.y, 
@@ -140,18 +137,8 @@ define(function(require, exports, module) {
         // If the distance is less than the circle's radius, an intersection occurs
         var distanceSquared = Math.pow(distanceX,2) + Math.pow(distanceY,2);
 
-         if(source.name){
-            //ebugger
-            console.log(circ, rect, distanceX, distanceY, distanceSquared);
-        }
-
 
         var overlapped = distanceSquared < Math.pow(circ.r,2);
-
-
-        if(source.name && overlapped)
-            debugger
-
         return overlapped;
 
     };

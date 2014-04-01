@@ -95,7 +95,7 @@ define(function(require, exports, module) {
         
         //add the surface to the view and the physics to the surface
         this.add(this.surface);
-        this.surface.add(this.physicsEngine);
+        this.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({
