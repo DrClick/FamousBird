@@ -89,12 +89,11 @@ define(function(require, exports, module) {
 
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
-            size: this.options.boardSize,
-            origin: [.5,.5]
+            origin: [0,0]
         });
         
         //add the surface to the view and the physics to the surface
-        this.add(this.surface);
+        this.add(this.modifier).add(this.surface);
         this.add(this.physicsEngine);
 
         //create gravity
@@ -418,15 +417,18 @@ define(function(require, exports, module) {
         });
 
 
-        this.panes.finalScore = new SlideUpPane(this.surface,
+        this.panes.finalScore = new SlideUpPane(
             {
                 size:[500,250],
                 content: content,
                 classes: ["finalScore"]
             }
         );
+
         this.panes.finalScore.surface.add(scoreModifier).add(scoreSurface);
         this.panes.finalScore.surface.add(highScoreModifier).add(highScoreSurface);
+
+        this.surface.add(this.panes.finalScore);
         this.panes.finalScore.show();
 
         //start the score counting up
@@ -456,7 +458,7 @@ define(function(require, exports, module) {
 
         //create the game over flash surface
         var flashSurface = new Surface({
-            size : this.options.boardSize,
+            size : [undefined, undefined],
             classes: ["gameOverFlash"]
         });
         var flashModifier = new Modifier({
@@ -510,12 +512,7 @@ define(function(require, exports, module) {
     };//end show
 
     Game.prototype.render = function(){
-        // return startupSurface.render();
-        if(this.visible){
-            return this._node.render();
-        }//end if visible
-
-        return undefined;
+        return this.visible ? this._node.render() : undefined;
     };//end render
   
     module.exports = Game;

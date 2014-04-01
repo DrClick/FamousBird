@@ -1,14 +1,14 @@
 define(function(require, exports, module) {
-	var AppUtils = require('app/Util');
-	var Transform = require('famous/core/Transform');
-	var Modifier = require('famous/core/Modifier');
-    var Surface = require('famous/core/Surface');
-	var ContainerSurface = require('famous/surfaces/ContainerSurface');
-    var View = require("famous/core/View");
+	var AppUtils           = require('app/Util');
+	var Transform          = require('famous/core/Transform');
+	var Modifier           = require('famous/core/Modifier');
+    var Surface            = require('famous/core/Surface');
+	var ContainerSurface   = require('famous/surfaces/ContainerSurface');
+    var View               = require("famous/core/View");
 	
 	//Transitions
-    var Transitionable = require('famous/transitions/Transitionable');
-    var SpringTransition = require('famous/transitions/SpringTransition')
+    var Transitionable     = require('famous/transitions/Transitionable');
+    var SpringTransition   = require('famous/transitions/SpringTransition')
 
 
     Transitionable.registerMethod('spring', SpringTransition);
@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 	function SlideUpPane(options){
         View.apply(this, [options]);
 
-		_create.call(this, node);
+		_create.call(this);
 	};
     SlideUpPane.prototype = Object.create(View.prototype);
     SlideUpPane.prototype.constructor = SlideUpPane;
@@ -29,10 +29,8 @@ define(function(require, exports, module) {
         size        : [300,300]
     };
 
-    function _create(node){
-        this.surface = new ContainerSurface({
-            size : this.options.size,
-        });
+    function _create(){
+        this.surface = new ContainerSurface();
         
         this.spring = {
             method: 'spring',
@@ -41,7 +39,7 @@ define(function(require, exports, module) {
         };
 
         this.modifier = new Modifier({
-                transform: Transform.translate(0,500,0),
+                transform: Transform.translate(320,1000,0),
                 origin: [0.5, 0.5],
                 opacity: 0
         });
@@ -50,10 +48,15 @@ define(function(require, exports, module) {
 
 
         this.surface.pipe(this._eventOutput);
-        this.surface.add(new Modifier({origin:[.5,.5]})).add(new Surface({
-            classes : ['unselectable'].concat(this.options.classes),
-            content: this.options.content
-        }));
+        this.surface
+            .add(new Modifier({origin:[.5,.5]}))
+            .add(new Surface({
+                classes : ['unselectable'].concat(this.options.classes),
+                size: this.options.size,
+                content: this.options.content
+            }));
+
+        this.add(this.modifier).add(this.surface);
     }//end create
 
     SlideUpPane.prototype.hide = function(){
@@ -62,26 +65,14 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.show = function(){
-    	this.modifier.setTransform(Transform.translate(0,-50,1), this.spring);
+    	this.modifier.setTransform(Transform.translate(320,480,1), this.spring);
     	this.modifier.setOpacity(1, {duration:200});
 
     	this.visible = true;
     };//end method
 
     SlideUpPane.prototype.render = function(){
-        var spec = [];
-
-        // return startupSurface.render();
-        if(this.visible){
-        	spec.push({
-        		transform : this.modifier.getTransform(),
-        		target : this.surface.render(),
-        		origin : this.modifier.getOrigin(),
-        		opacity : this.modifier.getOpacity()
-        	});
-        }//end if visible
-
-        return spec;
+        return this.visible ? this._node.render() : [];
     };//end method
 
     module.exports = SlideUpPane;
