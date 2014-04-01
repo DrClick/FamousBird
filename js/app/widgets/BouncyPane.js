@@ -23,7 +23,6 @@ define(function(require, exports, module) {
         classes     : [],
         content     : null,
         visible     : false,
-        origin      : [.5,.5],
         size        : [300,300]
     };
 
@@ -39,7 +38,7 @@ define(function(require, exports, module) {
         this.particle = new Circle({
             mass : 1,
             radius : 1,
-            position : [0,0,10],
+            position : [320,0,10],
             velocity : [0,1,0]
         });
 
@@ -49,7 +48,7 @@ define(function(require, exports, module) {
             length          : 100,
             origin          : [.5,.5],
             bidirectional   : false,
-            anchor          : [0,200,0]
+            anchor          : [320,200,0]
         });
         //attach physics
         this.physicsEngine.addBody(this.particle);
@@ -82,6 +81,10 @@ define(function(require, exports, module) {
     	this.visible = true;
     	this.pulse();
     };//end method
+
+    BouncyPane.prototype.render = function render(){
+        return this.visible ? this._node.render() : [];
+    }
 
 
     module.exports = BouncyPane;
