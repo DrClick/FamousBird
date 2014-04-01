@@ -6,17 +6,14 @@ define(function(require, exports, module) {
     var ContainerSurface = require("famous/surfaces/ContainerSurface");
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
-    var Vector      = require("famous/math/Vector");
     var View        = require("famous/core/View");
     var Timer       = require("famous/utilities/Timer");
 
     //Include Physics
     var Spring      = require("famous/physics/forces/Spring");     //spring effect
     var Circle      = require("famous/physics/bodies/Circle");
-    var Force       = require("famous/physics/forces/Force");
 
     //Utilities
-    var AppUtils    = require("app/Util");
     var GameSounds  = require("app/GameSounds");
     
 
@@ -50,7 +47,7 @@ define(function(require, exports, module) {
 
         this.rotationModifier = new Modifier({
             size:[.001,.001],
-            origin: [.5,.5],
+            origin: [.5,.5]
         });
         
         
@@ -68,11 +65,12 @@ define(function(require, exports, module) {
         this.birdieModifier = [];
         for (var i = 0; i < 3; i++) {
             this.birdieModifier.push(new Modifier({ opacity: 1, origin: [.5,.5]}));
-        };
+        }
 
         var birdieContainer = new ContainerSurface({
             size: [77,57]
-        })
+        });
+        
         birdieContainer.add(this.birdieModifier[0]).add(new Surface({
             size : [77, 57],
             classes : ["birdie"]
@@ -109,7 +107,7 @@ define(function(require, exports, module) {
         this.springID = this.physicsEngine.attach(spring, this.particle);
 
 
-        this.flyTimer = Timer.setInterval(function(){this.fly()}.bind(this),100);
+        this.flyTimer = Timer.setInterval(function(){this.fly();}.bind(this),100);
 
     };
 
@@ -117,7 +115,7 @@ define(function(require, exports, module) {
         this.flyState++;
         var state = this.flyState % 3;
         this.birdieModifier.forEach(function(b){
-            b.setOpacity(.001)});
+            b.setOpacity(.001);});
         this.birdieModifier[state].setOpacity(.999);
     };
 
@@ -132,15 +130,17 @@ define(function(require, exports, module) {
 
     Birdie.prototype.stop = function() {
         Timer.clear(this.flyTimer);
-        this.particle.setVelocity([0,0,0]);
     };
     
     Birdie.prototype.flap = function(isInitialFlap){
-        this.particle.setVelocity([0,-.50,0]);
+        //this.particle.applyImpulse(new Vector([0,-.60,0]));
+        this.particle.setVelocity([0,-.52,0]);
         
         //adjust the birdie rotation
         this.rotateBirdie("up");
-        Timer.setTimeout(function(){this.rotateBirdie("down")}.bind(this), 100)
+        Timer.setTimeout(function(){
+            this.rotateBirdie("down");
+        }.bind(this), 100);
         GameSounds.playSound(0, 1.0);
     };
 
