@@ -1,9 +1,8 @@
 define(function(require, exports, module) {
     "use strict";
 	//Includes Famous Repositories
-    var Engine = require('famous/core/Engine');
-    var Surface = require('famous/core/Surface');
-    var Rectangle = require("famous/physics/bodies/Rectangle")
+    var Surface     = require("famous/core/Surface");
+    var Rectangle   = require("famous/physics/bodies/Rectangle");
     var View        = require("famous/core/View");
   
     /** @constructor */
@@ -13,16 +12,17 @@ define(function(require, exports, module) {
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);
-    };
+    }
+
     Floor.prototype = Object.create(View.prototype); 
     Floor.prototype.constructor = Floor; 
 
 
     function _init(opts){
-        if(!opts) opts = {};
+        if(!opts) {opts = {};}
         this.opts = {
             velocity      : -.4,
-            initPos: opts.initPos !== undefined?opts.initPos : 700
+            initPos: opts.initPos !== undefined ? opts.initPos : 700
         };
     }//end init
 
@@ -31,15 +31,15 @@ define(function(require, exports, module) {
         
         this.surface = 
             new Surface({
-                size    : [128*20, 18],
-                classes : ['grass']
+                size    : [128 * 20, 18],
+                classes : ["grass"]
         });
 
        
 	    //Create a physical particle
         this.particle = new Rectangle({
                     mass: 0,
-                    size : [128*20, 18],
+                    size : [128 * 20, 18],
                     position : [this.opts.initPos, 750 , 2],
                     velocity : [this.opts.velocity,0,0]
         });
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
 
     Floor.prototype.restart = function(){
         this.particle.setPosition([this.opts.initPos, 750,1]);
-    }
+    };
 
 
 	module.exports = Floor;
