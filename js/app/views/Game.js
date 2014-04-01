@@ -146,6 +146,7 @@ define(function(require, exports, module) {
 
         this.scorer = new Score();
         this.scorer.attachToPhysics(this.physicsEngine);
+        this.surface.add(this.scorer);
 
         this.timers.pipes = Timer.setInterval(_spawnPipes.bind(this),1200);
         

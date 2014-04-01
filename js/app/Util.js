@@ -20,10 +20,14 @@ define(function(require, exports, module) {
 
         pulse: function(modifier){
             var m = modifier;
+            var initTransform = m.getFinalTransform();
+
+            //scale up the transform and return it to normal
             m.setTransform(
-                Transform.scale(1.05,1.05, 1), { duration: 300 }, 
+                Transform.multiply(m.getFinalTransform(), Transform.scale(1.2,1.2,1)),
+                { duration: 100 },
                 function(){
-                    m.setTransform(Transform.scale(1,1, 1), { duration: 100 });
+                    m.setTransform(initTransform, { duration: 100 });
                 });
         },//end function
 

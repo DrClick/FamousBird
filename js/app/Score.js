@@ -34,28 +34,11 @@
                 content: '<h1>0</h1>'
             });
 
-        //NOTE: we need two transforms here, one to translate from the particle position
-        //and one to scale the score (used in pulsing it)
-        this.translateModifier = new Modifier({
-            transform: Transform.translate(10, 10, 10)
-        }); 
         
-
-        //create a modifier with a custom render method so we can 
-        //interact with this modifier programatically. Specifically
-        //we want to be able to hide this. 
         this.modifier = new Modifier({
-            transform: Transform.scale(1, 1, 0)
-        });
-
-        this.modifier.render = function(){
-            if(this.visible){
-                return {
-                    transform : this.modifier.getTransform(),
-                    target : this.surface.render()
-                };
-            }//end if visible
-        }.bind(this);
+            transform: Transform.translate(280, 10, 10),
+            origin: [.5,.5]
+        }); 
 
 
 	    //Create a physical particle. This will be used when a pipe overlaps this particle, 
@@ -63,13 +46,13 @@
         this.particle = new Circle({
                     mass: 0,
                     radius: 5,
-                    position : [0, 0 , 0],
+                    position : [50, 0 , 0],
                     velocity : [0,0,0]
                 });
 
         //Render the Famous Surface from the particle. Note we did not need to link in the surface
         //here because we have created a custom render method on this.modifier
-        this._add(this.particle).add(this.translateModifier).add(this.modifier);
+        this._add(this.particle).add(this.modifier).add(this.surface)
     };
 
     Score.prototype.setScore = function(score){
@@ -84,6 +67,10 @@
     Score.prototype.hide = function(score){
         this.visible = false;
     };
+
+    Score.prototype.render = function render(){
+        return this.visible ? this._node.render() : [];
+    }
 
 
 	module.exports = Score;
