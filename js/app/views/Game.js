@@ -14,7 +14,6 @@ define(function(require, exports, module) {
     //include forces and constraints
     var VectorField = require("famous/physics/forces/VectorField");
     var Overlap = require("app/Overlap");
-    var Wall = require("famous/physics/constraints/Wall");
     
     //Game Elements
     var Birdie = require("app/Bird");
@@ -22,6 +21,7 @@ define(function(require, exports, module) {
     var Pipe = require("app/Pipe");
     var Floor = require("app/Floor");
     var Score = require("app/Score");
+    var Spawn = require("app/Spawn");
     
     var GameSounds = require("app/GameSounds");
 
@@ -46,12 +46,6 @@ define(function(require, exports, module) {
 
     function Game(){
         View.apply(this, arguments);
-
-        //create the container and link the physics engine
-        this.surface = new ContainerSurface({
-            size : this.options.boardSize,
-            classes: ["game"]
-        });
 
         _create.call(this);
         _init.call(this);
@@ -87,7 +81,11 @@ define(function(require, exports, module) {
         this.clouds         = [null, null, null, null, null, null, null, null, null, null];
         this.floor          = [null, null, null];
 
-        
+        //create the container and link the physics engine
+        this.surface = new ContainerSurface({
+            size : this.options.boardSize,
+            classes: ["game"]
+        });
 
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
@@ -116,7 +114,7 @@ define(function(require, exports, module) {
         this.surface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
 
 
-        _spawnFloor.call(this);
+        Spawn.floor.call(this);
 
         //pipe events up and handle clicks
         this.surface.pipe(this._eventOutput);
@@ -131,7 +129,7 @@ define(function(require, exports, module) {
 
     function _init(){ 
         _showWelcomeScreen.call(this);
-        _spawn.call(this);
+        Spawn.start.call(this);
     }//end init
 
     function _start(){
@@ -148,7 +146,7 @@ define(function(require, exports, module) {
         this.scorer.attachToPhysics(this.physicsEngine);
         this.surface.add(this.scorer);
 
-        this.timers.pipes = Timer.setInterval(_spawnPipes.bind(this),1200);
+        this.timers.pipes = Timer.setInterval(Spawn.pipes.bind(this),1200);
         
 
         //attach forces to physics
@@ -176,7 +174,7 @@ define(function(require, exports, module) {
         this.physicsEngine.sleep();
         this.birdie.halt();
         //console.log("death on the ground");
-        _end.call(this);
+        this.end.call(this);
 
         //hack to keep from constantly firing collisions, if done inline, causes
         //errors
@@ -208,7 +206,7 @@ define(function(require, exports, module) {
     }
 
 
-    function _end(){
+    Game.prototype.end = function end(){
          //Bummer dude, game over
         if(!this.ended){
             this.ended = true;
@@ -225,10 +223,10 @@ define(function(require, exports, module) {
             //show the game over screen
             _showGameOverScreen.call(this);
         }//end if game playing
-    }//end end
+    };//end end
 
 
-    function _incrementScore(data){
+    Game.prototype.incrementScore = function incrementScore(data){
         //read the score from the pipe
         var score = data.target.pipeNumber;
 
@@ -250,97 +248,7 @@ define(function(require, exports, module) {
             this.birdie.flap();
         }//end if playing
     };//end method
-
-
-
-
-
-    //DO THIS NEXT - EXTRACT SPAWN CLASS
-    function _spawnClouds(){
-        if(!this.ended){
-            var cloud = this.clouds[this.counters.cloud];
-            if(cloud == null){
-                cloud = new Cloud(this.physicsEngine);
-                this.clouds[this.counters.cloud] = cloud;
-
-                this.surface.add(cloud);
-            }//end if cloud not created yet
-            else{
-                cloud.restart();
-            }
-
-            this.counters.cloud = (this.counters.cloud + 1) % this.clouds.length;
-        }//end if game not ended
-    };//end method
-
-    function _spawnPipes(){
-        if(!this.ended){
-            var pipes = this.pipes[this.counters.pipe % this.pipes.length];
-            if(pipes == null){
-                pipes = new Pipe(
-                    this.physicsEngine,
-                    {id:this.counters.pipe + 1}
-                );
-
-
-
-                //detects overlaps with pipes and the birdie
-                var overlap_top = new Overlap();
-                overlap_top.on("hit", _end.bind(this));
-                this.physicsEngine.attach(overlap_top, pipes.particles[0], this.birdie.particle);
-
-                var overlap_bottom = new Overlap();
-                overlap_bottom.on("hit", _end.bind(this));
-                this.physicsEngine.attach(overlap_bottom, pipes.particles[1], this.birdie.particle);
-
-                //detect overlaps with the upper pipe and the scorer
-                var overlapScore = new Overlap();
-                overlapScore.on("hit", function(data){
-                    _incrementScore.call(this, data);
-                }.bind(this));
-                this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
-
-
-                this.surface.add(pipes);
-
-
-                this.pipes[this.counters.pipe % this.pipes.length] = pipes;
-
-            }//end if pipes did not exist
-            else{
-                pipes.restart({id:this.counters.pipe + 1});
-            }
-
-            //incrament the counter
-            this.counters.pipe++;
-        }//end if game not over
-    };//end method
-
-    function _spawnFloor(){
-        if(!this.ended){
-            var floor = this.floor[this.counters.floor];
-            if(floor == null){
-                var opts = {};
-                if (this.counters.floor == 0){opts.initPos = 0;}
-                floor = new Floor(this, this.physicsEngine, opts);
-                this.floor[this.counters.floor] = floor;
-
-                this.surface.add(floor);
-            }//end if floor not created yet
-            else{
-                floor.restart();
-            }
-
-
-            this.counters.floor = (this.counters.floor + 1) % this.floor.length;
-        }//end if game not ended
-    };//end method
-
-    function _spawn(){
-        //Spawn the scene
-        this.timers.clouds  = Timer.setInterval(_spawnClouds.bind(this),1000);
-        this.timers.floor   = Timer.setInterval(_spawnFloor.bind(this),1000);
-    }//end spawn
+    
 
     function  _showWelcomeScreen(){
         this.panes.welcome = new BouncyPane(this.physicsEngine, {
