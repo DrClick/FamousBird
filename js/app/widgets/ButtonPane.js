@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         classes     : [],
         visible     : false,
         origin      : [.5,.5],
-        position    : [630,700,10],
+        position    : [630,700,20],
         size        : [600,100],
         buttons     : []
     };

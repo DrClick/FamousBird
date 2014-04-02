@@ -21,7 +21,7 @@ define(function(require, exports, module) {
     function _init(opts){
         if(!opts) {opts = {};}
         this.opts = {
-            velocity      : -.4,
+            velocity      : -.3,
             initPos: opts.initPos !== undefined ? opts.initPos : 700
         };
     }//end init
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
     }//end create
 
     Floor.prototype.restart = function(){
-        this.particle.setPosition([this.opts.initPos, 750,1]);
+        this.particle.setPosition([this.opts.initPos, 750, 2]);
     };
 
 

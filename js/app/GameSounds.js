@@ -8,7 +8,7 @@ define(function(require, exports, module) {
        'content/sounds/die.wav',
        'content/sounds/score.wav'
     ], function (e) { 
-        console.log('sounds loaded', e);
+        //console.log('sounds loaded', e);
     });
 
     module.exports = soundPlayer;

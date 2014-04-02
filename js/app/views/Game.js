@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var Transform = require("famous/core/Transform");
     var Timer = require("famous/utilities/Timer");
     var PhysicsEngine = require('famous/physics/PhysicsEngine');
+    var Rectangle   = require("famous/physics/bodies/Rectangle");
 
     //include forces and constraints
     var VectorField = require("famous/physics/forces/VectorField");
@@ -94,7 +95,7 @@ define(function(require, exports, module) {
         
         //add the surface to the view and the physics to the surface
         this.add(this.modifier).add(this.surface);
-        this.add(this.physicsEngine);
+        this.surface.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({
@@ -109,8 +110,7 @@ define(function(require, exports, module) {
         //add the floor
         var floorSurface = new Surface({
             classes: ["floor"],
-            size:[640,215],
-            properties: {backgroundColor:"pink"}
+            size:[640,215]
         });
         this.surface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
 
@@ -154,19 +154,29 @@ define(function(require, exports, module) {
         this.gravityID = this.physicsEngine.attach([this.gravity]);
 
         //create a wall to cover the floor
-        var wall = new Wall({
-            normal: [0,-1,0],
-            distance: 745,
-            restitution : 0
+        var ground = new Rectangle({
+            mass: 0,
+            size : [this.options.boardSize[0], 1],
+            position : [0, 745]
         });
 
         // //attatch the wall and look for collisions with the birdie
-        this.physicsEngine.attach(wall, this.birdie.particle);
-        wall.on("collision", _end.bind(this));
+        this.physicsEngine.addBody(ground);
+        var groundOverlap = new Overlap();
+        groundOverlap.on("hit", _onGroundCollision.bind(this));
+        this.physicsEngine.attach(groundOverlap, ground, this.birdie.particle);
+
 
         //let er fly!
         this.birdie.start();
     }//end start
+
+    function _onGroundCollision(){
+        this.physicsEngine.sleep();
+        this.birdie.particle.setVelocity([0,0,0]);
+        this.birdie.particle.setMass(0);
+        _end.call(this);
+    }
 
     function _restart(){
         location.reload();
@@ -175,10 +185,14 @@ define(function(require, exports, module) {
 
     function _stop(){
         this.birdie.stop();
+
+        //stop all the particles accept let the birdie fall down.
         this.physicsEngine.getBodies().forEach(function(b){
+            if(b.name == "Birdie Particle") return;
+
             b.setVelocity([0,0,0]);
         });
-        this.physicsEngine.detach(this.gravityID);
+        //this.physicsEngine.detach(this.gravityID);
     };//end stop
 
     function _clearTimers(){

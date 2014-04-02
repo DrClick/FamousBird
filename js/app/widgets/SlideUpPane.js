@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var Surface            = require('famous/core/Surface');
 	var ContainerSurface   = require('famous/surfaces/ContainerSurface');
     var View               = require("famous/core/View");
+    var Timer              = require("famous/utilities/Timer");
 	
 	//Transitions
     var Transitionable     = require('famous/transitions/Transitionable');
@@ -65,14 +66,21 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.show = function(){
-    	this.modifier.setTransform(Transform.translate(320,480,20), this.spring);
-    	this.modifier.setOpacity(1, {duration:200});
+        
 
-    	this.visible = true;
+        //this lets it get back in the render tree before animating
+        Timer.setTimeout(function(){
+            this.visible = true;
+            this.modifier.setTransform(Transform.translate(320,480,20), this.spring);
+            this.modifier.setOpacity(1, {duration:200});
+        }.bind(this),0);
     };//end method
 
     SlideUpPane.prototype.render = function(){
-        return this.visible ? this._node.render() : [];
+        if (this.visible){
+            if (this.modifier._legacyStates.transform.get()[14] !== 20) debugger
+            return this._node.render();
+        }
     };//end method
 
     module.exports = SlideUpPane;

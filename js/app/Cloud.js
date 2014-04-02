@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 
       
     /** @constructor */
-    function Cloud(physicsEngine, opts){
+    function Cloud(physicsEngine){
         View.apply(this);
 
         this.physicsEngine = physicsEngine;
@@ -35,8 +35,8 @@ define(function(require, exports, module) {
     	this.modifier =
             new Modifier({
     	        transform: Transform.multiply(
-                    Transform.translate(0,this.opts.yPos,0),
-                    Transform.scale(this.opts.scale, this.opts.scale, 0)),
+                    Transform.translate(0,this.opts.yPos,-1),
+                    Transform.scale(this.opts.scale, this.opts.scale, 1)),
                 opacity: this.opts.opacity
     	    });
 
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 
         this.surface.pipe(this._eventOutput);
 
-    };
+    }
 
     function _getYPos(){
         return -10 + Math.random() * 200;
