@@ -131,6 +131,11 @@ define(function(require, exports, module) {
     Birdie.prototype.stop = function() {
         Timer.clear(this.flyTimer);
     };
+
+    Birdie.prototype.halt = function(){
+        this.particle.setVelocity([0,0,0]);
+        this.particle.setMass(0);
+    }
     
     Birdie.prototype.flap = function(isInitialFlap){
         //this.particle.applyImpulse(new Vector([0,-.60,0]));

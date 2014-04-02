@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var Timer = require("famous/utilities/Timer");
     var PhysicsEngine = require('famous/physics/PhysicsEngine');
     var Rectangle   = require("famous/physics/bodies/Rectangle");
+    var View = require("famous/core/View");
 
     //include forces and constraints
     var VectorField = require("famous/physics/forces/VectorField");
@@ -38,7 +39,7 @@ define(function(require, exports, module) {
     var SpringTransition = require("famous/transitions/SpringTransition")
 
     //View
-    var View = require("famous/core/View");
+    var GameOverView = require("app/views/GameOverView");
 
 
     Transitionable.registerMethod("spring", SpringTransition);
@@ -173,15 +174,18 @@ define(function(require, exports, module) {
 
     function _onGroundCollision(){
         this.physicsEngine.sleep();
-        this.birdie.particle.setVelocity([0,0,0]);
-        this.birdie.particle.setMass(0);
+        this.birdie.halt();
+        //console.log("death on the ground");
         _end.call(this);
+
+        //hack to keep from constantly firing collisions, if done inline, causes
+        //errors
+        Timer.setTimeout(function(){
+            this.physicsEngine.sleep();
+        }.bind(this), 500);
     }
 
-    function _restart(){
-        location.reload();
-        
-    }//end restart
+
 
     function _stop(){
         this.birdie.stop();
@@ -382,87 +386,13 @@ define(function(require, exports, module) {
     function _showGameOverScreen(){
         this.scorer.hide();
 
-        this.panes.gameOver = new BouncyPane(this.physicsEngine, {
-            content: "<h1>Game Over</h1>",
-            classes: ["gameOver"]
-        });
+        this.panes.gameOver = new GameOverView(this.physicsEngine, {score: this.score});
+        this.surface.add(this.panes.gameOver);
         this.panes.gameOver.show();
 
-        this.panes.gameOverButtons = new ButtonPane({
-            buttons: [
-                {text: "OK", callback: _restart.bind(this), offsetX: -120},
-                {text: "SHARE", callback: _share.bind(this), offsetX: 120}
-            ]
-        });
-        this.surface.add(this.panes.gameOverButtons);
-
-        //make sure draggable events on these views are piped up
-        this.panes.gameOver.pipe(this._eventOutput);
-        this.panes.gameOverButtons.pipe(this._eventOutput);
-
-
-        _createFinalScorePane.call(this, "<div class='currentScore'>SCORE</div><div class='highScore'>BEST</div><div class='medal'>MEDAL</div>");
-
-        //display the buttons pane
-        Timer.setTimeout(function(){
-            this.panes.gameOverButtons.show();
-        }.bind(this),300);
     };//end function
 
-    function _createFinalScorePane(content){
-         var scoreSurface = new Surface({
-            content: "<h1>0</h1>",
-            size: [100,80],
-            classes: ["scorer"]
-        });
-        var scoreModifier = new Modifier({
-            transform: Transform.translate(180,-60,50),
-            origin: [.5,.5]
-        });
-
-        var highScoreSurface = new Surface({
-            content: "<h1>" + (localStorage.getItem("HighScore") || 0) + "</h1>",
-            size: [100,80],
-            classes: ["scorer"]
-        });
-        var highScoreModifier = new Modifier({
-            transform: Transform.translate(180,40,50),
-            origin: [.5,.5]
-        });
-
-
-        this.panes.finalScore = new SlideUpPane(
-            {
-                size:[500,250],
-                content: content,
-                classes: ["finalScore"]
-            }
-        );
-
-        this.panes.finalScore.surface.add(scoreModifier).add(scoreSurface);
-        this.panes.finalScore.surface.add(highScoreModifier).add(highScoreSurface);
-
-        this.surface.add(this.panes.finalScore);
-        this.panes.finalScore.show();
-
-        //start the score counting up
-        var scoreUpCounter = 0;
-        this.timers.counter = Timer.setInterval(function(){
-            scoreUpCounter++;
-            if(scoreUpCounter<= this.score){
-                scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
-
-                //set the highscore if higher than the local score
-                if(scoreUpCounter > localStorage.getItem("HighScore")){
-                    localStorage.setItem("HighScore", scoreUpCounter);
-                    highScoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
-                }
-            }
-            else{
-                Timer.clear(this.timers.counter);
-            }
-        }.bind(this),40);
-    }//end create final score pane
+    
 
 
     function _doooooh(){
@@ -514,9 +444,7 @@ define(function(require, exports, module) {
         alert("Whoah! This agression will not stand man! This hasnt been implemented.");
     };
 
-    function _share(){
-        alert("This is a private beta, no sharing for now.");
-    };
+    
 
     Game.prototype.hide = function(){
         this.visible = false;

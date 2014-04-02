@@ -75,10 +75,10 @@ define(function(require, exports, module) {
 
 
     BouncyPane.prototype.show = function(){
+        this.visible = true;
     	this.modifier.setTransform(Transform.translate(0,200,10));
     	this.modifier.setOpacity(1);
 
-    	this.visible = true;
     	this.pulse();
     };//end method
 

@@ -66,21 +66,13 @@ define(function(require, exports, module) {
     };//end method
 
     SlideUpPane.prototype.show = function(){
-        
-
-        //this lets it get back in the render tree before animating
-        Timer.setTimeout(function(){
-            this.visible = true;
-            this.modifier.setTransform(Transform.translate(320,480,20), this.spring);
-            this.modifier.setOpacity(1, {duration:200});
-        }.bind(this),0);
+        this.visible = true;
+        this.modifier.setTransform(Transform.translate(320,420,20), this.spring);
+        this.modifier.setOpacity(1, {duration:200});
     };//end method
 
     SlideUpPane.prototype.render = function(){
-        if (this.visible){
-            if (this.modifier._legacyStates.transform.get()[14] !== 20) debugger
-            return this._node.render();
-        }
+        return this.visible ? this._node.render() : undefined;
     };//end method
 
     module.exports = SlideUpPane;
