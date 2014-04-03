@@ -9,6 +9,10 @@ define(function(require, exports, module) {
     var Timer       = require("famous/utilities/Timer");
     var Spring      = require("famous/physics/forces/spring");
 
+    var GameSounds  = require("app/GameSounds");
+    var Overlap     = require("app/Overlap");
+    
+
       
     /** @constructor */
     function Plant(physicsEngine, options){
@@ -21,7 +25,7 @@ define(function(require, exports, module) {
     Plant.prototype.constructor = Plant;
     Plant.DEFAULT_OPTIONS = {
         size: [80, 157],
-        visible: true
+        visible: false
     };
 
   
@@ -49,7 +53,6 @@ define(function(require, exports, module) {
             anchor          : [0, yPos, 0]
         });
 
-
         //attach the paricles and surface
         this.physicsEngine.addBody(this.particle);
         this.springID = this.physicsEngine.attach(this.spring, this.particle);
@@ -58,7 +61,40 @@ define(function(require, exports, module) {
         this.add(this.particle).add(this.surface);
 
         this.surface.pipe(this._eventOutput);
+
+
+        //add the bullet
+        var direction = this.options.type == "lower" ? -1 : 1;
+        this.bulletSurface = new Surface({
+            size:[20,20],
+            classes:['icon-famous-logo'],
+            properties: {fontFamily: "famous", color: "#fa5c4f", fontSize: "20px"}
+        });
+        this.bulletModifier = new Modifier({opacity: 0.001});
+        this.bulletParticle = new Rectangle({
+            size: [20, 20],
+            position: [-10, yPos + (direction * (157 - 20)), 0]
+        });
+
+        this.physicsEngine.addBody(this.bulletParticle);
+        this.add(this.bulletParticle)
+            .add(new Modifier({size:[.001, .001], origin:[.5,.5]}))
+            .add(this.bulletModifier)
+            .add(this.bulletSurface);
+
+        this.overlap = new Overlap();
+        this.overlap.on("hit", _onHitBirdie.bind(this));
+        
+        
+        
+
+        //set the visibility
         this.visible = this.options.visible;
+    }
+
+    function _onHitBirdie(){
+        console.log("Im hit");
+        debugger
     }
 
     function _getYPos(pipeHeight){
@@ -71,9 +107,20 @@ define(function(require, exports, module) {
     }
 
     Plant.prototype.restart = function(pipeHeight){
+        this.options.pipeHeight = pipeHeight;
         var yPos = _getYPos.call(this, pipeHeight);
+        var direction = this.options.type == "lower" ? -1 : 1;
+
+
         this.spring.setAnchor([0,yPos,0]);
         this.particle.setPosition([0, yPos, -1]);
+        this.bulletParticle.setPosition([-10, yPos + (direction * (157 - 20)), 0])
+        this.bulletParticle.setVelocity([0,0,0]);
+
+        if(this.overlapId){
+            this.physicsEngine.detach(this.overlapId);
+            this.overlapId = undefined;
+        }
     };
 
 
@@ -85,7 +132,7 @@ define(function(require, exports, module) {
 
         Timer.setTimeout(function(){
             this.visible = false;
-        }.bind(this), 1300);
+        }.bind(this), 1000);
         
     };//end show
     Plant.prototype.show = function(){
@@ -99,12 +146,32 @@ define(function(require, exports, module) {
 
     Plant.prototype.attack = function(){
         this.show();
-        Timer.setTimeout(_fire.bind(this), 1000);
+        Timer.setTimeout(_fire.bind(this), 300);
         Timer.setTimeout(this.hide.bind(this), 1300);
     };//end show
 
     function _fire(){
-        console.log("fire");
+        //get the birdie particle
+        var birdieParticle = this.physicsEngine.getBodies()
+                .filter(function(b){return b.name == "Birdie Particle"})[0];
+
+        var birdiePosition = birdieParticle.getPosition().y;
+        var baseHeight = this.options.type == "upper" 
+            ? this.options.pipeHeight
+            : 960 - this.options.pipeHeight;
+
+
+        //pick a directio to fire
+        var direction = birdiePosition > baseHeight ? 1 : -1; 
+
+        this.bulletModifier.setOpacity(1);
+        this.bulletParticle.setVelocity([-.25, direction * .1, 0]);
+
+        //attach the overlap
+        this.overlapId = this.physicsEngine.attach(this.overlap, this.bulletParticle, birdieParticle);
+
+        GameSounds.playSound(3, 1.0);
+
     }
 
     Plant.prototype.render = function(){

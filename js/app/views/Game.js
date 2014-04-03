@@ -159,7 +159,7 @@ define(function(require, exports, module) {
             position : [0, 745]
         });
 
-        // //attatch the wall and look for collisions with the birdie
+        //attatch the wall and look for collisions with the birdie
         this.physicsEngine.addBody(ground);
         var groundOverlap = new Overlap();
         groundOverlap.on("hit", _onGroundCollision.bind(this));

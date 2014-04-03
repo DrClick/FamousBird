@@ -6,7 +6,8 @@ define(function(require, exports, module) {
     var soundPlayer = new SoundPlayer([
        'content/sounds/flap.wav',
        'content/sounds/die.wav',
-       'content/sounds/score.wav'
+       'content/sounds/score.wav',
+       'content/sounds/fire.wav'
     ], function (e) { 
         //console.log('sounds loaded', e);
     });

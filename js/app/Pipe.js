@@ -119,8 +119,7 @@ define(function(require, exports, module) {
         this.pipeNodes["lower"].add(this.plants["lower"]);
 
 
-        this.plants["upper"].attack();
-        this.plants["lower"].attack();
+        _attack.call(this)
 
     }//end create
 
@@ -141,11 +140,26 @@ define(function(require, exports, module) {
         this.particles[1].setSize(this.surfaces[1].size);
         this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, -2]);
 
-        //reset the plants
         this.plants["upper"].restart(upperPipe.height);
         this.plants["lower"].restart(lowerPipe.height);
+        _attack.call(this)
 
     };
+
+    function _attack(){
+        //reset the plants
+        var threshold = 0;
+        var currentPipe = this.particles[0].pipeNumber;
+
+        //set the threshold 
+        if (currentPipe > 6) {threshold = .8};
+        if (currentPipe > 20) {threshold = .6};
+        if (currentPipe > 50) {threshold = .4};
+        if (currentPipe > 100) {threshold = .2};
+
+        if(Math.random() > threshold) {this.plants["upper"].attack();}
+        if(Math.random() > threshold) {this.plants["lower"].attack();}
+    }
 
 
     function _calcGapOffset(){
