@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     function Cloud(physicsEngine){
         View.apply(this);
 
+        //DV: define physics engine outside, and return the necessary particles to add
         this.physicsEngine = physicsEngine;
         _init.call(this);
         _create.call(this);

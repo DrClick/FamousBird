@@ -17,6 +17,8 @@ define(function(require, exports, module) {
     /** @constructor */
     function Plant(physicsEngine, options){
         View.apply(this, [options]);
+
+        //DV: define physics engine outside, and return the necessary particles to add
         this.physicsEngine = physicsEngine;
 
         _create.call(this);
@@ -175,7 +177,7 @@ define(function(require, exports, module) {
     }
 
     Plant.prototype.render = function(){
-        return this.visible ? this._node.render() : undefined;
+        if (this.visible) return this._node.render();
     };//end render
 
 

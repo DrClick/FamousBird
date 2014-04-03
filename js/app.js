@@ -1,57 +1,58 @@
 define(function(require, exports, module) {
-        "use strict";
-        //includes Famous
-        var Engine      = require("famous/core/Engine");
-        var Modifier    = require("famous/core/Modifier");
-        var Transform   = require("famous/core/Transform");
-        var GameView    = require("app/views/Game");
-
-       
-        var modifier = new Modifier({
-                origin: [.5,.5],
-                size: [640, 960]
-            });
-
-        function getAppDims(){
-            var scaleY = window.innerHeight / 960;
-            var scaleX = window.innerWidth / 640;
+    "use strict";
+    //includes Famous
+    var Engine      = require("famous/core/Engine");
+    var Modifier    = require("famous/core/Modifier");
+    var Transform   = require("famous/core/Transform");
+    var GameView    = require("app/views/Game");
 
 
-            //here we are going to let the bottom of the screen be cut off to allow fit to more
-            //devices
-            var scale = Math.min(scaleX, scaleY * 1.2);
-            //var scale = 1;
+    var modifier = new Modifier({
+        origin: [.5,.5],
+        size: [640, 960]
+    });
 
-            var appWidth = 640 * scale;
-            var appHeight = 960 * scale;
+    function getAppDims(){
+        var scaleY = window.innerHeight / 960;
+        var scaleX = window.innerWidth / 640;
 
-            return [appWidth, appHeight, scale];
-        }
 
-        function _resize(container){
-            var appDims = getAppDims();
-            container.style.width = appDims[0] + "px";
-            container.style.height = appDims[1] + "px";
+        //here we are going to let the bottom of the screen be cut off to allow fit to more
+        //devices
+        var scale = Math.min(scaleX, scaleY * 1.2);
+        //var scale = 1;
 
-            modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
-        }
+        var appWidth = 640 * scale;
+        var appHeight = 960 * scale;
 
-        function _init(){
-            var contextContainer = document.getElementById("contextContainer");
-            _resize(contextContainer);
+        return [appWidth, appHeight, scale];
+    }
 
-            //create the new one
-            var context = Engine.createContext(contextContainer);
-            context.setPerspective(3000);
-            
+    function _resize(container){
+        var appDims = getAppDims();
+        container.style.width = appDims[0] + "px";
+        container.style.height = appDims[1] + "px";
 
-            var game = new GameView();
-            context.add(modifier).add(game);
+        modifier.setTransform(Transform.scale(appDims[2], appDims[2], 1));
+    }
 
-            Engine.on("resize", function(){_resize(contextContainer);});
-            Engine.on("orientationchange", function(){_resize(contextContainer);});
-        }
+    function _init(){
+        var contextContainer = document.getElementById("contextContainer");
+        //DV: i would do this in CSS, and not call _resize on contextContainer
+        _resize(contextContainer);
 
-        _init();
+        //create the new one
+        var context = Engine.createContext(contextContainer);
+        context.setPerspective(3000);
+
+
+        var game = new GameView();
+        context.add(modifier).add(game);
+
+        Engine.on("resize", function(){_resize(contextContainer);});
+        Engine.on("orientationchange", function(){_resize(contextContainer);});
+    }
+
+    _init();
 });
 

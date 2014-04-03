@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     function Floor(game, physicsEngine, opts){
         View.apply(this);
         this.game = game;
+        //DV: define physics engine outside, and return the necessary particles to add
         this.physicsEngine = physicsEngine;
         _init.call(this, opts);
         _create.call(this);

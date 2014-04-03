@@ -24,12 +24,13 @@ define(function(require, exports, module) {
     function Birdie(physicsEngine, opts){
         View.apply(this);
 
+        //DV: define physics engine outside, and return the necessary particles to add
         this.physicsEngine = physicsEngine;
         this.opts = {
             flapStrength        : .035,
             birdieRadius        : 25
         };
-        if (opts){this.setOpts(opts);}
+        if (opts){this.setOptions(opts);}
 
         _create.call(this);
         this.hangout();
@@ -89,7 +90,7 @@ define(function(require, exports, module) {
 
 
 
-    Birdie.prototype.setOpts = function(opts){
+    Birdie.prototype.setOptions = function(opts){
         for (var key in opts){this.opts[key] = opts[key];}
     };
 
@@ -115,7 +116,8 @@ define(function(require, exports, module) {
         this.flyState++;
         var state = this.flyState % 3;
         this.birdieModifier.forEach(function(b){
-            b.setOpacity(.001);});
+            b.setOpacity(.001);
+        });
         this.birdieModifier[state].setOpacity(.999);
     };
 
