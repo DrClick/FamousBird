@@ -183,3 +183,9 @@ button{
 .plant.lower{
     background-image: url("../content/images/plant_lower.png");
 }
+
+.credits{
+    margin: 30px 0px 0px 10px;
+    font-family: 'terminal';
+
+}

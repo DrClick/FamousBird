@@ -106,12 +106,29 @@ define(function(require, exports, module) {
         this.containerSurface.add(this.birdie);
 
 
-        //add the floor
+        //create a wall to cover the floor
+        var ground = new Rectangle({
+            mass: 0,
+            size : [this.options.boardSize[0], 1],
+            position : [0, 745]
+        });
+
+        //attatch a floor and look for collisions with the birdie
+        this.physicsEngine.addBody(ground);
+        var groundOverlap = new Overlap();
+        groundOverlap.on("hit", _onGroundCollision.bind(this));
+        this.physicsEngine.attach(groundOverlap, ground, this.birdie.particle);
+
+        //add the floor surface
         var floorSurface = new Surface({
             classes: ["floor"],
-            size:[640,215]
+            size:[640,215],
+            content : 
+                    "<div class='credits'>Built with Famous by <a href='mailto:drclick@mac.com'>Thomas Watson</a>. " +
+                    "<i>Original Game Design: Dong Nguyen</i></div>"
+
         });
-        this.containerSurface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
+        this.containerSurface.add(ground).add(floorSurface);
 
 
         Spawn.floor.call(this);
@@ -152,18 +169,7 @@ define(function(require, exports, module) {
         //attach forces to physics
         this.gravityID = this.physicsEngine.attach([this.gravity]);
 
-        //create a wall to cover the floor
-        var ground = new Rectangle({
-            mass: 0,
-            size : [this.options.boardSize[0], 1],
-            position : [0, 745]
-        });
-
-        //attatch the wall and look for collisions with the birdie
-        this.physicsEngine.addBody(ground);
-        var groundOverlap = new Overlap();
-        groundOverlap.on("hit", _onGroundCollision.bind(this));
-        this.physicsEngine.attach(groundOverlap, ground, this.birdie.particle);
+        
 
 
         //let er fly!
