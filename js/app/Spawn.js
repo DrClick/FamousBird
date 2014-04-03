@@ -20,7 +20,7 @@ define(function(require, exports, module) {
                 cloud = new Cloud(this.physicsEngine);
                 this.clouds[this.counters.cloud] = cloud;
 
-                this.surface.add(cloud);
+                this.containerSurface.add(cloud);
             }//end if cloud not created yet
             else{
                 cloud.restart();
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                 this.physicsEngine.attach(overlapScore, pipes.particles[0], this.scorer.particle);
 
 
-                this.surface.add(pipes);
+                this.containerSurface.add(pipes);
 
 
                 this.pipes[this.counters.pipe % this.pipes.length] = pipes;
@@ -80,7 +80,7 @@ define(function(require, exports, module) {
                 floor = new Floor(this, this.physicsEngine, opts);
                 this.floor[this.counters.floor] = floor;
 
-                this.surface.add(floor);
+                this.containerSurface.add(floor);
             }//end if floor not created yet
             else{
                 floor.restart();

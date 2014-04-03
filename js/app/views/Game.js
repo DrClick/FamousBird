@@ -39,7 +39,7 @@ define(function(require, exports, module) {
     var SpringTransition = require("famous/transitions/SpringTransition")
 
     //View
-    var GameOverView = require("app/views/GameOverView");
+    var GameOverScreen = require("app/views/GameOver");
 
 
     Transitionable.registerMethod("spring", SpringTransition);
@@ -82,7 +82,7 @@ define(function(require, exports, module) {
         this.floor          = [null, null, null];
 
         //create the container and link the physics engine
-        this.surface = new ContainerSurface({
+        this.containerSurface = new ContainerSurface({
             size : this.options.boardSize,
             classes: ["game"]
         });
@@ -93,8 +93,8 @@ define(function(require, exports, module) {
         });
         
         //add the surface to the view and the physics to the surface
-        this.add(this.modifier).add(this.surface);
-        this.surface.add(this.physicsEngine);
+        this.add(this.modifier).add(this.containerSurface);
+        this.containerSurface.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({
@@ -103,7 +103,7 @@ define(function(require, exports, module) {
         });
 
         //add the bird
-        this.surface.add(this.birdie);
+        this.containerSurface.add(this.birdie);
 
 
         //add the floor
@@ -111,18 +111,18 @@ define(function(require, exports, module) {
             classes: ["floor"],
             size:[640,215]
         });
-        this.surface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
+        this.containerSurface.add(new Modifier({transform: Transform.translate(0,745,0), origin:[0,0]})).add(floorSurface);
 
 
         Spawn.floor.call(this);
 
         //pipe events up and handle clicks
-        this.surface.pipe(this._eventOutput);
+        this.containerSurface.pipe(this._eventOutput);
 
         if( AppUtils.isMobile() ) { 
-            this.surface.on("touchstart", _handleClicks.bind(this));
+            this.containerSurface.on("touchstart", _handleClicks.bind(this));
         } else { 
-            this.surface.on("click", _handleClicks.bind(this));
+            this.containerSurface.on("click", _handleClicks.bind(this));
         }
     }//end create
 
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
 
         this.scorer = new Score();
         this.scorer.attachToPhysics(this.physicsEngine);
-        this.surface.add(this.scorer);
+        this.containerSurface.add(this.scorer);
 
         this.timers.pipes = Timer.setInterval(Spawn.pipes.bind(this),1200);
         
@@ -256,7 +256,7 @@ define(function(require, exports, module) {
             classes: ["startup"]
         });
 
-        this.surface.add(this.panes.welcome);
+        this.containerSurface.add(this.panes.welcome);
         this.panes.welcome.show();
 
         this.panes.welcomeButtons = new ButtonPane({
@@ -265,7 +265,7 @@ define(function(require, exports, module) {
                 {text: "SCORES", callback: _showHighScores.bind(this), offsetX: 120}
             ]
         });
-        this.surface.add(this.panes.welcomeButtons);
+        this.containerSurface.add(this.panes.welcomeButtons);
         this.panes.welcomeButtons.show();
 
 
@@ -284,7 +284,7 @@ define(function(require, exports, module) {
         });
 
 
-        this.surface.add(this.panes.ready)
+        this.containerSurface.add(this.panes.ready)
         this.panes.ready.show();
         //make sure draggable events on these views are piped up
         this.panes.ready.pipe(this._eventOutput);
@@ -294,8 +294,8 @@ define(function(require, exports, module) {
     function _showGameOverScreen(){
         this.scorer.hide();
 
-        this.panes.gameOver = new GameOverView(this.physicsEngine, {score: this.score});
-        this.surface.add(this.panes.gameOver);
+        this.panes.gameOver = new GameOverScreen(this.physicsEngine, {score: this.score});
+        this.containerSurface.add(this.panes.gameOver);
         this.panes.gameOver.show();
 
     };//end function

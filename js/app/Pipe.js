@@ -10,6 +10,8 @@ define(function(require, exports, module) {
     var View        = require("famous/core/View");
     var Rectangle   = require("famous/physics/bodies/Rectangle");
 
+    var Plant       = require("app/Plant");
+
       
     /** @constructor */
     function Pipe(physicsEngine, opts){
@@ -76,22 +78,22 @@ define(function(require, exports, module) {
 
 
         //create render nodes for the pipes
-        this.pipeNodes = [];
-        this.pipeNodes.push(new RenderNode());
-        this.pipeNodes.push(new RenderNode());
+        this.pipeNodes = {};
+        this.pipeNodes["upper"] = new RenderNode();
+        this.pipeNodes["lower"] = new RenderNode();
 
-        this.pipeNodes[0].add(this.surfaces[0]);
-        this.pipeNodes[1].add(this.surfaces[1]);
+        this.pipeNodes["upper"].add(this.surfaces[0]);
+        this.pipeNodes["lower"].add(this.surfaces[1]);
 
         //add the particles as modifiers
         //NOTE: It is important to add the origin modifier after adding the particle so that the
         //particle is in the middle of the surface
         this._add(this.particles[0])
             .add(new Modifier({origin:[.5,.5]}))
-            .add(this.pipeNodes[0]);
+            .add(this.pipeNodes["upper"]);
         this._add(this.particles[1])
             .add(new Modifier({origin:[.5,.5]}))
-            .add(this.pipeNodes[1]);
+            .add(this.pipeNodes["lower"]);
 
 
         //add the particles to the physics engine
@@ -105,23 +107,20 @@ define(function(require, exports, module) {
 
 
         //add the plants
-        this.plants = [];
-        this.plants.push(new Surface({
-            size: [80, 157],
-            classes: ['plant', 'lower']
-        }));
-        this.plants.push(new Surface({
-            size: [80, 157],
-            classes: ['plant', 'upper']
-        }));
-
-
-
-        this.plant_lower_modifier = new Modifier({
-            transform: Transform.translate(0,0,0)
+        this.plants = {};
+        this.plants["upper"] = new Plant(this.physicsEngine, {
+            pipeHeight: upperPipe.height, type: "upper"
+        });
+        this.plants["lower"] = new Plant(this.physicsEngine, {
+            pipeHeight: lowerPipe.height, type: "lower"
         });
 
-        this.pipeNodes[1].add(this.plant_lower_modifier).add(this.plants[1]);
+        this.pipeNodes["upper"].add(this.plants["upper"]);
+        this.pipeNodes["lower"].add(this.plants["lower"]);
+
+
+        this.plants["upper"].attack();
+        this.plants["lower"].attack();
 
     }//end create
 
@@ -141,6 +140,10 @@ define(function(require, exports, module) {
         this.surfaces[1].size = [this.opts.pipeWidth, lowerPipe.height];
         this.particles[1].setSize(this.surfaces[1].size);
         this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, -2]);
+
+        //reset the plants
+        this.plants["upper"].restart(upperPipe.height);
+        this.plants["lower"].restart(lowerPipe.height);
 
     };
 

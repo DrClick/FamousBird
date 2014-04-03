@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     
     /**
-     * @constructor
+     * @author Reza Ali http://www.syedrezaali.com/
      */
     function BufferLoader(context, urlList, callback) 
     {
