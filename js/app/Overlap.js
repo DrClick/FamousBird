@@ -104,7 +104,7 @@ define(function(require, exports, module) {
            throw "Only supported for circle on rectangle hot action!"
 
 
-
+        debugger
 
         var circle      = source.constructor.name == CircleName ? source: target;
         var rectangle   = source.constructor.name == RectangleName ? source: target;

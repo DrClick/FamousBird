@@ -13,15 +13,21 @@
 
       
     /** @constructor */
-    function Score(){
-        View.apply(this);
+    function Score(options){
+        View.apply(this, [options]);
+        
+        _create.call(this);
+    };
+    Score.prototype = Object.create(View.prototype); 
+    Score.prototype.constructor = Score; 
+
+    function _create(){
         this.score      = 0;
         this.surface    = null;
         this.particle   = null;
         this.visible    = true;
-    };
-    Score.prototype = Object.create(View.prototype); 
-    Score.prototype.constructor = Score; 
+        this.classes    = ['scorer'].concat(this.options.classes);
+    }
 
 
     Score.prototype.attachToPhysics = function(physicsEngine){
@@ -30,7 +36,7 @@
         this.surface = 
             new Surface({
                 size : [100,25],
-                classes : ['scorer'],
+                classes : this.classes,
                 content: '<h1>0</h1>'
             });
 

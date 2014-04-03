@@ -82,6 +82,9 @@ button{
     display: inline;
     box-shadow: -1px 1px 0 3px black; 
 }
+.scorer.main h1{
+    font-size:50px;
+}
 
 .scorer h1{
     font-size:40px;

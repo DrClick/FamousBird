@@ -142,7 +142,7 @@ define(function(require, exports, module) {
         this.panes.welcomeButtons.hide();
         this.panes.ready.hide();
 
-        this.scorer = new Score();
+        this.scorer = new Score({classes: "main"});
         this.scorer.attachToPhysics(this.physicsEngine);
         this.containerSurface.add(this.scorer);
 
