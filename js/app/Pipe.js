@@ -148,7 +148,8 @@ define(function(require, exports, module) {
 
     function _attack(){
         //reset the plants
-        var threshold = 0;
+        var threshold = 1;//a value of 1 turns off the plant attacks to start
+        
         var currentPipe = this.particles[0].pipeNumber;
 
         //set the threshold 
