@@ -5,7 +5,7 @@
     background-position: center 532px;
     background-repeat:no-repeat;
     font-family: 'flappyBird';
-    overflow : hidden;
+    overflow:hidden;
 }
 
 .startup, .gameOver, .scorer, .getReady{
@@ -113,7 +113,6 @@ button{
 .cloud{
     background-image: url('../content/images/clouds.png');
     background-size: 128 256px;
-    overflow: hidden;
     background-repeat:no-repeat;
 }
 .cloud-type-0{
@@ -134,7 +133,6 @@ button{
 .pipe{
     background-image: url('../content/images/pipe.png');
     color:transparent;
-    overflow: hidden;
     background-repeat:no-repeat;
 }
 .pipe.upper{
@@ -174,5 +172,9 @@ button{
 .grass p{
     display:block;
     /*margin-top:20px;*/
+}
+
+.plant{
+    background-image: url("../content/images/plant.png");
 }
 

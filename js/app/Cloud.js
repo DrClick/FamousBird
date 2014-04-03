@@ -35,7 +35,7 @@ define(function(require, exports, module) {
     	this.modifier =
             new Modifier({
     	        transform: Transform.multiply(
-                    Transform.translate(0,this.opts.yPos,-1),
+                    Transform.translate(0,this.opts.yPos, Math.random() * -3),
                     Transform.scale(this.opts.scale, this.opts.scale, 1)),
                 opacity: this.opts.opacity
     	    });
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
     }
 
     Cloud.prototype.restart = function(){
-        this.particle.setPosition([820, _getYPos(), 0]);
+        this.particle.setPosition([820, _getYPos(), Math.random() * -3]);
     };
 
 

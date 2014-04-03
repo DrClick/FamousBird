@@ -15,7 +15,12 @@ define(function(require, exports, module) {
         function getAppDims(){
             var scaleY = window.innerHeight / 960;
             var scaleX = window.innerWidth / 640;
-            var scale = Math.min(scaleX, scaleY);
+
+
+            //here we are going to let the bottom of the screen be cut off to allow fit to more
+            //devices
+            var scale = Math.min(scaleX, scaleY * 1.2);
+            //var scale = 1;
 
             var appWidth = 640 * scale;
             var appHeight = 960 * scale;
@@ -44,7 +49,7 @@ define(function(require, exports, module) {
             context.add(modifier).add(game);
 
             Engine.on("resize", function(){_resize(contextContainer);});
-            window.addEventListener("orientationchange", function(){_resize(contextContainer);});
+            Engine.on("orientationchange", function(){_resize(contextContainer);});
         }
 
         _init();

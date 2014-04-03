@@ -94,7 +94,7 @@ define(function(require, exports, module) {
     function spawn(){
         //Spawn the scene
         this.timers.clouds  = Timer.setInterval(spawnClouds.bind(this),1000);
-        this.timers.floor   = Timer.setInterval(spawnFloor.bind(this),1000);
+        this.timers.floor   = Timer.setInterval(spawnFloor.bind(this),3000);
     }//end spawn
 
 

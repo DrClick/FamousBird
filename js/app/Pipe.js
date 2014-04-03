@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 	//Includes Famous Repositories
     var Engine = require('famous/core/Engine');
     var Surface = require('famous/core/Surface');
+    var RenderNode = require("famous/core/RenderNode");
 
     var Modifier = require("famous/core/Modifier");
     var Transform = require("famous/core/Transform");
@@ -58,14 +59,14 @@ define(function(require, exports, module) {
                 new Rectangle({
                     mass: 0,
                     size : [this.opts.pipeWidth, upperPipe.height],
-                    position : [this.opts.initPipePos, upperPipe.y, 1],
+                    position : [this.opts.initPipePos, upperPipe.y, -2],
                     velocity : [this.opts.velocity,0,0]
                 }),
                 //lower pipe
                 new Rectangle({
                     mass : 0,
                     size : [this.opts.pipeWidth, lowerPipe.height],
-                    position : [this.opts.initPipePos, lowerPipe.y, 1],
+                    position : [this.opts.initPipePos, lowerPipe.y, -2],
                     velocity : [this.opts.velocity,0,0]
                 })
             ];
@@ -73,15 +74,24 @@ define(function(require, exports, module) {
         //set a property on the pipe used for scoring
         this.particles[0].pipeNumber = this.opts.id;
 
+
+        //create render nodes for the pipes
+        this.pipeNodes = [];
+        this.pipeNodes.push(new RenderNode());
+        this.pipeNodes.push(new RenderNode());
+
+        this.pipeNodes[0].add(this.surfaces[0]);
+        this.pipeNodes[1].add(this.surfaces[1]);
+
         //add the particles as modifiers
         //NOTE: It is important to add the origin modifier after adding the particle so that the
         //particle is in the middle of the surface
         this._add(this.particles[0])
             .add(new Modifier({origin:[.5,.5]}))
-            .add(this.surfaces[0]);
+            .add(this.pipeNodes[0]);
         this._add(this.particles[1])
             .add(new Modifier({origin:[.5,.5]}))
-            .add(this.surfaces[1]);
+            .add(this.pipeNodes[1]);
 
 
         //add the particles to the physics engine
@@ -91,6 +101,27 @@ define(function(require, exports, module) {
         //pipe events so clicks on the pipes will bubble up 
         this.surfaces[0].pipe(this._eventOutput);
         this.surfaces[1].pipe(this._eventOutput);
+
+
+
+        //add the plants
+        this.plants = [];
+        this.plants.push(new Surface({
+            size: [80, 157],
+            classes: ['plant', 'lower']
+        }));
+        this.plants.push(new Surface({
+            size: [80, 157],
+            classes: ['plant', 'upper']
+        }));
+
+
+
+        this.plant_lower_modifier = new Modifier({
+            transform: Transform.translate(0,0,0)
+        });
+
+        this.pipeNodes[1].add(this.plant_lower_modifier).add(this.plants[1]);
 
     }//end create
 
@@ -105,11 +136,11 @@ define(function(require, exports, module) {
         //reset the pipes surface/particle size and position
         this.surfaces[0].size = [this.opts.pipeWidth, upperPipe.height];
         this.particles[0].setSize(this.surfaces[0].size);
-        this.particles[0].setPosition([this.opts.initPipePos, upperPipe.y, 1]);
+        this.particles[0].setPosition([this.opts.initPipePos, upperPipe.y, -2]);
 
         this.surfaces[1].size = [this.opts.pipeWidth, lowerPipe.height];
         this.particles[1].setSize(this.surfaces[1].size);
-        this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, 1]);
+        this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, -2]);
 
     };
 
