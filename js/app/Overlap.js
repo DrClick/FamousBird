@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
-    var Constraint = require('famous/physics/constraints/Constraint');
-    var Vector = require('famous/math/Vector');
-    var EventHandler = require('famous/core/EventHandler');
-    var Circle = require('famous/physics/bodies/Circle');
-    var Rectangle = require('famous/physics/bodies/Rectangle');
-    var MathUtilities = require("famous/math/Utilities");
+    var Constraint      = require('famous/physics/constraints/Constraint');
+    var Vector          = require('famous/math/Vector');
+    var EventHandler    = require('famous/core/EventHandler');
+    var Circle          = require('famous/physics/bodies/Circle');
+    var Rectangle       = require('famous/physics/bodies/Rectangle');
+    var MathUtilities   = require("famous/math/Utilities");
 
     /** @constructor */
     function Overlap(options){
