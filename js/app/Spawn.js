@@ -17,7 +17,7 @@ define(function(require, exports, module) {
         if(!this.ended){
             var cloud = this.clouds[this.counters.cloud];
             if(cloud == null){
-                cloud = new Cloud(this.physicsEngine);
+                cloud = new Cloud();
                 this.clouds[this.counters.cloud] = cloud;
 
                 this.containerSurface.add(cloud);
@@ -34,12 +34,7 @@ define(function(require, exports, module) {
         if(!this.ended){
             var pipes = this.pipes[this.counters.pipe % this.pipes.length];
             if(pipes == null){
-                pipes = new Pipe(
-                    this.physicsEngine,
-                    {id:this.counters.pipe + 1}
-                );
-
-
+                pipes = new Pipe({id:this.counters.pipe + 1});
 
                 //detects overlaps with pipes and the birdie
                 var overlap_top = new Overlap();
@@ -75,9 +70,7 @@ define(function(require, exports, module) {
         if(!this.ended){
             var floor = this.floor[this.counters.floor];
             if(floor == null){
-                var opts = {};
-                if (this.counters.floor == 0){opts.initPos = 0;}
-                floor = new Floor(this, this.physicsEngine, opts);
+                floor = new Floor();
                 this.floor[this.counters.floor] = floor;
 
                 this.containerSurface.add(floor);

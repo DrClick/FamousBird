@@ -1,41 +1,36 @@
 define(function(require, exports, module) {
     "use strict";
 	//Includes Famous Repositories
-    var Engine = require('famous/core/Engine');
-    var Surface = require('famous/core/Surface');
-    var RenderNode = require("famous/core/RenderNode");
+    var Engine      = require('famous/core/Engine');
+    var Surface     = require('famous/core/Surface');
+    var RenderNode  = require("famous/core/RenderNode");
 
-    var Modifier = require("famous/core/Modifier");
-    var Transform = require("famous/core/Transform");
+    var Modifier    = require("famous/core/Modifier");
+    var Transform   = require("famous/core/Transform");
     var View        = require("famous/core/View");
     var Rectangle   = require("famous/physics/bodies/Rectangle");
 
-    var Plant       = require("app/Plant");
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
+    var Plant                   = require("app/Plant");
 
       
     /** @constructor */
-    function Pipe(physicsEngine, opts){
-        View.apply(this);
+    function Pipe(options){
+        View.apply(this, arguments);
 
-        this.physicsEngine = physicsEngine;
-        _init.call(this, opts);
         _create.call(this);
     };
     Pipe.prototype = Object.create(View.prototype); 
-    Pipe.prototype.constructor = Pipe; 
-
-    function _init(opts){
-        if(!opts) opts = {};
-        this.opts = {
-            id              : opts.id,
-            velocity        : -.3,
-            pipeHeight      : 480,
-            pipeWidth       : 113,
-            initPipePos     : 700
-        };
-    }//end init
+    Pipe.prototype.constructor = Pipe;
+    Pipe.DEFAULT_OPTIONS = {
+        velocity        : -.3,
+        pipeHeight      : 480,
+        pipeWidth       : 113,
+        initPipePos     : 700
+    };
 
     function _create(){
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
     
         var pipeSizeAndPos = _calcPipePositionAndSize.call(this);
         var upperPipe = pipeSizeAndPos[0];
@@ -45,11 +40,11 @@ define(function(require, exports, module) {
 
         this.surfaces = [
             new Surface({
-                size : [this.opts.pipeWidth, upperPipe.height],
+                size : [this.options.pipeWidth, upperPipe.height],
                 classes : ['pipe','upper', 'unselectable']
             }),
             new Surface({
-                size : [this.opts.pipeWidth, lowerPipe.height],
+                size : [this.options.pipeWidth, lowerPipe.height],
                 classes : ['pipe','lower']
             })
         ];
@@ -60,21 +55,21 @@ define(function(require, exports, module) {
                 //upper pipe
                 new Rectangle({
                     mass: 0,
-                    size : [this.opts.pipeWidth, upperPipe.height],
-                    position : [this.opts.initPipePos, upperPipe.y, -2],
-                    velocity : [this.opts.velocity,0,0]
+                    size : [this.options.pipeWidth, upperPipe.height],
+                    position : [this.options.initPipePos, upperPipe.y, -2],
+                    velocity : [this.options.velocity,0,0]
                 }),
                 //lower pipe
                 new Rectangle({
                     mass : 0,
-                    size : [this.opts.pipeWidth, lowerPipe.height],
-                    position : [this.opts.initPipePos, lowerPipe.y, -2],
-                    velocity : [this.opts.velocity,0,0]
+                    size : [this.options.pipeWidth, lowerPipe.height],
+                    position : [this.options.initPipePos, lowerPipe.y, -2],
+                    velocity : [this.options.velocity,0,0]
                 })
             ];
 
         //set a property on the pipe used for scoring
-        this.particles[0].pipeNumber = this.opts.id;
+        this.particles[0].pipeNumber = this.options.id;
 
 
         //create render nodes for the pipes
@@ -108,10 +103,10 @@ define(function(require, exports, module) {
 
         //add the plants
         this.plants = {};
-        this.plants["upper"] = new Plant(this.physicsEngine, {
+        this.plants["upper"] = new Plant({
             pipeHeight: upperPipe.height, type: "upper"
         });
-        this.plants["lower"] = new Plant(this.physicsEngine, {
+        this.plants["lower"] = new Plant({
             pipeHeight: lowerPipe.height, type: "lower"
         });
 
@@ -132,13 +127,13 @@ define(function(require, exports, module) {
         this.particles[0].pipeNumber = opts.id;
 
         //reset the pipes surface/particle size and position
-        this.surfaces[0].size = [this.opts.pipeWidth, upperPipe.height];
+        this.surfaces[0].size = [this.options.pipeWidth, upperPipe.height];
         this.particles[0].setSize(this.surfaces[0].size);
-        this.particles[0].setPosition([this.opts.initPipePos, upperPipe.y, -2]);
+        this.particles[0].setPosition([this.options.initPipePos, upperPipe.y, -2]);
 
-        this.surfaces[1].size = [this.opts.pipeWidth, lowerPipe.height];
+        this.surfaces[1].size = [this.options.pipeWidth, lowerPipe.height];
         this.particles[1].setSize(this.surfaces[1].size);
-        this.particles[1].setPosition([this.opts.initPipePos, lowerPipe.y, -2]);
+        this.particles[1].setPosition([this.options.initPipePos, lowerPipe.y, -2]);
 
         this.plants["upper"].restart(upperPipe.height);
         this.plants["lower"].restart(lowerPipe.height);
@@ -172,8 +167,8 @@ define(function(require, exports, module) {
     function _calcPipePositionAndSize(){
         var gapOffset = _calcGapOffset();
 
-        var upperPipeHeight = (this.opts.pipeHeight-200) + gapOffset;
-        var lowerPipeHeight = (this.opts.pipeHeight-200) - gapOffset;
+        var upperPipeHeight = (this.options.pipeHeight-200) + gapOffset;
+        var lowerPipeHeight = (this.options.pipeHeight-200) - gapOffset;
         var upperPipeYPos = upperPipeHeight/2;
         var lowerPipeYPos = 480 + gapOffset + lowerPipeHeight/2;
 

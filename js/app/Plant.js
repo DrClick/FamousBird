@@ -12,14 +12,11 @@ define(function(require, exports, module) {
     var GameSounds  = require("app/GameSounds");
     var Overlap     = require("app/Overlap");
     
-
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
       
     /** @constructor */
-    function Plant(physicsEngine, options){
-        View.apply(this, [options]);
-
-        //DV: define physics engine outside, and return the necessary particles to add
-        this.physicsEngine = physicsEngine;
+    function Plant(options){
+        View.apply(this, arguments);
 
         _create.call(this);
     }
@@ -32,6 +29,8 @@ define(function(require, exports, module) {
 
   
     function _create(){
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
+
         var yPos = _getYPos.call(this, this.options.pipeHeight);
 
 	    //add the Plant off screen

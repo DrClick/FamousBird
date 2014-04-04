@@ -7,16 +7,16 @@ define(function(require, exports, module) {
     var Modifier = require("famous/core/Modifier");
     var Transform = require("famous/core/Transform");
     var Timer = require("famous/utilities/Timer");
-    var PhysicsEngine = require('famous/physics/PhysicsEngine');
     var Rectangle   = require("famous/physics/bodies/Rectangle");
     var View = require("famous/core/View");
 
     //include forces and constraints
+    var PhysicsEngineFactory = require('app/PhysicsEngineFactory');
     var VectorField = require("famous/physics/forces/VectorField");
     var Overlap = require("app/Overlap");
     
     //Game Elements
-    var Birdie = require("app/Bird");
+    var Birdie = require("app/Birdie");
     var Cloud = require("app/Cloud");
     var Pipe = require("app/Pipe");
     var Floor = require("app/Floor");
@@ -72,9 +72,9 @@ define(function(require, exports, module) {
         this.birdie         = null;
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
         this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
-        this.physicsEngine  = new PhysicsEngine({numConstraints: 4});
+        this.physicsEngine  = PhysicsEngineFactory.getEngine();
 
-        this.birdie         = new Birdie(this.physicsEngine);
+        this.birdie         = new Birdie();
 
         //holders for the objects
         this.pipes          = [null, null, null];
@@ -160,7 +160,6 @@ define(function(require, exports, module) {
         this.panes.ready.hide();
 
         this.scorer = new Score({classes: "main"});
-        this.scorer.attachToPhysics(this.physicsEngine);
         this.containerSurface.add(this.scorer);
 
         this.timers.pipes = Timer.setInterval(Spawn.pipes.bind(this),1200);
@@ -257,7 +256,7 @@ define(function(require, exports, module) {
     
 
     function  _showWelcomeScreen(){
-        this.panes.welcome = new BouncyPane(this.physicsEngine, {
+        this.panes.welcome = new BouncyPane({
             content: "<h1>Famous Bird</h1>",
             classes: ["startup"]
         });
@@ -284,7 +283,7 @@ define(function(require, exports, module) {
         this.panes.welcome.hide();
         this.panes.welcomeButtons.hide();
 
-        this.panes.ready = new BouncyPane(this.physicsEngine, {
+        this.panes.ready = new BouncyPane({
             content: "<h1>Get Ready</h1><p></p>",
             classes: ["getReady"]
         });
@@ -300,7 +299,7 @@ define(function(require, exports, module) {
     function _showGameOverScreen(){
         this.scorer.hide();
 
-        this.panes.gameOver = new GameOverScreen(this.physicsEngine, {score: this.score});
+        this.panes.gameOver = new GameOverScreen({score: this.score});
         this.containerSurface.add(this.panes.gameOver);
         this.panes.gameOver.show();
 

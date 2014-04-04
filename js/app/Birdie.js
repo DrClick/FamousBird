@@ -14,32 +14,29 @@ define(function(require, exports, module) {
     var Circle      = require("famous/physics/bodies/Circle");
 
     //Utilities
-    var GameSounds  = require("app/GameSounds");
+    var GameSounds              = require("app/GameSounds");
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
     
 
     
 
    
     /** @constructor */
-    function Birdie(physicsEngine, opts){
-        View.apply(this);
-
-        //DV: define physics engine outside, and return the necessary particles to add
-        this.physicsEngine = physicsEngine;
-        this.opts = {
-            flapStrength        : .035,
-            birdieRadius        : 25
-        };
-        if (opts){this.setOptions(opts);}
+    function Birdie(options){
+        View.apply(this, options);
 
         _create.call(this);
-        this.hangout();
+        _init.call(this);
     }
     Birdie.prototype = Object.create(View.prototype); 
     Birdie.prototype.constructor = Birdie; 
-
+    Birdie.DEFAULT_OPTIONS = {
+        flapStrength        : .035,
+        birdieRadius        : 25
+    };
 
     function _create(){
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
         
         this.flyTimer = null;
         this.flyState = 0;
@@ -55,7 +52,7 @@ define(function(require, exports, module) {
         //Create a physical particle
         this.particle = new Circle({
             mass : 1,
-            radius : this.opts.birdieRadius,
+            radius : this.options.birdieRadius,
             position: [200,440,10],
             velocity : [0,0,0]
         });
@@ -88,11 +85,9 @@ define(function(require, exports, module) {
         this._add(this.particle).add(this.rotationModifier).add(birdieContainer);
     }
 
-
-
-    Birdie.prototype.setOptions = function(opts){
-        for (var key in opts){this.opts[key] = opts[key];}
-    };
+    function _init(){
+        this.hangout();
+    }
 
 
     Birdie.prototype.hangout = function(){

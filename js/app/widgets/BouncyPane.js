@@ -10,13 +10,14 @@ define(function(require, exports, module) {
 	var Spring          = require('famous/physics/constraints/Snap');
     var Circle          = require("famous/physics/bodies/Circle");
 
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
 
-	function BouncyPane(physicsEngine, options){
-        View.apply(this, [options]);
 
-        this.physicsEngine = physicsEngine;
-		_create.call(this);
-	}
+    function BouncyPane(options){
+        View.apply(this, arguments);
+
+        _create.call(this);
+    }
     BouncyPane.prototype = Object.create(View.prototype);
     BouncyPane.prototype.constructor = BouncyPane;
     BouncyPane.DEFAULT_OPTIONS = {
@@ -28,6 +29,8 @@ define(function(require, exports, module) {
 
 
     function _create(){
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
+        
         this.surface = new Surface({
             size : this.options.size,
             classes : ['unselectable'].concat(this.options.classes),

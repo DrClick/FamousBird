@@ -16,7 +16,7 @@ define(function(require, exports, module) {
 
 
 	function SlideUpPane(options){
-        View.apply(this, [options]);
+        View.apply(this, arguments);
 
 		_create.call(this);
 	};

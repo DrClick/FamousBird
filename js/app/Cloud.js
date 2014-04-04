@@ -7,44 +7,43 @@ define(function(require, exports, module) {
     var View        = require("famous/core/View");
     var Circle      = require("famous/physics/bodies/Circle");
 
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
+
       
     /** @constructor */
-    function Cloud(physicsEngine){
-        View.apply(this);
+    function Cloud(options){
+        View.apply(this, arguments);
 
-        //DV: define physics engine outside, and return the necessary particles to add
-        this.physicsEngine = physicsEngine;
-        _init.call(this);
         _create.call(this);
     }
 
     Cloud.prototype = Object.create(View.prototype); 
-    Cloud.prototype.constructor = Cloud; 
+    Cloud.prototype.constructor = Cloud;
+    Cloud.DEFAULT_OPTIONS = {};
 
-    function _init(){
-        this.opts = {
+  
+    function _create(){
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
+
+        this.setOptions({
             yPos        : _getYPos(),
             scale       : 2 + 2 * Math.random(),
             opacity     : 1 / (1.1 + Math.random()),
             velocity    : -.2 - Math.random() * .1,
             cloudType   : "cloud-type-" + parseInt((Math.random() * 1000)) % 3
-        };
-    }//end init
-
-  
-    function _create(){
-    	this.modifier =
-            new Modifier({
-    	        transform: Transform.multiply(
-                    Transform.translate(0,this.opts.yPos, Math.random() * -3),
-                    Transform.scale(this.opts.scale, this.opts.scale, 1)),
-                opacity: this.opts.opacity
-    	    });
+        });
+    	
+        this.modifier = new Modifier({
+	        transform: Transform.multiply(
+                Transform.translate(0,this.options.yPos, Math.random() * -3),
+                Transform.scale(this.options.scale, this.options.scale, 1)),
+            opacity: this.options.opacity
+	    });
 
 	    //add the cloud off screen
         this.surface = new Surface({
             size : [128, 64],
-            classes : ["cloud", this.opts.cloudType]
+            classes : ["cloud", this.options.cloudType]
         });
 
 	    //Create a physical particle
@@ -52,7 +51,7 @@ define(function(require, exports, module) {
             mass : 0,
             radius : 0,
             position : [820,0,0],
-            velocity : [this.opts.velocity,0,0]
+            velocity : [this.options.velocity,0,0]
         });
 
         //Render the Famous Surface from the particle

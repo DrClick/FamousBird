@@ -12,9 +12,10 @@ define(function(require, exports, module){
     var ButtonPane 		= require("app/widgets/ButtonPane");
     var SlideUpPane 	= require("app/widgets/SlideUpPane");
 
+    var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
+
 	function GameOverView(physicsEngine, options){
 		View.apply(this, [options]);
-		this.physicsEngine = physicsEngine;
 
 		_create.call(this);
 
@@ -27,7 +28,10 @@ define(function(require, exports, module){
 
 
 	function _create(){
-		this.bouncyPane = new BouncyPane(this.physicsEngine, {
+
+        this.physicsEngine = PhysicsEngineFactory.getEngine();
+
+		this.bouncyPane = new BouncyPane({
             content: "<h1>Game Over</h1>",
             classes: ["gameOver"]
         });
@@ -48,8 +52,6 @@ define(function(require, exports, module){
 
 
         _createFinalScorePane.call(this);
-
-        
 	}
 
 
