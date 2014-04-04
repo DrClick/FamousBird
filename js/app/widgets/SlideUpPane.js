@@ -40,7 +40,7 @@ define(function(require, exports, module) {
         };
 
         this.modifier = new Modifier({
-                transform: Transform.translate(320,1000,1),
+                transform: Transform.translate(320,1000,100),
                 origin: [0.5, 0.5],
                 opacity: 0
         });
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
 
     SlideUpPane.prototype.show = function(){
         this.visible = true;
-        this.modifier.setTransform(Transform.translate(320,420,1), this.spring);
+        this.modifier.setTransform(Transform.translate(320,420,100), this.spring);
         this.modifier.setOpacity(1, {duration:200});
     };//end method
 
