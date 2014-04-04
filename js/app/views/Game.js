@@ -177,16 +177,16 @@ define(function(require, exports, module) {
     }//end start
 
     function _onGroundCollision(){
-        this.physicsEngine.sleep();
         this.birdie.halt();
-        //console.log("death on the ground");
+        this.physicsEngine.sleep();
+
         this.end.call(this);
 
         //hack to keep from constantly firing collisions, if done inline, causes
         //errors
         Timer.setTimeout(function(){
-            this.physicsEngine.sleep();
-        }.bind(this), 500);
+            this.physicsEngine.detachAll();
+        }.bind(this), 3000);
     }
 
 
