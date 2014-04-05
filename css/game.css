@@ -97,17 +97,17 @@ button{
 }
 
 /*------The birdie-------*/
-.birdie{
-    background-image: url('../content/images/birdie_1.png');
+.birdie-middle, .birdie-up, .birdie-down{
     background-repeat: no-repeat;
+}
+.birdie-middle{
+    background-image: url('../content/images/birdie_1.png');
 }
 .birdie-down{
     background-image: url('../content/images/birdie_2.png');
-    background-repeat: no-repeat;
 }
 .birdie-up{
     background-image: url('../content/images/birdie_3.png');
-    background-repeat: no-repeat;
 }
 
 
@@ -188,4 +188,10 @@ button{
     margin: 30px 0px 0px 10px;
     font-family: 'terminal';
 
+}
+
+.share{
+    padding: 20px;
+    border: solid 1px red;
+    background-color: pink;
 }

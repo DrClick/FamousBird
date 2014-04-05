@@ -81,20 +81,19 @@ define(function(require, exports, module) {
         this.clouds         = [null, null, null, null, null, null, null, null, null, null];
         this.floor          = [null, null, null];
 
-        //create the container and link the physics engine
+        //create the container surface that will hold all of the game content
         this.containerSurface = new ContainerSurface({
-            size : this.options.boardSize,
             classes: ["game"]
         });
 
+        //this modifier will be used shake the screen
         this.modifier = new Modifier({
             transform: Transform.translate(0,0,0),
             origin: [0,0]
         });
         
-        //add the surface to the view and the physics to the surface
+        //add the container surface to the view 
         this.add(this.modifier).add(this.containerSurface);
-        this.containerSurface.add(this.physicsEngine);
 
         //create gravity
         this.gravity = new VectorField({

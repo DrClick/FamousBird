@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 	
 
 	function ButtonPane(options){
-        View.apply(this, [options]);
+        View.apply(this, arguments);
 
 		_create.call(this);     
 	}

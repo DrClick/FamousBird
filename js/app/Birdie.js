@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     //Includes Famous Repositories
     var Surface     = require("famous/core/Surface");
-    var ContainerSurface = require("famous/surfaces/ContainerSurface");
+    var RenderNode  = require("famous/core/RenderNode");
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
     var View        = require("famous/core/View");
@@ -38,10 +38,7 @@ define(function(require, exports, module) {
     function _create(){
         this.physicsEngine = PhysicsEngineFactory.getEngine();
         
-        this.flyTimer = null;
         this.flyState = 0;
-        this.started = false;
-
 
         this.rotationModifier = new Modifier({
             size:[.001,.001],
@@ -59,70 +56,61 @@ define(function(require, exports, module) {
         this.particle.name = "Birdie Particle";
         this.physicsEngine.addBody(this.particle);
 
-        //create the birdie surface
+
+        //since we need to modify the opacity of each of the three birdie surfaces, we will need 
+        //modifiers for each.
         this.birdieModifier = [];
-        for (var i = 0; i < 3; i++) {
-            this.birdieModifier.push(new Modifier({ opacity: 1, origin: [.5,.5]}));
-        }
-
-        var birdieContainer = new ContainerSurface({
-            size: [77,57]
-        });
+        var birdieNode = new RenderNode();
         
-        birdieContainer.add(this.birdieModifier[0]).add(new Surface({
-            size : [77, 57],
-            classes : ["birdie"]
-        }));
-        birdieContainer.add(this.birdieModifier[1]).add(new Surface({
-            size : [77, 57],
-            classes : ["birdie-up"]
-        }));
-        birdieContainer.add(this.birdieModifier[2]).add(new Surface({
-            size : [77, 57],
-            classes : ["birdie-down"]
-        }));
+        ["middle", "up", "down"].forEach(function(flapState, index){
+            //create a modifier
+            this.birdieModifier.push(new Modifier({ opacity: 1, origin: [.5,.5]}));
+            //add a surface to the render node
+            birdieNode.add(this.birdieModifier[index]).add(new Surface({
+                size : [77, 57],
+                classes : ["birdie" + "-" + flapState]
+            }));
+        }.bind(this));
 
-        this._add(this.particle).add(this.rotationModifier).add(birdieContainer);
+        this._add(this.particle).add(this.rotationModifier).add(birdieNode);
     }
 
     function _init(){
         this.hangout();
+        this.flyTimer = Timer.setInterval(function(){this.fly();}.bind(this),100);
     }
 
 
     Birdie.prototype.hangout = function(){
-        //Define Physical Agents: Forces & constraints
+        //Create a new spring force
         var spring = new Spring({
             period          : 1200,
-            dampingRatio    : 0,
+            dampingRatio    : 0, //undamped, we want the bird to bounce until we start
             length          : 30,
             bidirectional   : true,
-            anchor          : [200,400,10]
+            anchor          : [200,400,10] //notice this positioned above where we set the birdie
         });
 
+        //when we attach forces to particles, we get the ID back, this is useful for when you want 
+        //to detach this force later (for instance when we start the game)
         this.springID = this.physicsEngine.attach(spring, this.particle);
-
-
-        this.flyTimer = Timer.setInterval(function(){this.fly();}.bind(this),100);
-
     };
 
     Birdie.prototype.fly = function(){
         this.flyState++;
         var state = this.flyState % 3;
-        this.birdieModifier.forEach(function(b){
-            b.setOpacity(.001);
+        
+        //set the opacity of all the birdie surface modifiers
+        this.birdieModifier.forEach(function(modifier, index){
+            modifier.setOpacity(index == state ? 1 : .001);
         });
-        this.birdieModifier[state].setOpacity(.999);
     };
 
     Birdie.prototype.start = function() {
-        if(!this.started){
-            this.started = true;
-            this.physicsEngine.detach(this.springID);
-        }
-
-        this.flap(true);
+        //remove the spring
+        this.physicsEngine.detach(this.springID);
+        //gives the birdie an initial upward motion
+        this.flap();
     };
 
     Birdie.prototype.stop = function() {
@@ -134,8 +122,7 @@ define(function(require, exports, module) {
         this.particle.setMass(0);
     }
     
-    Birdie.prototype.flap = function(isInitialFlap){
-        //this.particle.applyImpulse(new Vector([0,-.60,0]));
+    Birdie.prototype.flap = function(){
         this.particle.setVelocity([0,-.52,0]);
         
         //adjust the birdie rotation

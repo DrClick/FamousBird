@@ -11,8 +11,11 @@ define(function(require, exports, module){
     var BouncyPane 		= require("app/widgets/BouncyPane");
     var ButtonPane 		= require("app/widgets/ButtonPane");
     var SlideUpPane 	= require("app/widgets/SlideUpPane");
+    var Share           = require("./Share");
 
     var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
+
+    
 
 	function GameOverView(physicsEngine, options){
 		View.apply(this, [options]);
@@ -50,6 +53,8 @@ define(function(require, exports, module){
         this.bouncyPane.pipe(this._eventOutput);
         this.gameOverButtons.pipe(this._eventOutput);
 
+        this.share = new Share();
+        this.add(this.share);
 
         _createFinalScorePane.call(this);
 	}
@@ -60,7 +65,7 @@ define(function(require, exports, module){
     }//end restart
 
     function _share(){
-        alert("This is a private beta, no sharing for now.");
+        this.share.share();
     };
 
 

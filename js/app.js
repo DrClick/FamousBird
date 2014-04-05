@@ -5,7 +5,10 @@ define(function(require, exports, module) {
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
     var GameView    = require("app/views/Game");
+    var AssetLoader = require("app/views/AssetLoader");
 
+    
+    var context = null;
 
     var modifier = new Modifier({
         origin: [.5,.5],
@@ -42,17 +45,45 @@ define(function(require, exports, module) {
         _resize(contextContainer);
 
         //create the new one
-        var context = Engine.createContext(contextContainer);
+        context = Engine.createContext(contextContainer);
         context.setPerspective(3000);
-
-
-        var game = new GameView();
-        context.add(modifier).add(game);
 
         Engine.on("resize", function(){_resize(contextContainer);});
         Engine.on("orientationchange", function(){_resize(contextContainer);});
     }
 
+    function _loadGame(){
+        var game = new GameView();
+        context.add(modifier).add(game);
+    }
+
     _init();
+
+
+    var requiredAssets = [
+        "content/font/04B_19__.TTF",
+        "content/font/terminal.woff",
+        "content/images/birdie_1.png",
+        "content/images/birdie_2.png",
+        "content/images/birdie_3.png",
+        "content/images/pipe.png",
+        "content/images/pipe_up.png",
+        "content/images/floor.png",
+        "content/images/grass.png",
+        "content/images/plant_lower.png",
+        "content/images/plant_upper.png",
+        "content/images/ready.png"
+    ];
+
+    AssetLoader.on("asset.loaded", function(data){
+        console.log("status", data);
+    });
+    
+    AssetLoader.getAssets(requiredAssets, function(){
+        console.log("loaded assets");
+        _loadGame.call(this);
+    }.bind(this));
+
+
 });
 
