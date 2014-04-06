@@ -4,8 +4,11 @@ define(function(require, exports, module) {
     var Engine      = require("famous/core/Engine");
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
+    
+
     var GameView    = require("app/views/Game");
-    var AssetLoader = require("app/views/AssetLoader");
+    var AssetLoader = require("app/AssetLoader");
+    var Loading     = require("app/views/Loading");
 
     
     var context = null;
@@ -75,12 +78,17 @@ define(function(require, exports, module) {
         "content/images/ready.png"
     ];
 
+    var loading = new Loading();
+    loading.show();
+    context.add(loading);
+
     AssetLoader.on("asset.loaded", function(data){
-        console.log("status", data);
+        loading.setProgress(data.complete);
     });
-    
+
     AssetLoader.getAssets(requiredAssets, function(){
-        console.log("loaded assets");
+
+        loading.hide();
         _loadGame.call(this);
     }.bind(this));
 

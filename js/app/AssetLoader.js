@@ -4,7 +4,7 @@ define(function(require, exports, module){
 	
 	var _eventInput = new EventHandler();
 	var _eventOutput = new EventHandler();
-	
+
 	function AssetLoader(){
 		
 		//wire up eventing
@@ -19,14 +19,14 @@ define(function(require, exports, module){
 		var numAssets = assets.length;
 		var loadedCount = 0.0;
 
-		var promises = assets.map(function(asset, index){ 
+		var promises = assets.map(function(asset){ 
 			return _get(asset).then(function(){
 				loadedCount++;
 				_eventOutput.emit("asset.loaded", 
-					{asset: asset, complete: loadedCount/numAssets})
+					{asset: asset, complete: loadedCount/numAssets});	
 			});
 		});
-		Promise.all(promises).then(callback());
+		Promise.all(promises).then(callback);
 	};
 
 	function _get(url) {

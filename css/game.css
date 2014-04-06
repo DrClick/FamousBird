@@ -1,4 +1,11 @@
-
+.progress{
+    border-radius: 10px;
+    border: solid 1px white;
+}
+.progressBar{
+    border-radius: 10px;
+    background-color: red;
+}
 .game{
     background-color:#6dc6d0;
     background-image: url('../content/images/background.png');
