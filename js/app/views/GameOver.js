@@ -17,7 +17,7 @@ define(function(require, exports, module){
 
     
 
-	function GameOverView(physicsEngine, options){
+	function GameOverView(options){
 		View.apply(this, [options]);
 
 		_create.call(this);
@@ -65,7 +65,7 @@ define(function(require, exports, module){
     }//end restart
 
     function _share(){
-        this.share.share();
+        this.share.share(this.options.score);
     };
 
 
