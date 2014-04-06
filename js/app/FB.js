@@ -62,9 +62,8 @@ define(function(require, exports, module) {
      			FB.api('/me', function(response) {
        				console.log('Good to see you, ' + response.name + '.');
      			});
-
      			//execute success callback
-     			success();
+     			success(response);
    			} else {
      			console.log('User cancelled login or did not fully authorize.');
 

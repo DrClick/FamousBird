@@ -46,10 +46,16 @@ define(function(require, exports, module) {
 
     Share.prototype.share = function(score){
     	FBFunctions.isLoggedIn(function(response){
-    		if(!response.status) FBFunctions.login(this.postScore.bind(this, score));
-
-            response.score = score;
-            this.postScore(response);
+    		if(!response.status) FBFunctions.login(
+                function(response){
+                    response.score = score;
+                    this.postScore(response);
+                }.bind(this));
+            else{
+                response.score = score;
+                this.postScore(response);
+            }
+            
     	}.bind(this));
     }
 
