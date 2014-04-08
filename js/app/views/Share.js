@@ -73,14 +73,17 @@ define(function(require, exports, module) {
         FBFunctions.FB().api(likeUrl,'post',{game: "demo.famou.us/famous-bird"});
 
         //share score
-        var shareUrl = 'https://graph.facebook.com/me/scores?score=USER_SCORE&access_token=APP_ACCESS_TOKEN'
-                .replace("USER_SCORE", scoreData.score)
-                .replace("APP_ACCESS_TOKEN", scoreData.token);
+        var shareUrl = 'https://graph.facebook.com/USERID/scores?score=USER_SCORE&access_token=ACCESS_TOKEN'
+                .replace("USERID", scoreData.uid)
+                .replace("USER_SCORE", scoreData.score || 0)
+                .replace("ACCESS_TOKEN", scoreData.token);
+
+        console.log(shareUrl);
 
     	FBFunctions.FB().api(
            shareUrl,
            'post',
-            {game: "demo.famou.us/famous-bird"},
+            {},
             function(response) {
                 alert("Hey " + scoreData.name + " thanks for sharing!");
             }

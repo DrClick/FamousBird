@@ -78,7 +78,7 @@ define(function(require, exports, module) {
      			//execute failure callback
      			failure();
    			}
- 		});
+ 		},{scope: 'publish_actions'});
 	}
 
 	function logout(callback){
