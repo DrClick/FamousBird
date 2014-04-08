@@ -87,7 +87,7 @@ define(function(require, exports, module) {
     });
 
     AssetLoader.getAssets(requiredAssets, function(){
-
+        
         loading.hide();
         _loadGame.call(this);
     }.bind(this));

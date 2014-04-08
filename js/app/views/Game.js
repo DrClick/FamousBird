@@ -39,7 +39,8 @@ define(function(require, exports, module) {
     var SpringTransition = require("famous/transitions/SpringTransition")
 
     //View
-    var GameOverScreen = require("app/views/GameOver");
+    var GameOverScreen  = require("app/views/GameOver");
+    var WelcomeScreen   = require("app/views/Welcome"); 
 
 
     Transitionable.registerMethod("spring", SpringTransition);
@@ -71,7 +72,7 @@ define(function(require, exports, module) {
         this.counters       = {pipe: 0, cloud: 0, floor: 0};
         this.birdie         = null;
         this.timers         = {clouds:null, pipes:null, floor: null, clean: null, counter: null};
-        this.panes          = {welcome: null, gameOver: null, welcomeButtons: null, finalScore: null, gameOverButtons: null};
+        this.panes          = {welcome: null, gameOver: null, finalScore: null, gameOverButtons: null};
         this.physicsEngine  = PhysicsEngineFactory.getEngine();
 
         this.birdie         = new Birdie();
@@ -155,8 +156,6 @@ define(function(require, exports, module) {
         this.ended = false;
         
         //get the UI in the correct state
-        this.panes.welcome.hide();
-        this.panes.welcomeButtons.hide();
         this.panes.ready.hide();
 
         this.scorer = new Score({classes: "main"});
@@ -259,33 +258,15 @@ define(function(require, exports, module) {
     
 
     function  _showWelcomeScreen(){
-        this.panes.welcome = new BouncyPane({
-            content: "<h1>Famous Bird</h1>",
-            classes: ["startup"]
-        });
-
-        this.containerSurface.add(this.panes.welcome);
+        this.panes.welcome = new WelcomeScreen();
         this.panes.welcome.show();
-
-        this.panes.welcomeButtons = new ButtonPane({
-            buttons: [
-                {text: "START", callback: _showGetReadyScreen.bind(this), offsetX: -120},
-                {text: "SCORES", callback: _showHighScores.bind(this), offsetX: 120}
-            ]
-        });
-        this.containerSurface.add(this.panes.welcomeButtons);
-        this.panes.welcomeButtons.show();
-
-
-        //make sure draggable events on these views are piped up
+        this.containerSurface.add(this.panes.welcome);
+        
+        this.panes.welcome.on("ready", _showGetReadyScreen.bind(this));
         this.panes.welcome.pipe(this._eventOutput);
-        this.panes.welcomeButtons.pipe(this._eventOutput);
     };
 
     function _showGetReadyScreen(){
-        this.panes.welcome.hide();
-        this.panes.welcomeButtons.hide();
-
         this.panes.ready = new BouncyPane({
             content: "<h1>Get Ready</h1><p></p>",
             classes: ["getReady"]
@@ -354,12 +335,6 @@ define(function(require, exports, module) {
         this.modifier.setTransform(Transform.translate(0,0,0),spring);
 
     };//end method
-
-
-    function _showHighScores(){
-        alert("Whoah! This agression will not stand man! This hasnt been implemented.");
-    };
-
     
 
     Game.prototype.hide = function(){

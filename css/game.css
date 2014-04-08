@@ -202,3 +202,48 @@ button{
     border: solid 1px red;
     background-color: pink;
 }
+
+.highScores{
+    font-family: 'terminal';
+    color:brown;
+    font-size: 30px;
+    background-color:#e2ca91;
+    border: ridge 5px tan;
+    box-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000;
+}
+.highScores h3{
+    margin: 0px 0px 0px 10px;
+}
+.closeButton{
+    background-color:#ec4200;
+    color:white;
+    text-align: center;
+    font-family: 'terminal';
+    font-size:14px;
+    border: solid 3px white;
+    letter-spacing:0.1em;
+    font-weight: bold;
+    display: inline;
+    box-shadow: -1px 1px 0 3px black; 
+}
+.highScoreItem{
+    color: white;
+    font-size:16px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-align: left;
+}
+.highScoreItem img{
+    float:left;
+    margin:5px;
+    border-radius: 5px;
+}
+.highScoreItem b{
+    float:right;
+    font-size: 24px;
+    margin-top:15px;
+    margin-right:10px;
+}
+.highScoreItem label{
+    margin-top:25px;
+    display:inline-block;
+}

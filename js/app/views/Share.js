@@ -24,7 +24,13 @@ define(function(require, exports, module) {
     };
 
     function _create(){
-        FBFunctions.init();
+
+        //FB likes to lock up the UI when it inits, so lets let the UI
+        //finish up before initing.
+        Timer.setTimeout(function(){
+            FBFunctions.init();
+        }, 100);
+        
 
         this.surface = new Surface({
             size : [300,300],

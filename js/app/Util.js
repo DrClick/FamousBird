@@ -22,8 +22,32 @@ define(function(require, exports, module) {
 
     Utils.isMobile = function() { 
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-    }//end function
+    };//end function
     
+    Utils.get = function(url, success, failure){
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+
+        req.onload = function() {
+          // This is called even on 404 etc
+          // so check the status
+          if (req.status == 200) {
+            success(req.response);
+          }
+          else {
+            failure(Error(req.statusText));
+          }
+        };
+
+        // Handle network errors
+        req.onerror = function() {
+          failure(Error("Network Error"));
+        };
+
+        // Make the request
+        req.send();
+    };//end function
+
 
     module.exports = Utils;
 });

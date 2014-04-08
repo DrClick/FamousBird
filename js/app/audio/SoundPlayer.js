@@ -66,7 +66,6 @@ define(function(require, exports, module) {
 
     SoundPlayer.prototype.playSound = function(i, volume, callback) {
         try{
-            debugger
             if(this.context && this.sounds)
             {
                 var buffer = this.context.createBufferSource();
