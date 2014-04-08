@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var Transform           = require("famous/core/Transform");
 
     var Utils               = require("app/Util");
+    var ProgressBar         = require("app/widgets/ProgressBar");
     
 
     function HighScores(options){
@@ -19,7 +20,20 @@ define(function(require, exports, module) {
     HighScores.prototype.constructor = HighScores;
     HighScores.DEFAULT_OPTIONS = {
         visible: false,
-        server: "//famous-bird.herokuapp.com/"
+        server: "//famous-bird.herokuapp.com/",
+        labelProperties: {
+            fontSize: "20px", 
+            color: "white", 
+            textShadow: "3px 3px 0px black",
+            textAlign: "center"},
+        progressProperties: {
+            borderRadius: "10px",
+            border: "solid 1px white"
+        },
+        barProperties: {
+            borderRadius: "10px",
+            backgroundColor: "#3cf"
+        }
     };
 
     function _create(){
@@ -46,7 +60,8 @@ define(function(require, exports, module) {
 
         this.add(new Modifier({
                 origin: [.5,.5],
-                transform: Transform.translate(320,380,100)
+                size: [480, 500],
+                transform: Transform.translate(5,50,100)
             }))
             .add(scrollContainer);
 
@@ -57,11 +72,7 @@ define(function(require, exports, module) {
             classes: ["highScores"],
             size: [510,530]
         })
-        this.add(new Modifier({
-                origin: [.5,.5],
-                transform: Transform.translate(320,370,99)
-            }))
-            .add(windowSurface);
+        this.add(windowSurface);
 
 
         //close button
@@ -71,13 +82,40 @@ define(function(require, exports, module) {
             size: [20,20]
         })
         this.add(new Modifier({
-                transform: Transform.translate(540,120,100)
+                transform: Transform.translate(480,10,100)
             }))
             .add(closeButton);
 
         closeButton.on("click", function(){
             this.hide();
         }.bind(this));
+
+
+
+        //progress Bar
+        this.progressBar = new ProgressBar({
+            progressProperties: this.options.progressProperties, 
+            barProperties: this.options.barProperties
+        });
+
+        this.progressBar.show();
+        this.add(new Modifier({
+                origin: [.5,.5],
+                size: [200,20]
+            }))
+            .add(this.progressBar);
+
+        this.loadingSurface = new Surface({
+            content: "Loading...",
+            size: [200,20],
+            properties: this.options.labelProperties
+        });
+        this.add(new Modifier({
+                size: [200,20],
+                origin: [.5,.5],
+                transform: Transform.translate(0,-30,0)
+            }))
+            .add(this.loadingSurface);
         
     }
 
@@ -113,6 +151,8 @@ define(function(require, exports, module) {
             temp.pipe(this.scrollview);
             this.highScoreSurfaces.push(temp);
         }
+
+        this.progressBar.hide();
     }
 
     function _fail(){

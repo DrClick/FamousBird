@@ -70,71 +70,18 @@ define(function(require, exports, module){
 
 
 	function _createFinalScorePane(){
-		var content = "<div class='currentScore'>SCORE</div><div class='highScore'>BEST</div><div class='medal'>MEDAL</div>";
-
-		//create surfaces and modifiers for showing the score and highscore
-        var scoreSurface = new Surface({
-            content: "<h1>0</h1>",
-            size: [100,80],
-            classes: ["scorer"]
-        });
-        var scoreModifier = new Modifier({
-            transform: Transform.translate(180,-60,50),
-            origin: [.5,.5]
-        });
-
-        var highScoreSurface = new Surface({
-            content: "<h1>" + (localStorage.getItem("HighScore") || 0) + "</h1>",
-            size: [100,80],
-            classes: ["scorer"]
-        });
-        var highScoreModifier = new Modifier({
-            transform: Transform.translate(180,40,50),
-            origin: [.5,.5]
-        });
-
 
         this.finalScore = new SlideUpPane(
             {
                 size:[500,250],
-                content: content,
-                classes: ["finalScore"]
+                classes: ["finalScore"],
+                score: this.options.score
             }
         );
-
-        this.finalScore.surface.add(scoreModifier).add(scoreSurface);
-        this.finalScore.surface.add(highScoreModifier).add(highScoreSurface);
-
-        //add the final score pane and show it
         this.add(this.finalScore);
         this.finalScore.show();
 
-
-        _countUpFinalScore.call(this, this.options.score, scoreSurface, highScoreSurface);
-
-    
     }//end create final score pane
-
-
-    function _countUpFinalScore(score, scoreSurface, highScoreSurface){
-    	//start the score counting up
-        var scoreUpCounter = 0;
-        this.counter = Timer.setInterval(function(){
-            scoreUpCounter++;
-            if(scoreUpCounter <= score){
-                scoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
-
-                //set the highscore if higher than the local score
-                if(scoreUpCounter > localStorage.getItem("HighScore")){
-                    localStorage.setItem("HighScore", scoreUpCounter);
-                    highScoreSurface.setContent("<h1>" + scoreUpCounter + "</h1>");
-                }
-            }
-            else{
-                Timer.clear(this.counter);
-            }
-        }.bind(this),40);
-    }
 
 
 

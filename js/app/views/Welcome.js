@@ -2,6 +2,8 @@ define(function(require, exports, module) {
 	
     var Surface     = require("famous/core/Surface");
     var View        = require("famous/core/View");
+    var Modifier    = require("famous/core/Modifier");
+    var Transform   = require("famous/core/Transform");
     var Scrollview  = require("famous/views/Scrollview");
     var Timer       = require("famous/utilities/Timer");
 
@@ -60,7 +62,12 @@ define(function(require, exports, module) {
 
     function _showHighScores(){
         var highScores = new HighScores();
-        this.add(highScores);
+        this.add(new Modifier({
+                size: [500,500],
+                transform: Transform.translate(320,380,60),
+                origin: [.5,.5]
+            }))
+            .add(highScores);
         highScores.show();
     }
 
