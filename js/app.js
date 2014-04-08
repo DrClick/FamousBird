@@ -61,36 +61,9 @@ define(function(require, exports, module) {
     }
 
     _init();
+    _loadGame.call(this);
 
 
-    var requiredAssets = [
-        "content/font/04B_19__.TTF",
-        "content/font/terminal.woff",
-        "content/images/birdie_1.png",
-        "content/images/birdie_2.png",
-        "content/images/birdie_3.png",
-        "content/images/pipe.png",
-        "content/images/pipe_up.png",
-        "content/images/floor.png",
-        "content/images/grass.png",
-        "content/images/plant_lower.png",
-        "content/images/plant_upper.png",
-        "content/images/ready.png"
-    ];
-
-    var loading = new Loading();
-    loading.show();
-    context.add(loading);
-
-    AssetLoader.on("asset.loaded", function(data){
-        loading.setProgress(data.complete);
-    });
-
-    AssetLoader.getAssets(requiredAssets, function(){
-
-        loading.hide();
-        _loadGame.call(this);
-    }.bind(this));
 
 
 });
