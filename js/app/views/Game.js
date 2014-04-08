@@ -226,7 +226,10 @@ define(function(require, exports, module) {
 
 
             //show the game over screen
-            _showGameOverScreen.call(this);
+            Timer.setTimeout(function(){
+                _showGameOverScreen.call(this);
+            }.bind(this), 300)
+            
         }//end if game playing
     };//end end
 
