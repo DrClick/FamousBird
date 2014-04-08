@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var View        = require("famous/core/View");
     var Rectangle   = require("famous/physics/bodies/Rectangle");
     var Timer       = require("famous/utilities/Timer");
-    var Spring      = require("famous/physics/forces/spring");
+    var Spring      = require("famous/physics/forces/Spring");
 
     var GameSounds  = require("app/GameSounds");
     var Overlap     = require("app/Overlap");
