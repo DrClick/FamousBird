@@ -20,7 +20,7 @@ define(function(require, exports, module) {
     Share.prototype.constructor = Share;
     Share.DEFAULT_OPTIONS = {
         visible: false,
-        server: "//localhost:5000"
+        server: "//famous-bird.herokuapp.com/"
     };
 
     function _create(){

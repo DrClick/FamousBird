@@ -93,7 +93,8 @@ define(function(require, exports, module) {
         });
         
         //add the container surface to the view 
-        this.add(this.modifier).add(this.containerSurface);
+        //this.add(this.modifier).add(this.containerSurface);
+        this.add(this.containerSurface);
 
         //create gravity
         this.gravity = new VectorField({
