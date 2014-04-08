@@ -11,7 +11,7 @@ define(function(require, exports, module){
     var BouncyPane 		= require("app/widgets/BouncyPane");
     var ButtonPane 		= require("app/widgets/ButtonPane");
     var SlideUpPane 	= require("app/widgets/SlideUpPane");
-    var Share           = require("./Share");
+    //var Share           = require("./Share");
 
     var PhysicsEngineFactory    = require("app/PhysicsEngineFactory");
 
@@ -53,8 +53,8 @@ define(function(require, exports, module){
         this.bouncyPane.pipe(this._eventOutput);
         this.gameOverButtons.pipe(this._eventOutput);
 
-        this.share = new Share();
-        this.add(this.share);
+        // this.share = new Share();
+        // this.add(this.share);
 
         _createFinalScorePane.call(this);
 	}
@@ -65,7 +65,8 @@ define(function(require, exports, module){
     }//end restart
 
     function _share(){
-        this.share.share(this.options.score);
+        // this.share.share(this.options.score);
+        alert("Hey man, this is like, not implemented for the capptivate demo.")
     };
 
 
