@@ -50,6 +50,7 @@
         });
 
         this.add(this.particle).add(this.modifier).add(this.surface)
+        this.physicsEngine.addBody(this.particle);
 
         this.visible    = this.options.visible;
     }

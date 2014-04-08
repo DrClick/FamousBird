@@ -20,7 +20,7 @@ define(function(require, exports, module) {
             this.bufferLoader.load();        
         }
         catch(e) {
-            // console.log('Web Audio API is not supported in this browser');
+            console.log('Web Audio API is not supported in this browser');
         }
     }
 
@@ -66,6 +66,7 @@ define(function(require, exports, module) {
 
     SoundPlayer.prototype.playSound = function(i, volume, callback) {
         try{
+            debugger
             if(this.context && this.sounds)
             {
                 var buffer = this.context.createBufferSource();
@@ -80,7 +81,7 @@ define(function(require, exports, module) {
                 }
 
                 lastNode.connect(this.context.destination);            
-                buffer.start(0.0);    
+                buffer.noteOn(0);    
                 buffer.onended = (function(){
                     var index = this.buffersActive.indexOf(buffer); 
                     if(index !== -1){
