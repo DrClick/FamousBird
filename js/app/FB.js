@@ -38,10 +38,18 @@ define(function(require, exports, module) {
 			    // the user's ID, a valid access token, a signed
 			    // request, and the time the access token 
 			    // and signed request each expire
-			    var uid = response.authResponse.userID;
-			    var accessToken = response.authResponse.accessToken;
+			    FB.api('/me', function(meResponse) {
+       				console.log('Good to see you, ' + response.name + '.');
+       				//execute success callback
+     				callback({
+     					status: true, 
+     					uid: response.authResponse.userID, 
+     					token: response.authResponse.accessToken, 
+     					name: meResponse.name 
+     				});
+     			});
 
-			    callback({status: true, uid: uid, token: accessToken });
+			    
 		  	} else if (response.status === 'not_authorized') {
 		  		//has not authroized your app
 		  		callback({status: false, uid: undefined, token: undefined });
@@ -61,9 +69,9 @@ define(function(require, exports, module) {
      			console.log('Welcome!  Fetching your information.... ');
      			FB.api('/me', function(response) {
        				console.log('Good to see you, ' + response.name + '.');
+       				//execute success callback
+     				success({name: response.name, id: response.uid});
      			});
-     			//execute success callback
-     			success(response);
    			} else {
      			console.log('User cancelled login or did not fully authorize.');
 

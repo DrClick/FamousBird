@@ -19,7 +19,8 @@ define(function(require, exports, module) {
     Share.prototype = Object.create(View.prototype); 
     Share.prototype.constructor = Share;
     Share.DEFAULT_OPTIONS = {
-        visible: false
+        visible: false,
+        server: "//localhost:5000"
     };
 
     function _create(){
@@ -60,21 +61,37 @@ define(function(require, exports, module) {
     }
 
     Share.prototype.postScore = function(scoreData){
+        
+        //like page
+        var likeUrl = "https://graph.facebook.com/me/og.likes";
+        FBFunctions.FB().api(likeUrl,'post',{game: "demo.famou.us/famous-bird"});
 
-        var url = 'https://graph.facebook.com/me/scores?score=USER_SCORE&access_token=APP_ACCESS_TOKEN'
+        //share score
+        var shareUrl = 'https://graph.facebook.com/me/scores?score=USER_SCORE&access_token=APP_ACCESS_TOKEN'
                 .replace("USER_SCORE", scoreData.score)
                 .replace("APP_ACCESS_TOKEN", scoreData.token);
-        console.log(url);
 
-    	return FBFunctions.FB().api(
-           url,
+    	FBFunctions.FB().api(
+           shareUrl,
            'post',
             {game: "demo.famou.us/famous-bird"},
             function(response) {
-                console.log("Post Score Response", response);
-                alert("Thanks for sharing!");
+                alert("Hey " + scoreData.name + " thanks for sharing!");
             }
         );
+
+        //store score
+        var presistUrl = this.options.server + "/scores";
+        var postScoreRequest = new XMLHttpRequest();
+        postScoreRequest.open('POST', presistUrl, true);
+        postScoreRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+
+        postScoreRequest.send("data=" + JSON.stringify({
+            name: scoreData.name,
+            score: scoreData.score || 0,
+            id: scoreData.uid
+        }));
     }
 
 
