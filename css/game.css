@@ -1,0 +1,249 @@
+.progress{
+    border-radius: 10px;
+    border: solid 1px white;
+}
+.progressBar{
+    border-radius: 10px;
+    background-color: red;
+}
+.game{
+    background-color:#6dc6d0;
+    background-image: url('../content/images/background.png');
+    background-position: center 532px;
+    background-repeat:no-repeat;
+    font-family: 'flappyBird';
+    overflow:hidden;
+}
+
+.startup, .gameOver, .scorer, .getReady{
+    text-align: center;
+    color:white;
+}
+.startup h1, .scorer h1, .gameOver h1, .gameOver h3, .getReady h1{
+    text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+    line-height: 1.1em;
+    font-size:50px;
+    font-family: 'flappyBird';
+}
+.startup p{
+    margin-top:250px;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    font-size:30px;
+}
+.gameOver h1, .gameOver h3{
+
+    color:orange;
+}
+
+.getReady{
+    color: lightgreen;
+}
+
+.getReady p{
+    background-image: url(../content/images/ready.png);
+    width:227px;
+    height:195px;
+    margin-top:120px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.finalScore{
+    font-family: 'terminal';
+    color:brown;
+    font-size: 30px;
+    background-color:#e2ca91;
+    background-image: url(../content/images/medal.png);
+    background-position: 30px 70px;
+    background-repeat: no-repeat;
+    border: ridge 5px tan;
+    box-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000;
+}
+.finalScore .currentScore, .finalScore .highScore, .finalScore .medal{
+    position: absolute;
+}
+
+.finalScore .currentScore{
+    right:50px;
+    top:15px;
+}
+.finalScore .highScore{
+    right:50px;
+    top:115px;
+}
+.finalScore .medal{
+    left:60px;
+    top:15px;
+}
+
+button{
+    width:130px;
+    height:40px;
+    background-color:#ec4200;
+    color:white;
+    font-family: 'terminal';
+    font-size:24px;
+    border: solid 3px white;
+    letter-spacing:0.1em;
+    font-weight: bold;
+    display: inline;
+    box-shadow: -1px 1px 0 3px black; 
+}
+.scorer.main h1{
+    font-size:50px;
+}
+
+.scorer h1{
+    font-size:40px;
+}
+
+.gameOverFlash{
+    background-color: white;
+}
+.gameOverFlashActive{
+}
+
+/*------The birdie-------*/
+.birdie-middle, .birdie-up, .birdie-down{
+    background-repeat: no-repeat;
+}
+.birdie-middle{
+    background-image: url('../content/images/birdie_1.png');
+}
+.birdie-down{
+    background-image: url('../content/images/birdie_2.png');
+}
+.birdie-up{
+    background-image: url('../content/images/birdie_3.png');
+}
+
+
+
+/*------Clouds---------*/
+.cloud{
+    background-image: url('../content/images/clouds.png');
+    background-size: 128 256px;
+    background-repeat:no-repeat;
+}
+.cloud-type-0{
+    background-position: 0px 0px;
+}
+.cloud-type-1{
+    background-position: 0px -64px;
+}
+.cloud-type-2{
+    background-position: 0px -128px;
+}
+.cloud-type-3{
+    background-position: 0px -196px;
+}
+
+
+/*------Pipes---------*/
+.pipe{
+    background-image: url('../content/images/pipe.png');
+    color:transparent;
+    background-repeat:no-repeat;
+}
+.pipe.upper{
+    background-image: url('../content/images/pipe_up.png');
+    background-position: bottom;
+}
+
+
+/*------grass---------*/
+.floor{
+    width:640;
+    height:215;
+    background-image: url('../content/images/floor.png');
+    background-repeat:repeat-x;
+}
+.grass{
+    background-image: url('../content/images/grass.png');
+    background-color:tan;
+    background-size: 128 18;
+}
+.grass *{
+    margin-left:500px;
+}
+.grass img{
+    float:left;
+    margin-top:50px;
+    opacity:.2;
+}
+.grass b{
+    display:block;
+    margin-top:60px;
+}
+.grass label{
+    display: block;
+    /*margin-top:20px;*/
+}
+.grass p{
+    display:block;
+    /*margin-top:20px;*/
+}
+
+.plant.upper{
+    background-image: url("../content/images/plant_upper.png");
+}
+.plant.lower{
+    background-image: url("../content/images/plant_lower.png");
+}
+
+.credits{
+    margin: 30px 0px 0px 10px;
+    font-family: 'terminal';
+
+}
+
+.share{
+    padding: 20px;
+    border: solid 1px red;
+    background-color: pink;
+}
+
+.highScores{
+    font-family: 'terminal';
+    color:brown;
+    font-size: 30px;
+    background-color:#e2ca91;
+    border: ridge 5px tan;
+    box-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000;
+}
+.highScores h3{
+    margin: 0px 0px 0px 10px;
+}
+.closeButton{
+    background-color:#ec4200;
+    color:white;
+    text-align: center;
+    font-family: 'terminal';
+    font-size:14px;
+    border: solid 3px white;
+    letter-spacing:0.1em;
+    font-weight: bold;
+    display: inline;
+    box-shadow: -1px 1px 0 3px black; 
+}
+.highScoreItem{
+    color: white;
+    font-size:16px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-align: left;
+}
+.highScoreItem img{
+    float:left;
+    margin:5px;
+    border-radius: 5px;
+}
+.highScoreItem b{
+    float:right;
+    font-size: 24px;
+    margin-top:15px;
+    margin-right:10px;
+}
+.highScoreItem label{
+    margin-top:25px;
+    display:inline-block;
+}
