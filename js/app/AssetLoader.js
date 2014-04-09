@@ -21,8 +21,19 @@ define(function(require, exports, module){
 		var numAssets = assets.length;
 		var loadedCount = 0.0;
 
-		var promises = assets.map(function(asset){ 
-			return _get(asset).then(function(){
+		var promises = assets.map(function(asset){
+
+
+			if(asset.match(/\.[png,gif,jpg]/)){
+				return new Promise(function(resolve, reject) {
+		    		var image = new Image();
+					image.src = asset;
+					resolve();
+		  		});
+			}
+
+
+			return _get(asset).then(function(result){
 				loadedCount++;
 				_eventOutput.emit("asset.loaded", 
 					{asset: asset, complete: loadedCount/numAssets});	
