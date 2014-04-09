@@ -104,14 +104,21 @@ define(function(require, exports, module) {
         //add the plants
         this.plants = {};
         this.plants["upper"] = new Plant({
-            pipeHeight: upperPipe.height, type: "upper"
+            pipeHeight: upperPipe.height, 
+            type: "upper",
+            particle: this.particles[0]
         });
         this.plants["lower"] = new Plant({
-            pipeHeight: lowerPipe.height, type: "lower"
+            pipeHeight: lowerPipe.height, 
+            type: "lower",
+            particle: this.particles[1]
         });
 
         this.pipeNodes["upper"].add(this.plants["upper"]);
         this.pipeNodes["lower"].add(this.plants["lower"]);
+
+        this.plants["upper"].pipe(this._eventOutput);
+        this.plants["lower"].pipe(this._eventOutput);
 
 
         _attack.call(this)

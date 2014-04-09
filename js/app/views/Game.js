@@ -142,6 +142,9 @@ define(function(require, exports, module) {
         } else { 
             this.containerSurface.on("click", _handleClicks.bind(this));
         }
+
+
+        this.on("fireball.hit", this.end.bind(this));
     }//end create
 
 

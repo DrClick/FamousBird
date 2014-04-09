@@ -30,7 +30,7 @@ define(function(require, exports, module) {
 
         if (source === undefined) return;
 
-        var p1 = source.position;
+        var p1 = _getWorldPosition(source);
         var r1 = source.radius;
 
         if(source instanceof Rectangle){
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
 
             if (source == target) continue;
 
-            var p2 = target.position;
+            var p2 = _getWorldPosition(target);
             var r2 = target.radius;
 
             //here we need to determine if target is a circle of rectangle. The rectangle
@@ -80,6 +80,17 @@ define(function(require, exports, module) {
         };//end for each target particle
     };//end function 
 
+
+    //Recurses up the parent particle chain to get 
+    //the final world position
+    function _getWorldPosition(particle){
+        if(!particle.parentParticle) return particle.position;
+        else{
+            var pos = particle.position.clone();
+            return pos.add(_getWorldPosition(particle.parentParticle));
+        }
+    }
+
     function _DetermineIfOverlapped (source, target){
         
         //For now, a basic implementation that looks at the vertices of the rectangle to see if they intersec
@@ -94,15 +105,18 @@ define(function(require, exports, module) {
         var circle      = source instanceof Circle ? source: target;
         var rectangle   = source instanceof Rectangle ? source: target;
 
+        var circlePos = _getWorldPosition(circle);
+        var rectanglePos = _getWorldPosition(rectangle);
+
         var circ = {
-            x: circle.position.x, 
-            y: circle.position.y, 
+            x: circlePos.x, 
+            y: circlePos.y, 
             r: circle.radius
         };
 
         var rect = {
-            x: rectangle.position.x, 
-            y: rectangle.position.y, 
+            x: rectanglePos.x, 
+            y: rectanglePos.y, 
             width: rectangle.size[0], 
             height: rectangle.size[1]
         };

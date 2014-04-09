@@ -46,6 +46,8 @@ define(function(require, exports, module) {
             position : [0, yPos, -1]
         });
 
+
+
         this.spring = new Spring({
             period          : 1000,
             dampingRatio    : 1,
@@ -85,6 +87,12 @@ define(function(require, exports, module) {
 
         this.overlap = new Overlap();
         this.overlap.on("hit", _onHitBirdie.bind(this));
+
+
+        //NOTE: this could be a bit hacky, we need to be able
+        //to calculate world coordintes for collission and need
+        //to keep a reference to any parent particles
+        this.bulletParticle.parentParticle = this.options.particle;
         
         
         
@@ -94,8 +102,7 @@ define(function(require, exports, module) {
     }
 
     function _onHitBirdie(){
-        console.log("Im hit");
-        debugger
+        this._eventOutput.emit("fireball.hit");
     }
 
     function _getYPos(pipeHeight){

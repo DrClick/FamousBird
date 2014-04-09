@@ -52,6 +52,7 @@ define(function(require, exports, module) {
 
 
                 this.containerSurface.add(pipes);
+                pipes.on("fireball.hit", this.end.bind(this));
 
 
                 this.pipes[this.counters.pipe % this.pipes.length] = pipes;
