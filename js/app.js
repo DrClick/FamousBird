@@ -4,11 +4,13 @@ define(function(require, exports, module) {
     var Engine      = require("famous/core/Engine");
     var Modifier    = require("famous/core/Modifier");
     var Transform   = require("famous/core/Transform");
-    
+    var Timer       = require("famous/utilities/Timer");
 
     var GameView    = require("app/views/Game");
     var AssetLoader = require("app/AssetLoader");
     var Loading     = require("app/views/Loading");
+
+    var GameSounds = require("app/GameSounds");
 
     
     var context = null;
@@ -86,11 +88,15 @@ define(function(require, exports, module) {
         loading.setProgress(data.complete);
     });
 
-    AssetLoader.getAssets(requiredAssets, function(){
-        
-        loading.hide();
-        _loadGame.call(this);
-    }.bind(this));
+   //show the loading screen and start loading
+    Timer.setTimeout(function(){
+        AssetLoader.getAssets(requiredAssets, function(){
+            GameSounds(function(){
+                loading.hide();
+                _loadGame.call(this)
+            }.bind(this));
+        }.bind(this)); 
+    }.bind(this), 100);
 
 
 });

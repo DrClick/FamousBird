@@ -245,7 +245,7 @@ define(function(require, exports, module) {
             this.score = score;
             this.scorer.setScore(score);
 
-            GameSounds.playSound( 2, 1.0 );
+            GameSounds().playSound( 2, 1.0 );
         }
     };//end method
 
@@ -297,7 +297,7 @@ define(function(require, exports, module) {
 
     function _doooooh(){
 
-        GameSounds.playSound(1, 1.0);
+        GameSounds().playSound(1, 1.0);
 
 
         //create the game over flash surface

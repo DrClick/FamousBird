@@ -178,7 +178,7 @@ define(function(require, exports, module) {
         //attach the overlap
         this.overlapId = this.physicsEngine.attach(this.overlap, this.bulletParticle, birdieParticle);
 
-        GameSounds.playSound(3, 1.0);
+        GameSounds().playSound(3, 1.0);
 
     }
 

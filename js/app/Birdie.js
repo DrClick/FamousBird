@@ -130,7 +130,7 @@ define(function(require, exports, module) {
         Timer.setTimeout(function(){
             this.rotateBirdie("down");
         }.bind(this), 100);
-        GameSounds.playSound(0, 1.0);
+        GameSounds().playSound(0, 1.0);
     };
 
     Birdie.prototype.rotateBirdie = function(direction, callback) {
